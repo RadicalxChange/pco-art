@@ -12,3 +12,5 @@ docgen/
 typechain-types/
 
 .env
+.direnv
+.envrc

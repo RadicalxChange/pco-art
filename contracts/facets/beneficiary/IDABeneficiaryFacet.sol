@@ -7,16 +7,21 @@ import { IBeneficiary } from './IBeneficiary.sol';
 import { IDABeneficiaryInternal } from './IDABeneficiaryInternal.sol';
 
 /**
- * @title ImmutableIDABeneficiaryFacet
+ * @title IDABeneficiaryFacet
  * @dev Beneficiary implemented using a Superfluid IDA index. Units are immutable after creation.
  */
-contract ImmutableIDABeneficiaryFacet is IBeneficiary, IDABeneficiaryInternal {
+contract IDABeneficiaryFacet is IBeneficiary, IDABeneficiaryInternal {
     using SuperTokenV1Library for ISETH;
 
     /**
      * @notice Distribute to beneficiaries
      */
     function distribute() external payable {
-        _distribute();
+        require(
+            msg.value > 0,
+            'ImmutableIDABeneficiaryFacet: msg.value should be greater than 0'
+        );
+
+        _distribute(msg.value);
     }
 }

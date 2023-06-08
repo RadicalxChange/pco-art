@@ -40,18 +40,13 @@ abstract contract IDABeneficiaryInternal {
     /**
      * @notice Distribute to beneficiaries
      */
-    function _distribute() internal {
-        require(
-            msg.value > 0,
-            'IDABeneficiaryInternal: msg.value should be greater than 0'
-        );
-
+    function _distribute(uint256 value) internal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
         // Wrap ETH
-        l.token.upgradeByETH{ value: msg.value }();
+        l.token.upgradeByETH{ value: value }();
 
         // Distribute to beneficiaries
-        l.token.distribute(0, msg.value);
+        l.token.distribute(0, value);
     }
 }

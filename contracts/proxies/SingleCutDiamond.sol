@@ -7,6 +7,10 @@ import { DiamondBase } from '@solidstate/contracts/proxy/diamond/base/DiamondBas
 import { DiamondReadable, IDiamondReadable } from '@solidstate/contracts/proxy/diamond/readable/DiamondReadable.sol';
 import { DiamondWritable } from '@solidstate/contracts/proxy/diamond/writable/DiamondWritable.sol';
 
+/******************************************************************************\
+* EIP-2535 Diamonds implementation that is a single cut with no diamondCut selector after deployment
+/******************************************************************************/
+
 contract SingleCutDiamond is
     DiamondBase,
     DiamondReadable,

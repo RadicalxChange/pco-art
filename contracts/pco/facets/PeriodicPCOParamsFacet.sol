@@ -18,6 +18,7 @@ contract PeriodicPCOParamsFacet is
      * @notice Initialize params
      */
     function initializePCOParams(
+        address _owner,
         uint256 _licensePeriod,
         uint256 _initialPeriodStartTime,
         uint256 _perSecondFeeNumerator,
@@ -28,6 +29,7 @@ contract PeriodicPCOParamsFacet is
             'PeriodicPCOParamsFacet: already initialized'
         );
 
+        _setOwner(_owner);
         _setLicensePeriod(_licensePeriod);
         _setInitialPeriodStartTime(_initialPeriodStartTime);
         _setPerSecondFeeNumerator(_perSecondFeeNumerator);
@@ -51,7 +53,7 @@ contract PeriodicPCOParamsFacet is
     /**
      * @notice Set license period
      */
-    function setLicensePeriod(uint256 _licensePeriod) external {
+    function setLicensePeriod(uint256 _licensePeriod) external onlyOwner {
         return _setLicensePeriod(_licensePeriod);
     }
 
@@ -65,7 +67,9 @@ contract PeriodicPCOParamsFacet is
     /**
      * @notice Set fee numerator
      */
-    function setPerSecondFeeNumerator(uint256 _perSecondFeeNumerator) external {
+    function setPerSecondFeeNumerator(
+        uint256 _perSecondFeeNumerator
+    ) external onlyOwner {
         return _setPerSecondFeeNumerator(_perSecondFeeNumerator);
     }
 
@@ -81,7 +85,7 @@ contract PeriodicPCOParamsFacet is
      */
     function setPerSecondFeeDenominator(
         uint256 _perSecondFeeDenominator
-    ) external {
+    ) external onlyOwner {
         return _setPerSecondFeeDenominator(_perSecondFeeDenominator);
     }
 }

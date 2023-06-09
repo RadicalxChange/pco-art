@@ -11,6 +11,31 @@ abstract contract AllowlistWritableInternal {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     /**
+     * @notice Initialize allowlist
+     */
+    function _initializeAllowlist(
+        bool _allowAny,
+        address[] memory _addresses
+    ) internal {
+        AllowlistStorage.Layout storage l = AllowlistStorage.layout();
+
+        l.isInitialized = true;
+
+        _setAllowAny(_allowAny);
+
+        for (uint256 i; i < _addresses.length; i++) {
+            l.allowlist.add(_addresses[i]);
+        }
+    }
+
+    /**
+     * @notice Check if initialized
+     */
+    function _isInitialized() internal view returns (bool) {
+        return AllowlistStorage.layout().isInitialized;
+    }
+
+    /**
      * @notice Set allow any
      */
     function _setAllowAny(bool _allowAny) internal {

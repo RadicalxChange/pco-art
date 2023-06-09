@@ -21,6 +21,23 @@ contract OwnableAllowlistFacet is
     using EnumerableSet for EnumerableSet.AddressSet;
 
     /**
+     * @notice Initialize allowlist
+     */
+    function initializeAllowlist(
+        address _owner,
+        bool allowAny,
+        address[] memory _addresses
+    ) external {
+        require(
+            _isInitialized() == false,
+            'OwnableAllowlistFacet: already initialized'
+        );
+
+        _setOwner(_owner);
+        _initializeAllowlist(allowAny, _addresses);
+    }
+
+    /**
      * @notice Check if address is allowed
      */
     function isAllowed(address _address) external view returns (bool) {

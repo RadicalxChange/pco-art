@@ -8,6 +8,7 @@ import { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';
  */
 library AllowlistStorage {
     struct Layout {
+        bool isInitialized;
         bool allowAny;
         EnumerableSet.AddressSet allowlist;
     }

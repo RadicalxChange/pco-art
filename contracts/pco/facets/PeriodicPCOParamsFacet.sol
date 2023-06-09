@@ -35,6 +35,20 @@ contract PeriodicPCOParamsFacet is
     }
 
     /**
+     * @notice Get initial period start time
+     */
+    function initialPeriodStartTime() external view returns (uint256) {
+        return _initialPeriodStartTime();
+    }
+
+    /**
+     * @notice Get license period
+     */
+    function licensePeriod() external view returns (uint256) {
+        return _licensePeriod();
+    }
+
+    /**
      * @notice Set license period
      */
     function setLicensePeriod(uint256 _licensePeriod) external {
@@ -42,10 +56,24 @@ contract PeriodicPCOParamsFacet is
     }
 
     /**
+     * @notice Get fee numerator
+     */
+    function perSecondFeeNumerator() external view returns (uint256) {
+        return _perSecondFeeNumerator();
+    }
+
+    /**
      * @notice Set fee numerator
      */
     function setPerSecondFeeNumerator(uint256 _perSecondFeeNumerator) external {
         return _setPerSecondFeeNumerator(_perSecondFeeNumerator);
+    }
+
+    /**
+     * @notice Get fee denominator
+     */
+    function perSecondFeeDenominator() external view returns (uint256) {
+        return _perSecondFeeDenominator();
     }
 
     /**

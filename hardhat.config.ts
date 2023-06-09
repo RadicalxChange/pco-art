@@ -10,7 +10,7 @@ import 'hardhat-spdx-license-identifier';
 import 'solidity-coverage';
 import { HardhatUserConfig } from 'hardhat/types';
 
-import Dotenv from 'dotenv';
+import * as Dotenv from 'dotenv';
 
 Dotenv.config();
 

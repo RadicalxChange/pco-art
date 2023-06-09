@@ -14,7 +14,7 @@ import { BeaconDiamondInternal } from './BeaconDiamondInternal.sol';
 contract BeaconDiamond is Proxy, BeaconDiamondInternal {
     error BeaconDiamond__NoFacetForSignature();
 
-    constructor(IDiamondReadable _beacon) payable {
+    constructor(IDiamondReadable _beacon) {
         _setBeacon(_beacon);
     }
 

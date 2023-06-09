@@ -6,10 +6,10 @@ import { PeriodicPCOParamsInternal } from '../PeriodicPCOParamsInternal.sol';
 import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 
 /**
- * @title PeriodicPCOParamsFacet
+ * @title OwnablePeriodicPCOParamsFacet
  * @dev Params store for periodic PCO
  */
-contract PeriodicPCOParamsFacet is
+contract OwnablePeriodicPCOParamsFacet is
     SafeOwnable,
     IPeriodicPCOParams,
     PeriodicPCOParamsInternal

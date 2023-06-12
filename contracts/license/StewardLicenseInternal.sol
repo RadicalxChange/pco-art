@@ -10,6 +10,7 @@ import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC1
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
+import { IAuction } from '../auction/IAuction.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -36,7 +37,7 @@ abstract contract StewardLicenseInternal is
         uint256 tokenId
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
         // Delegatecall to facet
-        bytes4 functionSelector = bytes4(keccak256('isAuctionPeriod()'));
+        bytes4 functionSelector = IAuction.isAuctionPeriod.selector;
         address facet = address(
             bytes20(DiamondBaseStorage.layout().facets[functionSelector])
         );

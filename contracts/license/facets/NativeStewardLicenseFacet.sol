@@ -30,17 +30,6 @@ contract NativeStewardLicenseFacet is StewardLicenseInternal {
             'StewardLicenseFacet: already initialized'
         );
 
-        // Initialize ERC721
-        ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
-            .layout();
-        ls.name = name;
-        ls.symbol = symbol;
-        ls.baseURI = baseURI;
-
-        _setSupportsInterface(type(IERC165).interfaceId, true);
-        _setSupportsInterface(type(IERC721).interfaceId, true);
-
-        // Mint single token to steward
-        _mint(_steward, 0);
+        _initializeStewardLicense(_steward, name, symbol, baseURI);
     }
 }

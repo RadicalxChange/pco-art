@@ -11,8 +11,4 @@ contract NativeStewardLicenseMock is NativeStewardLicenseFacet {
     function burn(uint256 tokenId) external {
         _burn(tokenId);
     }
-
-    function isAuctionPeriod() external pure returns (bool) {
-        return false;
-    }
 }

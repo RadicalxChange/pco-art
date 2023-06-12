@@ -22,6 +22,33 @@ abstract contract StewardLicenseInternal is
     ERC165Base
 {
     /**
+     * @notice Initialize license
+     */
+    function _initializeStewardLicense(
+        address _steward,
+        string memory name,
+        string memory symbol,
+        string memory baseURI
+    ) internal {
+        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
+
+        l.isInitialized = true;
+
+        // Initialize ERC721
+        ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
+            .layout();
+        ls.name = name;
+        ls.symbol = symbol;
+        ls.baseURI = baseURI;
+
+        _setSupportsInterface(type(IERC165).interfaceId, true);
+        _setSupportsInterface(type(IERC721).interfaceId, true);
+
+        // Mint single token to steward
+        _mint(_steward, 0);
+    }
+
+    /**
      * @notice Check if initialized
      */
     function _isInitialized() internal view returns (bool) {

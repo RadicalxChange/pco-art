@@ -7,23 +7,23 @@ describe('OwnableAllowlist', function () {
   let owner: SignerWithAddress;
   let nomineeOwner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
-  let instance;
+
+  async function getInstance() {
+    const factory = await ethers.getContractFactory('OwnableAllowlistFacet');
+    const instance = await factory.deploy();
+    await instance.deployed();
+    return instance;
+  }
 
   before(async function () {
     [owner, nomineeOwner, nonOwner] = await ethers.getSigners();
   });
 
-  beforeEach(async function () {
-    const factory = await ethers.getContractFactory('OwnableAllowlistFacet');
-    instance = await factory.deploy();
-    await instance.deployed();
-  });
+  beforeEach(async function () {});
 
   describeBehaviorOfSafeOwnable(
     async () => {
-      const factory = await ethers.getContractFactory('OwnableAllowlistFacet');
-      const instance = await factory.deploy();
-      await instance.deployed();
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), true, []);
       return instance;
     },
@@ -36,6 +36,7 @@ describe('OwnableAllowlist', function () {
 
   describe('initializeAllowlist', function () {
     it('should set isAllowed', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), true, []);
 
       // ethers zero address
@@ -45,14 +46,18 @@ describe('OwnableAllowlist', function () {
     });
 
     it('should revert if already initialized', async function () {
-      expect(
-        await instance.initializeAllowlist(await owner.getAddress(), true, []),
+      const instance = await getInstance();
+      await instance.initializeAllowlist(await owner.getAddress(), true, []);
+
+      await expect(
+        instance.initializeAllowlist(await owner.getAddress(), true, []),
       ).to.be.revertedWith('OwnableAllowlistFacet: already initialized');
     });
   });
 
   describe('setAllowAny', function () {
     it('should allow owner to set', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), true, []);
 
       await expect(instance.connect(owner).setAllowAny(false)).to.not.be
@@ -63,6 +68,7 @@ describe('OwnableAllowlist', function () {
     });
 
     it('should only allow owner to set', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), true, []);
 
       await expect(instance.connect(nonOwner).setAllowAny(false)).to.be
@@ -72,6 +78,7 @@ describe('OwnableAllowlist', function () {
 
   describe('addToAllowlist', function () {
     it('should allow owner to add', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), false, []);
 
       await expect(
@@ -83,6 +90,7 @@ describe('OwnableAllowlist', function () {
     });
 
     it('should only allow owner to add', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), false, []);
 
       await expect(
@@ -93,6 +101,7 @@ describe('OwnableAllowlist', function () {
 
   describe('removeFromAllowlist', function () {
     it('should allow owner to remove', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), false, [
         await nonOwner.getAddress(),
       ]);
@@ -108,6 +117,7 @@ describe('OwnableAllowlist', function () {
     });
 
     it('should only allow owner to remove', async function () {
+      const instance = await getInstance();
       await instance.initializeAllowlist(await owner.getAddress(), false, [
         await nonOwner.getAddress(),
       ]);

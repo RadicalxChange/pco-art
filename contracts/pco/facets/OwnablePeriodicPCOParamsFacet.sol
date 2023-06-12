@@ -30,10 +30,12 @@ contract OwnablePeriodicPCOParamsFacet is
         );
 
         _setOwner(_owner);
-        _setLicensePeriod(_licensePeriod);
-        _setInitialPeriodStartTime(_initialPeriodStartTime);
-        _setPerSecondFeeNumerator(_perSecondFeeNumerator);
-        _setPerSecondFeeDenominator(_perSecondFeeDenominator);
+        _initializeParams(
+            _licensePeriod,
+            _initialPeriodStartTime,
+            _perSecondFeeNumerator,
+            _perSecondFeeDenominator
+        );
     }
 
     /**

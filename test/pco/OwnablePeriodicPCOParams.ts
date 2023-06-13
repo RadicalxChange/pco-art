@@ -73,8 +73,9 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(nonOwner).setLicensePeriod(11)).to.be
-        .reverted;
+      await expect(
+        instance.connect(nonOwner).setLicensePeriod(11),
+      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
     });
   });
 
@@ -90,8 +91,9 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(nonOwner).setPerSecondFeeNumerator(12)).to
-        .be.reverted;
+      await expect(
+        instance.connect(nonOwner).setPerSecondFeeNumerator(12),
+      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
     });
   });
 
@@ -107,8 +109,9 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(nonOwner).setPerSecondFeeDenominator(13)).to
-        .be.reverted;
+      await expect(
+        instance.connect(nonOwner).setPerSecondFeeDenominator(13),
+      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
     });
   });
 });

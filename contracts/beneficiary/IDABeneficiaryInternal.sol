@@ -13,6 +13,28 @@ abstract contract IDABeneficiaryInternal is IOwnableBeneficiaryInternal {
     using SuperTokenV1Library for ISETH;
 
     /**
+     * @notice Initialize beneficiary
+     */
+    function _initializeIDABeneficiary(
+        ISETH _token,
+        Beneficiary[] memory _beneficiaries
+    ) internal {
+        IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
+
+        l.isInitialized = true;
+
+        _setToken(_token);
+        _updateBeneficiaryUnits(_beneficiaries);
+    }
+
+    /**
+     * @notice Check if initialized
+     */
+    function _isInitialized() internal view returns (bool) {
+        return IDABeneficiaryStorage.layout().isInitialized;
+    }
+
+    /**
      * @notice Set token
      */
     function _setToken(ISETH _token) internal {

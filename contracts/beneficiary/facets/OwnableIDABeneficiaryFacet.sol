@@ -19,6 +19,23 @@ contract OwnableIDABeneficiaryFacet is
     using SuperTokenV1Library for ISETH;
 
     /**
+     * @notice Initialize beneficiary
+     */
+    function initializeIDABeneficiary(
+        address _owner,
+        ISETH _token,
+        Beneficiary[] memory _beneficiaries
+    ) external {
+        require(
+            _isInitialized() == false,
+            'OwnableIDABeneficiaryFacet: already initialized'
+        );
+
+        _setOwner(_owner);
+        _initializeIDABeneficiary(_token, _beneficiaries);
+    }
+
+    /**
      * @notice Update beneficiaries
      */
     function updateBeneficiaryUnits(

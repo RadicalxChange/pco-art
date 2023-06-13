@@ -95,7 +95,7 @@ describe('OwnableAllowlist', function () {
 
       await expect(
         instance.connect(nonOwner).addToAllowlist(await nonOwner.getAddress()),
-      ).to.be.reverted;
+      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
     });
   });
 
@@ -126,7 +126,7 @@ describe('OwnableAllowlist', function () {
         instance
           .connect(nonOwner)
           .removeFromAllowlist(await nonOwner.getAddress()),
-      ).to.be.reverted;
+      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
     });
   });
 });

@@ -8,6 +8,7 @@ import { ISETH } from '@superfluid-finance/ethereum-contracts/contracts/interfac
  */
 library IDABeneficiaryStorage {
     struct Layout {
+        bool isInitialized;
         ISETH token;
     }
 

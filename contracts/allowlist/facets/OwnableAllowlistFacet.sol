@@ -7,6 +7,7 @@ import { IOwnableAllowlist } from '../IOwnableAllowlist.sol';
 import { AllowlistStorage } from '../AllowlistStorage.sol';
 import { AllowlistReadableInternal } from '../AllowlistReadableInternal.sol';
 import { AllowlistWritableInternal } from '../AllowlistWritableInternal.sol';
+import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 
 /**
  * @title OwnableAllowlistFacet
@@ -16,7 +17,8 @@ contract OwnableAllowlistFacet is
     SafeOwnable,
     IOwnableAllowlist,
     AllowlistReadableInternal,
-    AllowlistWritableInternal
+    AllowlistWritableInternal,
+    ERC165Base
 {
     using EnumerableSet for EnumerableSet.AddressSet;
 
@@ -33,6 +35,7 @@ contract OwnableAllowlistFacet is
             'OwnableAllowlistFacet: already initialized'
         );
 
+        _setSupportsInterface(type(IOwnableAllowlist).interfaceId, true);
         _setOwner(_owner);
         _initializeAllowlist(allowAny, _addresses);
     }

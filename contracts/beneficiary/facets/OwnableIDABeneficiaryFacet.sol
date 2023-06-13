@@ -6,6 +6,7 @@ import { SuperTokenV1Library } from '@superfluid-finance/ethereum-contracts/cont
 import { IOwnableBeneficiary } from '../IOwnableBeneficiary.sol';
 import { IDABeneficiaryInternal } from '../IDABeneficiaryInternal.sol';
 import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
+import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 
 /**
  * @title OwnableIDABeneficiaryFacet
@@ -14,7 +15,8 @@ import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.so
 contract OwnableIDABeneficiaryFacet is
     IOwnableBeneficiary,
     IDABeneficiaryInternal,
-    SafeOwnable
+    SafeOwnable,
+    ERC165Base
 {
     using SuperTokenV1Library for ISETH;
 
@@ -31,6 +33,7 @@ contract OwnableIDABeneficiaryFacet is
             'OwnableIDABeneficiaryFacet: already initialized'
         );
 
+        _setSupportsInterface(type(IOwnableBeneficiary).interfaceId, true);
         _setOwner(_owner);
         _initializeIDABeneficiary(_token, _beneficiaries);
     }

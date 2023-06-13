@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import { IPeriodicPCOParams } from '../IPeriodicPCOParams.sol';
 import { PeriodicPCOParamsInternal } from '../PeriodicPCOParamsInternal.sol';
 import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
+import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 
 /**
  * @title OwnablePeriodicPCOParamsFacet
@@ -12,7 +13,8 @@ import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.so
 contract OwnablePeriodicPCOParamsFacet is
     SafeOwnable,
     IPeriodicPCOParams,
-    PeriodicPCOParamsInternal
+    PeriodicPCOParamsInternal,
+    ERC165Base
 {
     /**
      * @notice Initialize params
@@ -29,6 +31,7 @@ contract OwnablePeriodicPCOParamsFacet is
             'PeriodicPCOParamsFacet: already initialized'
         );
 
+        _setSupportsInterface(type(IPeriodicPCOParams).interfaceId, true);
         _setOwner(_owner);
         _initializeParams(
             _licensePeriod,

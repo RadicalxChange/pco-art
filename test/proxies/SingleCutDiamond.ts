@@ -24,7 +24,8 @@ describe('SingleCutDiamond', function () {
     instance = await factory.deploy([
       {
         target: facetInstance.address,
-        action: 0,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
         selectors: [facetInstance.interface.getSighash('owner()')],
       },
     ]);

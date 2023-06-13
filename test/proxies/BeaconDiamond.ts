@@ -17,7 +17,8 @@ describe('BeaconDiamond', function () {
     const beaconInstance = await beaconFactory.deploy([
       {
         target: facetInstance.address,
-        action: 0,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
         selectors: [facetInstance.interface.getSighash('owner()')],
       },
     ]);

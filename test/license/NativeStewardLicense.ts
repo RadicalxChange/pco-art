@@ -60,20 +60,26 @@ describe('NativeStewardLicense', function () {
       ),
     ];
 
+    const initData = facetInstance.interface.encodeFunctionData(
+      'initializeStewardLicense(address,string,string,string)',
+      [await owner.getAddress(), name, symbol, tokenURI],
+    );
     instance = await factory.deploy([
       {
-        target: facetInstance.address,
-        action: 0,
-        selectors: selectors,
-      },
-      {
         target: mockAuction.address,
-        action: 0,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
         selectors: [
           mockAuction.interface.getSighash('isAuctionPeriod()'),
           mockAuction.interface.getSighash('setIsAuctionPeriod(bool)'),
           mockAuction.interface.getSighash('setShouldFail(bool)'),
         ],
+      },
+      {
+        target: facetInstance.address,
+        initTarget: facetInstance.address,
+        initData,
+        selectors: selectors,
       },
     ]);
     await instance.deployed();
@@ -81,13 +87,6 @@ describe('NativeStewardLicense', function () {
     instance = await ethers.getContractAt(
       'NativeStewardLicenseMock',
       instance.address,
-    );
-
-    await instance['initializeStewardLicense(address,string,string,string)'](
-      await owner.getAddress(),
-      name,
-      symbol,
-      tokenURI,
     );
 
     const auctionMockFacet = await ethers.getContractAt(

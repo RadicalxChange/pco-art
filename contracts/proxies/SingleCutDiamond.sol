@@ -17,7 +17,14 @@ contract SingleCutDiamond is
     DiamondWritable,
     ERC165Base
 {
-    constructor(FacetCut[] memory facetCuts) {
+    struct FacetInit {
+        address target;
+        address initTarget;
+        bytes initData;
+        bytes4[] selectors;
+    }
+
+    constructor(FacetInit[] memory facetInits) {
         bytes4[] memory selectors = new bytes4[](5);
         uint256 selectorIndex;
 
@@ -49,7 +56,18 @@ contract SingleCutDiamond is
         });
 
         _diamondCut(builtInFacetCuts, address(0), '');
-        _diamondCut(facetCuts, address(0), '');
+
+        for (uint256 facetIndex; facetIndex < facetInits.length; facetIndex++) {
+            FacetInit memory facetInit = facetInits[facetIndex];
+            FacetCut[] memory facetCuts = new FacetCut[](1);
+            facetCuts[0] = FacetCut({
+                target: facetInit.target,
+                action: FacetCutAction.ADD,
+                selectors: facetInit.selectors
+            });
+
+            _diamondCut(facetCuts, facetInit.initTarget, facetInit.initData);
+        }
     }
 
     receive() external payable {}

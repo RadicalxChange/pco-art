@@ -20,6 +20,6 @@ jobs:
       - name: "Install JS Dependencies"
         run: "yarn install --frozen-lockfile --dev"
       - name: "Build"
-        run: "yarn build"
+        run: "yarn prepare"
       - name: "Run tests"
-        run: "yarn tests:run"
+        run: "yarn hardhat test"

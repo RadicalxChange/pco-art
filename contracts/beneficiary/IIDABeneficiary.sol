@@ -2,12 +2,12 @@
 pragma solidity ^0.8.17;
 
 import { IBeneficiary } from './IBeneficiary.sol';
-import { IOwnableBeneficiaryInternal } from './IOwnableBeneficiaryInternal.sol';
+import { IIDABeneficiaryInternal } from './IIDABeneficiaryInternal.sol';
 
 /**
- * @title IOwnableBeneficiary
+ * @title IIDABeneficiary
  */
-interface IOwnableBeneficiary is IBeneficiary, IOwnableBeneficiaryInternal {
+interface IIDABeneficiary is IBeneficiary, IIDABeneficiaryInternal {
     /**
      * @notice Update beneficiary units
      */

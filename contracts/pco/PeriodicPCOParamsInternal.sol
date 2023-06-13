@@ -2,11 +2,12 @@
 pragma solidity ^0.8.17;
 
 import { PeriodicPCOParamsStorage } from './PeriodicPCOParamsStorage.sol';
+import { IPeriodicPCOParamsInternal } from './IPeriodicPCOParamsInternal.sol';
 
 /**
  * @title PeriodicPCOParamsInternal
  */
-abstract contract PeriodicPCOParamsInternal {
+abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
     /**
      * @notice Initialize parameters
      */
@@ -51,6 +52,8 @@ abstract contract PeriodicPCOParamsInternal {
             .layout();
 
         l.initialPeriodStartTime = initialPeriodStartTime;
+
+        emit InitialPeriodStartTimeSet(initialPeriodStartTime);
     }
 
     /**
@@ -68,6 +71,8 @@ abstract contract PeriodicPCOParamsInternal {
             .layout();
 
         l.licensePeriod = licensePeriod;
+
+        emit LicensePeriodSet(licensePeriod);
     }
 
     /**
@@ -85,6 +90,8 @@ abstract contract PeriodicPCOParamsInternal {
             .layout();
 
         l.perSecondFeeNumerator = perSecondFeeNumerator;
+
+        emit PerSecondFeeNumeratorSet(perSecondFeeNumerator);
     }
 
     /**
@@ -103,5 +110,7 @@ abstract contract PeriodicPCOParamsInternal {
         PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
             .layout();
         l.perSecondFeeDenominator = perSecondFeeDenominator;
+
+        emit PerSecondFeeDenominatorSet(perSecondFeeDenominator);
     }
 }

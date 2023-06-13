@@ -3,11 +3,12 @@ pragma solidity ^0.8.17;
 
 import { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';
 import { AllowlistStorage } from './AllowlistStorage.sol';
+import { IAllowlistWritableInternal } from './IAllowlistWritableInternal.sol';
 
 /**
  * @title AllowlistWritableInternal
  */
-abstract contract AllowlistWritableInternal {
+abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     /**
@@ -42,6 +43,8 @@ abstract contract AllowlistWritableInternal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
         l.allowAny = _allowAny;
+
+        emit AllowAnyUpdated(_allowAny);
     }
 
     /**
@@ -51,6 +54,8 @@ abstract contract AllowlistWritableInternal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
         l.allowlist.add(_address);
+
+        emit Allowlisted(_address);
     }
 
     /**
@@ -60,5 +65,7 @@ abstract contract AllowlistWritableInternal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
         l.allowlist.remove(_address);
+
+        emit Unallowlisted(_address);
     }
 }

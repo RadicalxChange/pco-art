@@ -3,7 +3,7 @@ pragma solidity ^0.8.17;
 
 import { ISETH } from '@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/ISETH.sol';
 import { SuperTokenV1Library } from '@superfluid-finance/ethereum-contracts/contracts/apps/SuperTokenV1Library.sol';
-import { IOwnableBeneficiary } from '../IOwnableBeneficiary.sol';
+import { IIDABeneficiary } from '../IIDABeneficiary.sol';
 import { IDABeneficiaryInternal } from '../IDABeneficiaryInternal.sol';
 import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
@@ -13,7 +13,7 @@ import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC1
  * @dev Beneficiary implemented using a Superfluid IDA index
  */
 contract OwnableIDABeneficiaryFacet is
-    IOwnableBeneficiary,
+    IIDABeneficiary,
     IDABeneficiaryInternal,
     SafeOwnable,
     ERC165Base
@@ -33,7 +33,7 @@ contract OwnableIDABeneficiaryFacet is
             'OwnableIDABeneficiaryFacet: already initialized'
         );
 
-        _setSupportsInterface(type(IOwnableBeneficiary).interfaceId, true);
+        _setSupportsInterface(type(IIDABeneficiary).interfaceId, true);
         _setOwner(_owner);
         _initializeIDABeneficiary(_token, _beneficiaries);
     }

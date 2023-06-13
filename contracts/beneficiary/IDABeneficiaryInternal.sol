@@ -4,12 +4,12 @@ pragma solidity ^0.8.17;
 import { ISETH } from '@superfluid-finance/ethereum-contracts/contracts/interfaces/tokens/ISETH.sol';
 import { SuperTokenV1Library } from '@superfluid-finance/ethereum-contracts/contracts/apps/SuperTokenV1Library.sol';
 import { IDABeneficiaryStorage } from './IDABeneficiaryStorage.sol';
-import { IOwnableBeneficiaryInternal } from './IOwnableBeneficiaryInternal.sol';
+import { IIDABeneficiaryInternal } from './IIDABeneficiaryInternal.sol';
 
 /**
  * @title IDABeneficiaryInternal
  */
-abstract contract IDABeneficiaryInternal is IOwnableBeneficiaryInternal {
+abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
     using SuperTokenV1Library for ISETH;
 
     /**
@@ -42,6 +42,8 @@ abstract contract IDABeneficiaryInternal is IOwnableBeneficiaryInternal {
 
         l.token = _token;
         l.token.createIndex(0);
+
+        emit TokenSet(address(_token));
     }
 
     /**
@@ -55,6 +57,11 @@ abstract contract IDABeneficiaryInternal is IOwnableBeneficiaryInternal {
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
             l.token.updateSubscriptionUnits(
                 0,
+                _beneficiaries[i].subscriber,
+                _beneficiaries[i].units
+            );
+
+            emit BeneficiaryUnitsUpdated(
                 _beneficiaries[i].subscriber,
                 _beneficiaries[i].units
             );
@@ -72,5 +79,7 @@ abstract contract IDABeneficiaryInternal is IOwnableBeneficiaryInternal {
 
         // Distribute to beneficiaries
         l.token.distribute(0, value);
+
+        emit Distributed(value);
     }
 }

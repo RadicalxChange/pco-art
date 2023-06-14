@@ -5,5 +5,5 @@ pragma solidity ^0.8.17;
  * @title IPeriodicAuction
  */
 interface IPeriodicAuction {
-    function isAuctionPeriod() external view returns (bool);
+    function isAuctionPeriod() external returns (bool);
 }

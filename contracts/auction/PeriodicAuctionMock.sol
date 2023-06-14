@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { IAuction } from './IAuction.sol';
+import { IPeriodicAuction } from './IPeriodicAuction.sol';
 
-contract AuctionMock is IAuction {
+contract PeriodicAuctionMock is IPeriodicAuction {
     struct Layout {
         bool isAuctionPeriod;
         bool shouldFail;
     }
 
     bytes32 private constant STORAGE_SLOT =
-        keccak256('pcoart.contracts.storage.AuctionMock');
+        keccak256('pcoart.contracts.storage.PeriodicAuctionMock');
 
     function layout() internal pure returns (Layout storage l) {
         bytes32 slot = STORAGE_SLOT;
@@ -20,7 +20,7 @@ contract AuctionMock is IAuction {
     }
 
     function isAuctionPeriod() external view returns (bool) {
-        require(!layout().shouldFail, 'AuctionMock: failed');
+        require(!layout().shouldFail, 'PeriodicAuctionMock: failed');
         return layout().isAuctionPeriod;
     }
 

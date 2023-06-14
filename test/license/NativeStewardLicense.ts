@@ -32,7 +32,9 @@ describe('NativeStewardLicense', function () {
       'IERC721Receiver',
       ethers.constants.AddressZero,
     );
-    const mockAuctionFactory = await ethers.getContractFactory('AuctionMock');
+    const mockAuctionFactory = await ethers.getContractFactory(
+      'PeriodicAuctionMock',
+    );
     const mockAuction = await mockAuctionFactory.deploy();
     await mockAuction.deployed();
 
@@ -90,7 +92,7 @@ describe('NativeStewardLicense', function () {
     );
 
     const auctionMockFacet = await ethers.getContractAt(
-      'AuctionMock',
+      'PeriodicAuctionMock',
       instance.address,
     );
     await auctionMockFacet['setIsAuctionPeriod(bool)'](false);
@@ -130,7 +132,7 @@ describe('NativeStewardLicense', function () {
   describe('transfer', function () {
     it('should fail if during auction period', async function () {
       const auctionMockFacet = await ethers.getContractAt(
-        'AuctionMock',
+        'PeriodicAuctionMock',
         instance.address,
       );
       await auctionMockFacet['setIsAuctionPeriod(bool)'](true);
@@ -150,7 +152,7 @@ describe('NativeStewardLicense', function () {
 
     it('should fail if call to auction fails', async function () {
       const auctionMockFacet = await ethers.getContractAt(
-        'AuctionMock',
+        'PeriodicAuctionMock',
         instance.address,
       );
       await auctionMockFacet['setShouldFail(bool)'](true);
@@ -163,7 +165,7 @@ describe('NativeStewardLicense', function () {
             await nonOwner.getAddress(),
             0,
           ),
-      ).to.be.revertedWith('StewardLicenseFacet: isAuctionPeriod() failed');
+      ).to.be.revertedWith('FacetCallInternal: facet call failed');
     });
   });
 });

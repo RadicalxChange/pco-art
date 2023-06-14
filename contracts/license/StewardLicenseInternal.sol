@@ -10,7 +10,8 @@ import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC1
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
-import { IAuction } from '../auction/IAuction.sol';
+import { IPeriodicAuction } from '../auction/IPeriodicAuction.sol';
+import { FacetCallInternal } from '../proxies/FacetCallInternal.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -19,7 +20,8 @@ abstract contract StewardLicenseInternal is
     ERC721Base,
     ERC721Enumerable,
     ERC721Metadata,
-    ERC165Base
+    ERC165Base,
+    FacetCallInternal
 {
     /**
      * @notice Initialize license
@@ -64,15 +66,8 @@ abstract contract StewardLicenseInternal is
         uint256 tokenId
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
         // Delegatecall to facet
-        bytes4 functionSelector = IAuction.isAuctionPeriod.selector;
-        address facet = address(
-            bytes20(DiamondBaseStorage.layout().facets[functionSelector])
-        );
-        bytes memory functionCall = abi.encodeWithSelector(functionSelector, 4);
-        (bool success, bytes memory result) = address(facet).delegatecall(
-            functionCall
-        );
-        require(success, 'StewardLicenseFacet: isAuctionPeriod() failed');
+        bytes4 functionSelector = IPeriodicAuction.isAuctionPeriod.selector;
+        bytes memory result = _callFacet(functionSelector, '');
 
         bool isAuctionPeriod = abi.decode(result, (bool));
         require(

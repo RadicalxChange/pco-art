@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import { EnglishPeriodicAuctionInternal } from '../EnglishPeriodicAuctionInternal.sol';
 import { IPeriodicAuction } from '../IPeriodicAuction.sol';
+import { IAllowlist } from '../../allowlist/IAllowlist.sol';
 
 /**
  * @title EnglishPeriodicAuctionFacet
@@ -48,9 +49,34 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Place a bid
+     */
+    function placeBid() external payable {
+        require(
+            _isAuctionPeriod(),
+            'EnglishPeriodicAuction: can only place bid in auction period'
+        );
+        require(
+            _isReadyForTransfer() == false,
+            'EnglishPeriodicAuction: auction is over and awaiting transfer'
+        );
+        require(
+            IAllowlist(address(this)).isAllowed(msg.sender),
+            'EnglishPeriodicAuction: sender is not allowed to place bid'
+        );
+
+        _placeBid(msg.sender, msg.value);
+    }
+
+    /**
      * @notice Trigger a transfer to the highest bidder
      */
     function triggerTransfer() external {
+        require(
+            _isReadyForTransfer(),
+            'EnglishPeriodicAuction: auction is not over'
+        );
+
         _triggerTransfer();
     }
 

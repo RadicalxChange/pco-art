@@ -10,6 +10,7 @@ library EnglishPeriodicAuctionStorage {
         uint256 bidExtensionSeconds;
         uint256 lastPeriodEndTime;
         uint256 currentAuctionRound;
+        uint256 currentAuctionLength;
         mapping(address => Bid) bids;
         Bid currentBid;
         Bid highestOutstandingBid;
@@ -18,7 +19,9 @@ library EnglishPeriodicAuctionStorage {
     struct Bid {
         uint256 round;
         address bidder;
-        uint256 amount;
+        uint256 bidAmount;
+        uint256 feeAmount;
+        uint256 collateralAmount;
     }
 
     bytes32 private constant STORAGE_SLOT =

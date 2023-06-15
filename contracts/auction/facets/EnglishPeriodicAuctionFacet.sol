@@ -41,6 +41,13 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Trigger a transfer to the highest bidder
+     */
+    function triggerTransfer() external {
+        _triggerTransfer();
+    }
+
+    /**
      * @notice Get auction length
      */
     function auctionLengthSeconds() external view returns (uint256) {

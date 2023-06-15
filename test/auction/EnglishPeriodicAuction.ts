@@ -61,6 +61,7 @@ describe('EnglishPeriodicAuction', function () {
             'initializeAuction(uint256,uint256,uint256,uint256)',
           ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
+          facetFactory.interface.getSighash('triggerTransfer()'),
           facetFactory.interface.getSighash('auctionLengthSeconds()'),
           facetFactory.interface.getSighash('minBidIncrement()'),
           facetFactory.interface.getSighash(
@@ -130,7 +131,7 @@ describe('EnglishPeriodicAuction', function () {
       expect(await instance.isAuctionPeriod()).to.be.equal(true);
     });
 
-    it.skip('should return false if initial auction ended', async function () {
+    it('should return false if initial auction ended', async function () {
       // Auction start: Now - 200
       // Auction end: Now - 100
       // Next auction start: Now + 900
@@ -140,20 +141,46 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
+      await instance.triggerTransfer();
+
       expect(await instance.isAuctionPeriod()).to.be.equal(false);
     });
 
     it('should return true if another auction is in progress', async function () {
       // Auction start: Now - 200
       // Auction end: Now - 100
-      // Next auction start: Now - 90
+      // License period start: Now
+      // Next auction start: Now + 1000
+      // Next auction end: Now + 1100
       const instance = await getInstance({
         auctionLengthSeconds: 100,
         initialPeriodStartTime: (await time.latest()) - 200,
-        licensePeriod: 10,
+        licensePeriod: 1000,
       });
 
+      await instance.triggerTransfer();
+      await time.increase(1050);
+
       expect(await instance.isAuctionPeriod()).to.be.equal(true);
+    });
+
+    it('should return false if another auction ended', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // License period start: Now
+      // Next auction start: Now + 1000
+      // Next auction end: Now + 1100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await instance.triggerTransfer();
+      await time.increase(1150);
+      await instance.triggerTransfer();
+
+      expect(await instance.isAuctionPeriod()).to.be.equal(false);
     });
   });
 });

@@ -92,4 +92,17 @@ abstract contract EnglishPeriodicAuctionInternal {
 
         return block.timestamp >= auctionStartTime;
     }
+
+    /**
+     * @notice Trigger a transfer to the highest bidder
+     */
+    function _triggerTransfer() internal {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        // TODO: Transfer to highest bidder
+
+        // Set lastPeriodEndTime to the end of the current auction period
+        l.lastPeriodEndTime = block.timestamp;
+    }
 }

@@ -94,9 +94,46 @@ abstract contract EnglishPeriodicAuctionInternal {
     }
 
     /**
+     * @notice Is token ready for transfer
+     */
+    function _isReadyForTransfer() internal view returns (bool) {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        uint256 initialPeriodStartTime = IPeriodicPCOParams(address(this))
+            .initialPeriodStartTime();
+        uint256 licensePeriod = IPeriodicPCOParams(address(this))
+            .licensePeriod();
+
+        uint256 auctionStartTime;
+        if (l.lastPeriodEndTime > initialPeriodStartTime) {
+            // Auction starts after licensePeriod has elapsed
+            auctionStartTime = l.lastPeriodEndTime + licensePeriod;
+        } else {
+            // Auction starts at initial time
+            auctionStartTime = initialPeriodStartTime;
+        }
+
+        return block.timestamp >= auctionStartTime + l.auctionLengthSeconds;
+    }
+
+    // /**
+    //  * @notice Place a bid
+    //  */
+    // function _placeBid(address bidder, uint256 bidAmount) internal {
+    //     EnglishPeriodicAuctionStorage.Layout
+    //         storage l = EnglishPeriodicAuctionStorage.layout();
+    // }
+
+    /**
      * @notice Trigger a transfer to the highest bidder
      */
     function _triggerTransfer() internal {
+        require(
+            _isReadyForTransfer(),
+            'EnglishPeriodicAuction: auction is not over'
+        );
+
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 

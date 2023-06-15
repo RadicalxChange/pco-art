@@ -61,6 +61,7 @@ describe('EnglishPeriodicAuction', function () {
             'initializeAuction(uint256,uint256,uint256,uint256)',
           ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
+          facetFactory.interface.getSighash('isReadyForTransfer()'),
           facetFactory.interface.getSighash('triggerTransfer()'),
           facetFactory.interface.getSighash('auctionLengthSeconds()'),
           facetFactory.interface.getSighash('minBidIncrement()'),
@@ -181,6 +182,117 @@ describe('EnglishPeriodicAuction', function () {
       await instance.triggerTransfer();
 
       expect(await instance.isAuctionPeriod()).to.be.equal(false);
+    });
+  });
+
+  describe('isReadyForTransfer', function () {
+    it('should return false if initial auction is in progress', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: await time.latest(),
+      });
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+    });
+
+    it('should return true if initial auction ended', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // Next auction start: Now + 900
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+    });
+
+    it('should return false if initial auction transferred', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // Next auction start: Now + 900
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await instance.triggerTransfer();
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+    });
+
+    it('should return false if another auction is in progress', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // License period start: Now
+      // Next auction start: Now + 1000
+      // Next auction end: Now + 1100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await instance.triggerTransfer();
+      await time.increase(1050);
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+    });
+
+    it('should return true if another auction ended', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // License period start: Now
+      // Next auction start: Now + 1000
+      // Next auction end: Now + 1100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await instance.triggerTransfer();
+      await time.increase(1150);
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+    });
+
+    it('should return false if another auction transferred', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // License period start: Now
+      // Next auction start: Now + 1000
+      // Next auction end: Now + 1100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await instance.triggerTransfer();
+      await time.increase(1150);
+      await instance.triggerTransfer();
+
+      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+    });
+  });
+
+  describe('triggerTransfer', function () {
+    it('should revert if auction is not over', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: await time.latest(),
+      });
+
+      await expect(instance.triggerTransfer()).to.be.revertedWith(
+        'EnglishPeriodicAuction: auction is not over',
+      );
     });
   });
 });

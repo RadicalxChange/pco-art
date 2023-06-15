@@ -41,6 +41,13 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Is token ready for transfer
+     */
+    function isReadyForTransfer() external view returns (bool) {
+        return _isReadyForTransfer();
+    }
+
+    /**
      * @notice Trigger a transfer to the highest bidder
      */
     function triggerTransfer() external {

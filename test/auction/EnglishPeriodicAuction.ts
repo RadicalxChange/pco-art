@@ -5,6 +5,7 @@ import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('EnglishPeriodicAuction', function () {
   let owner: SignerWithAddress;
+  let nonOwner: SignerWithAddress;
   let instance: any;
 
   async function getInstance({
@@ -17,6 +18,18 @@ describe('EnglishPeriodicAuction', function () {
     );
     const pcoParamsFacetInstance = await pcoParamsFacetFactory.deploy();
     await pcoParamsFacetInstance.deployed();
+
+    const licenseMockFactory = await ethers.getContractFactory(
+      'NativeStewardLicenseMock',
+    );
+    const licenseMock = await licenseMockFactory.deploy();
+    await licenseMock.deployed();
+
+    const beneficiaryFactory = await ethers.getContractFactory(
+      'MockBeneficiary',
+    );
+    const beneficiaryMock = await beneficiaryFactory.deploy();
+    await beneficiaryMock.deployed();
 
     const facetFactory = await ethers.getContractFactory(
       'EnglishPeriodicAuctionFacet',
@@ -50,15 +63,53 @@ describe('EnglishPeriodicAuction', function () {
         ],
       },
       {
+        target: licenseMock.address,
+        initTarget: licenseMock.address,
+        initData: licenseMock.interface.encodeFunctionData(
+          'initializeStewardLicense(address,string,string,string)',
+          [await owner.getAddress(), 'name', 'symbol', 'tokenURI'],
+        ),
+        selectors: [
+          licenseMock.interface.getSighash(
+            'initializeStewardLicense(address,string,string,string)',
+          ),
+          licenseMock.interface.getSighash(
+            'triggerTransfer(address,address,uint256)',
+          ),
+        ],
+      },
+      {
+        target: beneficiaryMock.address,
+        initTarget: beneficiaryMock.address,
+        initData: beneficiaryMock.interface.encodeFunctionData(
+          'initializeMockBeneficiary(address)',
+          [await owner.getAddress()],
+        ),
+        selectors: [
+          beneficiaryMock.interface.getSighash(
+            'initializeMockBeneficiary(address)',
+          ),
+          beneficiaryMock.interface.getSighash('distribute()'),
+        ],
+      },
+      {
         target: facetInstance.address,
         initTarget: facetInstance.address,
         initData: facetInstance.interface.encodeFunctionData(
-          'initializeAuction(uint256,uint256,uint256,uint256)',
-          [auctionLengthSeconds, 200, 10, 20],
+          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
+          [
+            await nonOwner.getAddress(),
+            await owner.getAddress(),
+            0,
+            auctionLengthSeconds,
+            200,
+            10,
+            20,
+          ],
         ),
         selectors: [
           facetFactory.interface.getSighash(
-            'initializeAuction(uint256,uint256,uint256,uint256)',
+            'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
           ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
           facetFactory.interface.getSighash('isReadyForTransfer()'),
@@ -83,7 +134,7 @@ describe('EnglishPeriodicAuction', function () {
   }
 
   before(async function () {
-    [owner] = await ethers.getSigners();
+    [owner, nonOwner] = await ethers.getSigners();
   });
 
   describe('initializeAuction', function () {
@@ -115,7 +166,15 @@ describe('EnglishPeriodicAuction', function () {
       const instance = await getInstance();
 
       await expect(
-        instance.initializeAuction(100, 200, 10, 20),
+        instance.initializeAuction(
+          await nonOwner.getAddress(),
+          await owner.getAddress(),
+          0,
+          100,
+          200,
+          10,
+          20,
+        ),
       ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
     });
   });

@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import { EnglishPeriodicAuctionStorage } from './EnglishPeriodicAuctionStorage.sol';
 import { IPeriodicPCOParams } from '../pco/IPeriodicPCOParams.sol';
 import { IStewardLicense } from '../license/IStewardLicense.sol';
+import { IBeneficiary } from '../beneficiary/IBeneficiary.sol';
 
 /**
  * @title EnglishPeriodicAuctionInternal
@@ -13,6 +14,9 @@ abstract contract EnglishPeriodicAuctionInternal {
      * @notice Initialize parameters
      */
     function _initializeAuction(
+        address repossessor,
+        address initialBidder,
+        uint256 startingBid,
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
         uint256 bidExtensionWindowLengthSeconds,
@@ -22,11 +26,20 @@ abstract contract EnglishPeriodicAuctionInternal {
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         l.isInitialized = true;
+        l.repossessor = repossessor;
         l.auctionLengthSeconds = auctionLengthSeconds;
         l.minBidIncrement = minBidIncrement;
         l.bidExtensionWindowLengthSeconds = bidExtensionWindowLengthSeconds;
         l.bidExtensionSeconds = bidExtensionSeconds;
         l.currentAuctionLength = auctionLengthSeconds;
+
+        l.currentBid.round = 0;
+        l.currentBid.bidder = initialBidder;
+        l.currentBid.bidAmount = startingBid;
+        l.currentBid.collateralAmount = 0;
+        l.bids[initialBidder] = l.currentBid;
+
+        l.highestOutstandingBid.bidder = repossessor;
     }
 
     /**
@@ -203,29 +216,46 @@ abstract contract EnglishPeriodicAuctionInternal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        EnglishPeriodicAuctionStorage.Bid storage winningBid = l
-            .highestOutstandingBid;
+        address oldBidder = l.currentBid.bidder;
 
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime = block.timestamp;
 
+        if (l.highestOutstandingBid.round != l.currentAuctionRound) {
+            // No bids were placed, transfer to reposssessor
+            EnglishPeriodicAuctionStorage.Bid storage repossessorBid = l.bids[
+                l.repossessor
+            ];
+            repossessorBid.round = l.currentAuctionRound;
+            repossessorBid.bidAmount = 0;
+            repossessorBid.collateralAmount = 0;
+            repossessorBid.bidder = l.repossessor;
+
+            l.highestOutstandingBid = repossessorBid;
+        } else {
+            // Transfer bid to previous bidder's collateral
+            l.bids[oldBidder].collateralAmount = l.bids[oldBidder].bidAmount;
+        }
+
         // Reset auction
-        address oldBidder = l.currentBid.bidder;
-        l.currentBid = winningBid;
+        l.currentBid = l.highestOutstandingBid;
         l.currentBid.collateralAmount = 0;
         l.currentAuctionLength = l.auctionLengthSeconds;
         l.currentAuctionRound = l.currentAuctionRound + 1;
 
-        // TODO: Transfer to highest bidder
-        // IStewardLicense(address(this)).triggerTransfer(
-        //     oldBidder,
-        //     winningBid.bidder,
-        //     0
-        // );
+        // Transfer to highest bidder
+        IStewardLicense(address(this)).triggerTransfer(
+            oldBidder,
+            l.highestOutstandingBid.bidder,
+            0
+        );
 
-        // TODO: Transfer bid to previous bidder
-
-        // TODO: Transfer fee to beneficiary
+        // Distribute fee to beneficiary
+        uint256 feeAmount = l.highestOutstandingBid.collateralAmount -
+            l.highestOutstandingBid.bidAmount;
+        if (feeAmount > 0) {
+            IBeneficiary(address(this)).distribute{ value: feeAmount }();
+        }
     }
 
     /**

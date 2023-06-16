@@ -65,15 +65,18 @@ abstract contract StewardLicenseInternal is
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
-        // Delegatecall to facet
-        bytes4 functionSelector = IPeriodicAuction.isAuctionPeriod.selector;
-        bytes memory result = _callFacet(functionSelector, '');
+        // Disable transfers if not mint
+        if (from != address(0x0)) {
+            // Delegatecall to facet
+            bytes4 functionSelector = IPeriodicAuction.isAuctionPeriod.selector;
+            bytes memory result = _callFacet(functionSelector, '');
 
-        bool isAuctionPeriod = abi.decode(result, (bool));
-        require(
-            isAuctionPeriod == false,
-            'StewardLicenseFacet: Cannot transfer during auction period'
-        );
+            bool isAuctionPeriod = abi.decode(result, (bool));
+            require(
+                isAuctionPeriod == false,
+                'StewardLicenseFacet: Cannot transfer during auction period'
+            );
+        }
 
         super._beforeTokenTransfer(from, to, tokenId);
     }

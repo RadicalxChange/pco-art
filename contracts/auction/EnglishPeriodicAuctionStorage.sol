@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 library EnglishPeriodicAuctionStorage {
     struct Layout {
         bool isInitialized;
+        address repossessor;
         uint256 auctionLengthSeconds;
         uint256 minBidIncrement;
         uint256 bidExtensionWindowLengthSeconds;

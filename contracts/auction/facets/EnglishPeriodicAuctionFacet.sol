@@ -16,6 +16,9 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Initialize auction parameters
      */
     function initializeAuction(
+        address repossessor,
+        address initialBidder,
+        uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
@@ -27,6 +30,9 @@ contract EnglishPeriodicAuctionFacet is
         );
 
         _initializeAuction(
+            repossessor,
+            initialBidder,
+            startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,

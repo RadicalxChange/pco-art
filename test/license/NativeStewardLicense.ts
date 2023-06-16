@@ -171,7 +171,7 @@ describe('NativeStewardLicense', function () {
             await nonOwner.getAddress(),
             0,
           ),
-      ).to.be.revertedWith('FacetCallInternal: facet call failed');
+      ).to.be.revertedWith('PeriodicAuctionMock: failed');
     });
   });
 

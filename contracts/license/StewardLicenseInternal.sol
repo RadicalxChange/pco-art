@@ -11,7 +11,6 @@ import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { IPeriodicAuction } from '../auction/IPeriodicAuction.sol';
-import { FacetCallInternal } from '../proxies/FacetCallInternal.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -20,8 +19,7 @@ abstract contract StewardLicenseInternal is
     ERC721Base,
     ERC721Enumerable,
     ERC721Metadata,
-    ERC165Base,
-    FacetCallInternal
+    ERC165Base
 {
     /**
      * @notice Initialize license
@@ -67,11 +65,8 @@ abstract contract StewardLicenseInternal is
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
         // Disable transfers if not mint
         if (from != address(0x0)) {
-            // Delegatecall to facet
-            bytes4 functionSelector = IPeriodicAuction.isAuctionPeriod.selector;
-            bytes memory result = _callFacet(functionSelector, '');
-
-            bool isAuctionPeriod = abi.decode(result, (bool));
+            bool isAuctionPeriod = IPeriodicAuction(address(this))
+                .isAuctionPeriod();
             require(
                 isAuctionPeriod == false,
                 'StewardLicenseFacet: Cannot transfer during auction period'

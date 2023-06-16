@@ -3,9 +3,18 @@ import { expect } from 'chai';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
 
+function perYearToPerSecondRate(annualRate: number) {
+  return {
+    numerator: annualRate * 100,
+    denominator: 60 * 60 * 24 * 365 * 100,
+  };
+}
+
 describe('EnglishPeriodicAuction', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
+  let bidder1: SignerWithAddress;
+  let bidder2: SignerWithAddress;
   let instance: any;
 
   async function getInstance({
@@ -26,10 +35,14 @@ describe('EnglishPeriodicAuction', function () {
     await licenseMock.deployed();
 
     const beneficiaryFactory = await ethers.getContractFactory(
-      'MockBeneficiary',
+      'BeneficiaryMock',
     );
     const beneficiaryMock = await beneficiaryFactory.deploy();
     await beneficiaryMock.deployed();
+
+    const allowlistFactory = await ethers.getContractFactory('AllowlistMock');
+    const allowlistMock = await allowlistFactory.deploy();
+    await allowlistMock.deployed();
 
     const facetFactory = await ethers.getContractFactory(
       'EnglishPeriodicAuctionFacet',
@@ -38,6 +51,7 @@ describe('EnglishPeriodicAuction', function () {
     await facetInstance.deployed();
 
     const factory = await ethers.getContractFactory('SingleCutDiamond');
+    const { numerator, denominator } = perYearToPerSecondRate(0.1);
     instance = await factory.deploy([
       {
         target: pcoParamsFacetInstance.address,
@@ -48,8 +62,8 @@ describe('EnglishPeriodicAuction', function () {
             await owner.getAddress(),
             licensePeriod,
             initialPeriodStartTime,
-            3,
-            4,
+            numerator,
+            denominator,
           ],
         ),
         selectors: [
@@ -60,6 +74,12 @@ describe('EnglishPeriodicAuction', function () {
             'initialPeriodStartTime()',
           ),
           pcoParamsFacetInstance.interface.getSighash('licensePeriod()'),
+          pcoParamsFacetInstance.interface.getSighash(
+            'perSecondFeeNumerator()',
+          ),
+          pcoParamsFacetInstance.interface.getSighash(
+            'perSecondFeeDenominator()',
+          ),
         ],
       },
       {
@@ -93,6 +113,18 @@ describe('EnglishPeriodicAuction', function () {
         ],
       },
       {
+        target: allowlistMock.address,
+        initTarget: allowlistMock.address,
+        initData: allowlistMock.interface.encodeFunctionData(
+          'setIsAllowed(bool)',
+          [true],
+        ),
+        selectors: [
+          allowlistMock.interface.getSighash('isAllowed(address)'),
+          allowlistMock.interface.getSighash('setIsAllowed(bool)'),
+        ],
+      },
+      {
         target: facetInstance.address,
         initTarget: facetInstance.address,
         initData: facetInstance.interface.encodeFunctionData(
@@ -113,13 +145,17 @@ describe('EnglishPeriodicAuction', function () {
           ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
           facetFactory.interface.getSighash('isReadyForTransfer()'),
+          facetFactory.interface.getSighash('placeBid(uint256)'),
           facetFactory.interface.getSighash('closeAuction()'),
+          facetFactory.interface.getSighash('calculateFeeFromBid(uint256)'),
           facetFactory.interface.getSighash('auctionLengthSeconds()'),
           facetFactory.interface.getSighash('minBidIncrement()'),
           facetFactory.interface.getSighash(
             'bidExtensionWindowLengthSeconds()',
           ),
           facetFactory.interface.getSighash('bidExtensionSeconds()'),
+          facetFactory.interface.getSighash('bidOf(address)'),
+          facetFactory.interface.getSighash('highestBid()'),
         ],
       },
     ]);
@@ -134,7 +170,7 @@ describe('EnglishPeriodicAuction', function () {
   }
 
   before(async function () {
-    [owner, nonOwner] = await ethers.getSigners();
+    [owner, nonOwner, bidder1, bidder2] = await ethers.getSigners();
   });
 
   describe('initializeAuction', function () {
@@ -337,6 +373,196 @@ describe('EnglishPeriodicAuction', function () {
       await instance.closeAuction();
 
       expect(await instance.isReadyForTransfer()).to.be.equal(false);
+    });
+  });
+
+  describe('calculateFeeFromBid', function () {
+    it('should return correct fee amount', async function () {
+      const instance = await getInstance({
+        licensePeriod: 60 * 60 * 24 * 365,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const expectedFeeAmount = ethers.utils.parseEther('0.099999999988128000');
+
+      expect(await instance.calculateFeeFromBid(bidAmount)).to.be.equal(
+        expectedFeeAmount,
+      );
+    });
+  });
+
+  describe('placeBid', function () {
+    it('should revert if not in auction period', async function () {
+      // Auction start: Now + 200
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) + 200,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await expect(
+        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: can only place bid in auction period',
+      );
+    });
+
+    it('should revert if auction is over and ready for transfer', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // Next auction start: Now + 900
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await expect(
+        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: auction is over and awaiting transfer',
+      );
+    });
+
+    it('should revert if bidder is not allowed', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      const allowlistMock = await ethers.getContractAt(
+        'AllowlistMock',
+        instance.address,
+      );
+      await allowlistMock.setIsAllowed(false);
+
+      await expect(
+        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: sender is not allowed to place bid',
+      );
+    });
+
+    it('should revert if bid does not reach minimum increment', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = 150;
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await expect(
+        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
+      );
+    });
+
+    it('should revert if bid is not highest', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('0.9');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: feeAmount1 });
+
+      await expect(
+        instance.connect(bidder2).placeBid(bidAmount2, { value: feeAmount2 }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
+      );
+    });
+
+    it('should revert if bid amount is not correct', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await expect(
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: feeAmount.add(1) }),
+      ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
+    });
+
+    it('should revert if bid amount is not correct for existing bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount });
+
+      await expect(
+        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+      ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
+    });
+
+    it('should place new bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+
+      await instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount });
+
+      const bid = await instance.bidOf(bidder1.address);
+      const highestBid = await instance.highestBid();
+
+      expect(bid.round).to.be.equal(0);
+      expect(bid.bidder).to.be.equal(bidder1.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount);
+      expect(bid.collateralAmount).to.be.equal(feeAmount);
+
+      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount);
+      expect(highestBid.collateralAmount).to.be.equal(feeAmount);
     });
   });
 

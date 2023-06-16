@@ -5,11 +5,14 @@ import { EnglishPeriodicAuctionStorage } from './EnglishPeriodicAuctionStorage.s
 import { IPeriodicPCOParams } from '../pco/IPeriodicPCOParams.sol';
 import { IStewardLicense } from '../license/IStewardLicense.sol';
 import { IBeneficiary } from '../beneficiary/IBeneficiary.sol';
+import { IEnglishPeriodicAuctionInternal } from './IEnglishPeriodicAuctionInternal.sol';
 
 /**
  * @title EnglishPeriodicAuctionInternal
  */
-abstract contract EnglishPeriodicAuctionInternal {
+abstract contract EnglishPeriodicAuctionInternal is
+    IEnglishPeriodicAuctionInternal
+{
     /**
      * @notice Initialize parameters
      */
@@ -39,7 +42,7 @@ abstract contract EnglishPeriodicAuctionInternal {
         l.currentBid.collateralAmount = 0;
         l.bids[initialBidder] = l.currentBid;
 
-        l.highestOutstandingBid.bidder = repossessor;
+        l.highestBid.bidder = repossessor;
     }
 
     /**
@@ -85,6 +88,27 @@ abstract contract EnglishPeriodicAuctionInternal {
     }
 
     /**
+     * @notice Get highest outstanding bid
+     */
+    function _highestBid() internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().highestBid;
+    }
+
+    /**
+     * @notice Get current bid
+     */
+    function _currentBid() internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().currentBid;
+    }
+
+    /**
+     * @notice Get bid for address
+     */
+    function _bidOf(address bidder) internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().bids[bidder];
+    }
+
+    /**
      * @notice Get is auction period
      */
     function _isAuctionPeriod() internal view returns (bool) {
@@ -112,11 +136,11 @@ abstract contract EnglishPeriodicAuctionInternal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        EnglishPeriodicAuctionStorage.Bid storage bid = l.bids[bidder];
+        Bid storage bid = l.bids[bidder];
 
         uint256 feeAmount;
         if (bidder == l.currentBid.bidder) {
-            // If existing bidder, collateral is entire fee amount
+            // If current bidder, collateral is entire fee amount
             feeAmount = collateralAmount;
         } else {
             // If new bidder, collateral is current bid + fee
@@ -143,9 +167,8 @@ abstract contract EnglishPeriodicAuctionInternal {
 
         // Check if highest bid
         require(
-            bidAmount >=
-                l.highestOutstandingBid.bidAmount + l.minBidIncrement ||
-                l.highestOutstandingBid.bidder == bidder,
+            bidAmount >= l.highestBid.bidAmount + l.minBidIncrement ||
+                l.highestBid.bidder == bidder,
             'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
         );
 
@@ -154,7 +177,7 @@ abstract contract EnglishPeriodicAuctionInternal {
         bid.bidAmount = bidAmount;
         bid.round = l.currentAuctionRound;
 
-        l.highestOutstandingBid = bid;
+        l.highestBid = bid;
 
         // Check if auction should extend
         uint256 timeRemaining;
@@ -185,11 +208,11 @@ abstract contract EnglishPeriodicAuctionInternal {
             'EnglishPeriodicAuction: Cannot withdraw bid if current bidder'
         );
         require(
-            bidder != l.highestOutstandingBid.bidder,
+            bidder != l.highestBid.bidder,
             'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder'
         );
 
-        EnglishPeriodicAuctionStorage.Bid storage bid = l.bids[bidder];
+        Bid storage bid = l.bids[bidder];
 
         require(
             bid.collateralAmount > 0,
@@ -221,24 +244,22 @@ abstract contract EnglishPeriodicAuctionInternal {
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime = block.timestamp;
 
-        if (l.highestOutstandingBid.round != l.currentAuctionRound) {
+        if (l.highestBid.round != l.currentAuctionRound) {
             // No bids were placed, transfer to reposssessor
-            EnglishPeriodicAuctionStorage.Bid storage repossessorBid = l.bids[
-                l.repossessor
-            ];
+            Bid storage repossessorBid = l.bids[l.repossessor];
             repossessorBid.round = l.currentAuctionRound;
             repossessorBid.bidAmount = 0;
             repossessorBid.collateralAmount = 0;
             repossessorBid.bidder = l.repossessor;
 
-            l.highestOutstandingBid = repossessorBid;
+            l.highestBid = repossessorBid;
         } else {
             // Transfer bid to previous bidder's collateral
             l.bids[oldBidder].collateralAmount = l.bids[oldBidder].bidAmount;
         }
 
         // Reset auction
-        l.currentBid = l.highestOutstandingBid;
+        l.currentBid = l.highestBid;
         l.currentBid.collateralAmount = 0;
         l.currentAuctionLength = l.auctionLengthSeconds;
         l.currentAuctionRound = l.currentAuctionRound + 1;
@@ -246,13 +267,13 @@ abstract contract EnglishPeriodicAuctionInternal {
         // Transfer to highest bidder
         IStewardLicense(address(this)).triggerTransfer(
             oldBidder,
-            l.highestOutstandingBid.bidder,
+            l.highestBid.bidder,
             0
         );
 
         // Distribute fee to beneficiary
-        uint256 feeAmount = l.highestOutstandingBid.collateralAmount -
-            l.highestOutstandingBid.bidAmount;
+        uint256 feeAmount = l.highestBid.collateralAmount -
+            l.highestBid.bidAmount;
         if (feeAmount > 0) {
             IBeneficiary(address(this)).distribute{ value: feeAmount }();
         }
@@ -293,8 +314,12 @@ abstract contract EnglishPeriodicAuctionInternal {
             .perSecondFeeNumerator();
         uint256 perSecondFeeDenominator = IPeriodicPCOParams(address(this))
             .perSecondFeeDenominator();
+        uint256 licensePeriod = IPeriodicPCOParams(address(this))
+            .licensePeriod();
 
-        return (bidAmount * perSecondFeeNumerator) / perSecondFeeDenominator;
+        return
+            ((bidAmount * perSecondFeeNumerator) / perSecondFeeDenominator) *
+            licensePeriod;
     }
 
     /**

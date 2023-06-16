@@ -94,6 +94,15 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Calculate fee from bid
+     */
+    function calculateFeeFromBid(
+        uint256 bidAmount
+    ) external view returns (uint256) {
+        return _calculateFeeFromBid(bidAmount);
+    }
+
+    /**
      * @notice Get auction length
      */
     function auctionLengthSeconds() external view returns (uint256) {
@@ -119,5 +128,26 @@ contract EnglishPeriodicAuctionFacet is
      */
     function bidExtensionSeconds() external view returns (uint256) {
         return _bidExtensionSeconds();
+    }
+
+    /**
+     * @notice Get highest outstanding bid
+     */
+    function highestBid() external view returns (Bid memory) {
+        return _highestBid();
+    }
+
+    /**
+     * @notice Get current bid
+     */
+    function currentBid() external view returns (Bid memory) {
+        return _currentBid();
+    }
+
+    /**
+     * @notice Get bid for address
+     */
+    function bidOf(address bidder) external view returns (Bid memory) {
+        return _bidOf(bidder);
     }
 }

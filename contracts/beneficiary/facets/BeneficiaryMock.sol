@@ -4,10 +4,7 @@ pragma solidity ^0.8.17;
 import { IBeneficiary } from '../IBeneficiary.sol';
 import { OwnableInternal } from '@solidstate/contracts/access/ownable/OwnableInternal.sol';
 
-/**
- * @title MockBeneficiary
- */
-contract MockBeneficiary is IBeneficiary, OwnableInternal {
+contract BeneficiaryMock is IBeneficiary, OwnableInternal {
     /**
      * @notice Initialize beneficiary
      */

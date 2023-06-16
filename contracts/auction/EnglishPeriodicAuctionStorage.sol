@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+import { IEnglishPeriodicAuctionInternal } from './IEnglishPeriodicAuctionInternal.sol';
+
 library EnglishPeriodicAuctionStorage {
     struct Layout {
         bool isInitialized;
@@ -12,16 +14,9 @@ library EnglishPeriodicAuctionStorage {
         uint256 lastPeriodEndTime;
         uint256 currentAuctionRound;
         uint256 currentAuctionLength;
-        mapping(address => Bid) bids;
-        Bid currentBid;
-        Bid highestOutstandingBid;
-    }
-
-    struct Bid {
-        uint256 round;
-        address bidder;
-        uint256 bidAmount;
-        uint256 collateralAmount;
+        mapping(address => IEnglishPeriodicAuctionInternal.Bid) bids;
+        IEnglishPeriodicAuctionInternal.Bid currentBid;
+        IEnglishPeriodicAuctionInternal.Bid highestBid;
     }
 
     bytes32 private constant STORAGE_SLOT =

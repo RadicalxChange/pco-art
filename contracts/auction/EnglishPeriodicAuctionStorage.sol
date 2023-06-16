@@ -20,7 +20,6 @@ library EnglishPeriodicAuctionStorage {
         uint256 round;
         address bidder;
         uint256 bidAmount;
-        uint256 feeAmount;
         uint256 collateralAmount;
     }
 

@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import { EnglishPeriodicAuctionStorage } from './EnglishPeriodicAuctionStorage.sol';
 import { IPeriodicPCOParams } from '../pco/IPeriodicPCOParams.sol';
+import { IStewardLicense } from '../license/IStewardLicense.sol';
 
 /**
  * @title EnglishPeriodicAuctionInternal
@@ -90,7 +91,11 @@ abstract contract EnglishPeriodicAuctionInternal {
     /**
      * @notice Place a bid
      */
-    function _placeBid(address bidder, uint256 collateralAmount) internal {
+    function _placeBid(
+        address bidder,
+        uint256 bidAmount,
+        uint256 collateralAmount
+    ) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
@@ -105,19 +110,28 @@ abstract contract EnglishPeriodicAuctionInternal {
             feeAmount = collateralAmount - l.currentBid.bidAmount;
         }
 
-        uint256 bidAmount;
         if (bid.round == l.currentAuctionRound) {
             // If bidder has bid for round, add to existing bid
-            bidAmount = _calculateBidFromFee(bid.feeAmount + collateralAmount);
+            require(
+                _checkBidAmount(
+                    bidAmount,
+                    bid.collateralAmount + collateralAmount
+                ),
+                'EnglishPeriodicAuction: Incorrect bid amount'
+            );
             bid.collateralAmount += collateralAmount;
         } else {
-            bidAmount = _calculateBidFromFee(feeAmount);
+            require(
+                _checkBidAmount(bidAmount, feeAmount),
+                'EnglishPeriodicAuction: Incorrect bid amount'
+            );
             bid.collateralAmount = collateralAmount;
         }
 
         // Check if highest bid
         require(
-            bidAmount > l.highestOutstandingBid.bidAmount ||
+            bidAmount >=
+                l.highestOutstandingBid.bidAmount + l.minBidIncrement ||
                 l.highestOutstandingBid.bidder == bidder,
             'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
         );
@@ -147,24 +161,71 @@ abstract contract EnglishPeriodicAuctionInternal {
     }
 
     /**
-     * @notice Trigger a transfer to the highest bidder
+     * @notice Withdraw bid collateral if not highest bidder
      */
-    function _triggerTransfer() internal {
+    function _withdrawBid(address bidder) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        // TODO: Transfer to highest bidder
+        require(
+            bidder != l.currentBid.bidder,
+            'EnglishPeriodicAuction: Cannot withdraw bid if current bidder'
+        );
+        require(
+            bidder != l.highestOutstandingBid.bidder,
+            'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder'
+        );
 
-        // TODO: Transfer bid to previous bidder
+        EnglishPeriodicAuctionStorage.Bid storage bid = l.bids[bidder];
 
-        // TODO: Transfer fee to beneficiary
+        require(
+            bid.collateralAmount > 0,
+            'EnglishPeriodicAuction: No collateral to withdraw'
+        );
+
+        // Reset collateral and bid
+        uint256 collateralAmount = bid.collateralAmount;
+        bid.collateralAmount = 0;
+        bid.bidAmount = 0;
+
+        // Transfer collateral back to bidder
+        (bool success, ) = bidder.call{ value: collateralAmount }('');
+        require(
+            success,
+            'EnglishPeriodicAuction: Failed to withdraw collateral'
+        );
+    }
+
+    /**
+     * @notice Close auction and trigger a transfer to the highest bidder
+     */
+    function _closeAuction() internal {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        EnglishPeriodicAuctionStorage.Bid storage winningBid = l
+            .highestOutstandingBid;
 
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime = block.timestamp;
 
         // Reset auction
+        address oldBidder = l.currentBid.bidder;
+        l.currentBid = winningBid;
+        l.currentBid.collateralAmount = 0;
         l.currentAuctionLength = l.auctionLengthSeconds;
         l.currentAuctionRound = l.currentAuctionRound + 1;
+
+        // TODO: Transfer to highest bidder
+        // IStewardLicense(address(this)).triggerTransfer(
+        //     oldBidder,
+        //     winningBid.bidder,
+        //     0
+        // );
+
+        // TODO: Transfer bid to previous bidder
+
+        // TODO: Transfer fee to beneficiary
     }
 
     /**
@@ -193,20 +254,6 @@ abstract contract EnglishPeriodicAuctionInternal {
     }
 
     /**
-     * @notice Calculate bid from fee
-     */
-    function _calculateBidFromFee(
-        uint256 feeAmount
-    ) internal view returns (uint256) {
-        uint256 perSecondFeeNumerator = IPeriodicPCOParams(address(this))
-            .perSecondFeeNumerator();
-        uint256 perSecondFeeDenominator = IPeriodicPCOParams(address(this))
-            .perSecondFeeDenominator();
-
-        return (feeAmount * perSecondFeeDenominator) / perSecondFeeNumerator;
-    }
-
-    /**
      * @notice Calculate fee from bid
      */
     function _calculateFeeFromBid(
@@ -218,5 +265,17 @@ abstract contract EnglishPeriodicAuctionInternal {
             .perSecondFeeDenominator();
 
         return (bidAmount * perSecondFeeNumerator) / perSecondFeeDenominator;
+    }
+
+    /**
+     * @notice Check that fee is within rounding error of bid amount
+     */
+    function _checkBidAmount(
+        uint256 bidAmount,
+        uint256 feeAmount
+    ) internal view returns (bool) {
+        uint256 calculatedFeeAmount = _calculateFeeFromBid(bidAmount);
+
+        return calculatedFeeAmount == feeAmount;
     }
 }

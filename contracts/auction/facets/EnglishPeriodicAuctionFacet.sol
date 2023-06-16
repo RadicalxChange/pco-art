@@ -51,7 +51,7 @@ contract EnglishPeriodicAuctionFacet is
     /**
      * @notice Place a bid
      */
-    function placeBid() external payable {
+    function placeBid(uint256 bidAmount) external payable {
         require(
             _isAuctionPeriod(),
             'EnglishPeriodicAuction: can only place bid in auction period'
@@ -65,19 +65,26 @@ contract EnglishPeriodicAuctionFacet is
             'EnglishPeriodicAuction: sender is not allowed to place bid'
         );
 
-        _placeBid(msg.sender, msg.value);
+        _placeBid(msg.sender, bidAmount, msg.value);
     }
 
     /**
-     * @notice Trigger a transfer to the highest bidder
+     * @notice Withdraw bid collateral
      */
-    function triggerTransfer() external {
+    function withdrawBid() external {
+        _withdrawBid(msg.sender);
+    }
+
+    /**
+     * @notice Close auction and trigger a transfer to the highest bidder
+     */
+    function closeAuction() external {
         require(
             _isReadyForTransfer(),
             'EnglishPeriodicAuction: auction is not over'
         );
 
-        _triggerTransfer();
+        _closeAuction();
     }
 
     /**

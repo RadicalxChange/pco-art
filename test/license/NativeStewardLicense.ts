@@ -57,6 +57,12 @@ describe('NativeStewardLicense', function () {
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('burn(uint256)'),
+      facetFactory.interface.getSighash(
+        'triggerTransfer(address,address,uint256)',
+      ),
+      facetFactory.interface.getSighash(
+        'testTriggerTransfer(address,address,uint256)',
+      ),
       erc721Receiver.interface.getSighash(
         'onERC721Received(address,address,uint256,bytes)',
       ),
@@ -166,6 +172,32 @@ describe('NativeStewardLicense', function () {
             0,
           ),
       ).to.be.revertedWith('FacetCallInternal: facet call failed');
+    });
+  });
+
+  describe('triggerTransfer', function () {
+    it('should succeed if called by facet', async function () {
+      await instance['testTriggerTransfer(address,address,uint256)'](
+        await owner.getAddress(),
+        await nonOwner.getAddress(),
+        0,
+      );
+
+      expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
+        await nonOwner.getAddress(),
+      );
+    });
+
+    it('should fail if not called by facet', async function () {
+      await expect(
+        instance['triggerTransfer(address,address,uint256)'](
+          await owner.getAddress(),
+          await nonOwner.getAddress(),
+          0,
+        ),
+      ).to.be.revertedWith(
+        'NativeStewardLicense: Trigger transfer can only be called from another facet',
+      );
     });
   });
 });

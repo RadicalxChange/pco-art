@@ -10,12 +10,13 @@ import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { StewardLicenseInternal } from '../StewardLicenseInternal.sol';
+import { IStewardLicense } from '../IStewardLicense.sol';
 
 /**
  * @title NativeStewardLicenseFacet
  * @dev ERC-721 token license for Steward. Transfers are disabled during an auction
  */
-contract NativeStewardLicenseFacet is StewardLicenseInternal {
+contract NativeStewardLicenseFacet is StewardLicenseInternal, IStewardLicense {
     /**
      * @notice Initialize license
      */
@@ -31,5 +32,21 @@ contract NativeStewardLicenseFacet is StewardLicenseInternal {
         );
 
         _initializeStewardLicense(_steward, name, symbol, baseURI);
+    }
+
+    /**
+     * @notice Trigger transfer of license
+     */
+    function triggerTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external {
+        require(
+            msg.sender == address(this),
+            'NativeStewardLicense: Trigger transfer can only be called from another facet'
+        );
+
+        _safeTransfer(from, to, tokenId, '');
     }
 }

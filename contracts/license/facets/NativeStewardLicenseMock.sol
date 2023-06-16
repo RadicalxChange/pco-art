@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import { NativeStewardLicenseFacet } from './NativeStewardLicenseFacet.sol';
+import { IStewardLicense } from '../IStewardLicense.sol';
 
 contract NativeStewardLicenseMock is NativeStewardLicenseFacet {
     function mint(address account, uint256 tokenId) external {
@@ -10,5 +11,13 @@ contract NativeStewardLicenseMock is NativeStewardLicenseFacet {
 
     function burn(uint256 tokenId) external {
         _burn(tokenId);
+    }
+
+    function testTriggerTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external {
+        IStewardLicense(address(this)).triggerTransfer(from, to, tokenId);
     }
 }

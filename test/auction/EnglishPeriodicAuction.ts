@@ -62,7 +62,7 @@ describe('EnglishPeriodicAuction', function () {
           ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
           facetFactory.interface.getSighash('isReadyForTransfer()'),
-          facetFactory.interface.getSighash('triggerTransfer()'),
+          facetFactory.interface.getSighash('closeAuction()'),
           facetFactory.interface.getSighash('auctionLengthSeconds()'),
           facetFactory.interface.getSighash('minBidIncrement()'),
           facetFactory.interface.getSighash(
@@ -142,7 +142,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
 
       expect(await instance.isAuctionPeriod()).to.be.equal(false);
     });
@@ -159,7 +159,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
       await time.increase(1050);
 
       expect(await instance.isAuctionPeriod()).to.be.equal(true);
@@ -177,9 +177,9 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
       await time.increase(1150);
-      await instance.triggerTransfer();
+      await instance.closeAuction();
 
       expect(await instance.isAuctionPeriod()).to.be.equal(false);
     });
@@ -220,7 +220,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
 
       expect(await instance.isReadyForTransfer()).to.be.equal(false);
     });
@@ -237,7 +237,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
       await time.increase(1050);
 
       expect(await instance.isReadyForTransfer()).to.be.equal(false);
@@ -255,7 +255,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
       await time.increase(1150);
 
       expect(await instance.isReadyForTransfer()).to.be.equal(true);
@@ -273,15 +273,15 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.triggerTransfer();
+      await instance.closeAuction();
       await time.increase(1150);
-      await instance.triggerTransfer();
+      await instance.closeAuction();
 
       expect(await instance.isReadyForTransfer()).to.be.equal(false);
     });
   });
 
-  describe('triggerTransfer', function () {
+  describe('closeAuction', function () {
     it('should revert if auction is not over', async function () {
       // Auction start: Now
       // Auction end: Now + 100
@@ -290,7 +290,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      await expect(instance.triggerTransfer()).to.be.revertedWith(
+      await expect(instance.closeAuction()).to.be.revertedWith(
         'EnglishPeriodicAuction: auction is not over',
       );
     });

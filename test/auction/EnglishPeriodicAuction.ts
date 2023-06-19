@@ -21,6 +21,7 @@ describe('EnglishPeriodicAuction', function () {
     auctionLengthSeconds = 100,
     licensePeriod = 1,
     initialPeriodStartTime = 2,
+    startingBid = ethers.utils.parseEther('1'),
   } = {}) {
     const pcoParamsFacetFactory = await ethers.getContractFactory(
       'OwnablePeriodicPCOParamsFacet',
@@ -132,7 +133,7 @@ describe('EnglishPeriodicAuction', function () {
           [
             await nonOwner.getAddress(),
             await owner.getAddress(),
-            0,
+            startingBid,
             auctionLengthSeconds,
             200,
             10,
@@ -401,9 +402,12 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
       await expect(
-        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: can only place bid in auction period',
       );
@@ -421,9 +425,12 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
       await expect(
-        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: auction is over and awaiting transfer',
       );
@@ -440,6 +447,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
       const allowlistMock = await ethers.getContractAt(
         'AllowlistMock',
@@ -448,7 +456,9 @@ describe('EnglishPeriodicAuction', function () {
       await allowlistMock.setIsAllowed(false);
 
       await expect(
-        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: sender is not allowed to place bid',
       );
@@ -463,11 +473,22 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      const bidAmount = 150;
-      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+
+      const bidAmount2 = ethers.utils.parseEther('1.1').add(100);
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: collateralAmount1 });
 
       await expect(
-        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+        instance.connect(bidder2).placeBid(bidAmount2, {
+          value: collateralAmount2,
+        }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
       );
@@ -484,16 +505,20 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
 
       const bidAmount2 = ethers.utils.parseEther('0.9');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: feeAmount1 });
+        .placeBid(bidAmount1, { value: collateralAmount1 });
 
       await expect(
-        instance.connect(bidder2).placeBid(bidAmount2, { value: feeAmount2 }),
+        instance.connect(bidder2).placeBid(bidAmount2, {
+          value: collateralAmount2,
+        }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
       );
@@ -510,15 +535,46 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: feeAmount.add(1) }),
+          .placeBid(bidAmount, { value: collateralAmount.add(1) }),
       ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
     });
 
-    it('should revert if bid amount is not correct for existing bid', async function () {
+    it('should revert if current highest bidder tries to lower bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+
+      const bidAmount2 = ethers.utils.parseEther('0.9');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: collateralAmount1 });
+
+      await expect(
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount2, { value: collateralAmount2 }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
+      );
+    });
+
+    it('should revert if bid amount is not correct', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100
       const instance = await getInstance({
@@ -529,12 +585,35 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-
-      await instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount });
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
       await expect(
-        instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount }),
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: collateralAmount.add(1) }),
       ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
+    });
+
+    it('should revert if collateral does not cover current bid amount', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('0.9');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount;
+
+      await expect(
+        instance
+          .connect(bidder1)
+          .placeBid(bidAmount, { value: collateralAmount }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Collateral must be greater than current bid',
+      );
     });
 
     it('should place new bid', async function () {
@@ -546,23 +625,126 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      const bidAmount = ethers.utils.parseEther('1');
+      const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
 
-      await instance.connect(bidder1).placeBid(bidAmount, { value: feeAmount });
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
 
       const bid = await instance.bidOf(bidder1.address);
       const highestBid = await instance.highestBid();
 
-      expect(bid.round).to.be.equal(0);
+      expect(bid.round).to.be.equal(1);
       expect(bid.bidder).to.be.equal(bidder1.address);
       expect(bid.bidAmount).to.be.equal(bidAmount);
-      expect(bid.collateralAmount).to.be.equal(feeAmount);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount);
 
-      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.round).to.be.equal(1);
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
-      expect(highestBid.collateralAmount).to.be.equal(feeAmount);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
+    it('should place bid lower than old bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('0.9');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      const bid = await instance.bidOf(bidder1.address);
+      const highestBid = await instance.highestBid();
+
+      expect(bid.round).to.be.equal(1);
+      expect(bid.bidder).to.be.equal(bidder1.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount);
+
+      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
+    it('should place additional bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1'));
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: collateralAmount1 });
+      await instance.connect(bidder1).placeBid(bidAmount2, {
+        value: collateralAmount2.sub(collateralAmount1),
+      });
+
+      const bid = await instance.bidOf(bidder1.address);
+      const highestBid = await instance.highestBid();
+
+      expect(bid.round).to.be.equal(1);
+      expect(bid.bidder).to.be.equal(bidder1.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount2);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount2);
+
+      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount2);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount2);
+    });
+
+    it('should place bid if current bidder', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount;
+
+      await instance
+        .connect(owner)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      const bid = await instance.bidOf(owner.address);
+      const highestBid = await instance.highestBid();
+
+      expect(bid.round).to.be.equal(1);
+      expect(bid.bidder).to.be.equal(owner.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount);
+
+      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.bidder).to.be.equal(owner.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
     });
   });
 

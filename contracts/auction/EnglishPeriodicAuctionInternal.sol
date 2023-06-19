@@ -35,8 +35,9 @@ abstract contract EnglishPeriodicAuctionInternal is
         l.bidExtensionWindowLengthSeconds = bidExtensionWindowLengthSeconds;
         l.bidExtensionSeconds = bidExtensionSeconds;
         l.currentAuctionLength = auctionLengthSeconds;
+        l.currentAuctionRound = 1;
 
-        l.currentBid.round = 0;
+        l.currentBid.round = 1;
         l.currentBid.bidder = initialBidder;
         l.currentBid.bidAmount = startingBid;
         l.currentBid.collateralAmount = 0;
@@ -138,39 +139,38 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         Bid storage bid = l.bids[bidder];
 
+        // Check if highest bid
+        require(
+            bidAmount >= l.highestBid.bidAmount + l.minBidIncrement,
+            'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
+        );
+
+        uint256 totalCollateralAmount;
+        if (bid.round == l.currentAuctionRound) {
+            // If bidder has bid for round, add to existing bid
+            totalCollateralAmount = bid.collateralAmount + collateralAmount;
+        } else {
+            totalCollateralAmount = collateralAmount;
+        }
+
         uint256 feeAmount;
         if (bidder == l.currentBid.bidder) {
             // If current bidder, collateral is entire fee amount
-            feeAmount = collateralAmount;
+            feeAmount = totalCollateralAmount;
         } else {
+            require(
+                totalCollateralAmount > l.currentBid.bidAmount,
+                'EnglishPeriodicAuction: Collateral must be greater than current bid'
+            );
             // If new bidder, collateral is current bid + fee
-            feeAmount = collateralAmount - l.currentBid.bidAmount;
+            feeAmount = totalCollateralAmount - l.currentBid.bidAmount;
         }
 
-        if (bid.round == l.currentAuctionRound) {
-            // If bidder has bid for round, add to existing bid
-            require(
-                _checkBidAmount(
-                    bidAmount,
-                    bid.collateralAmount + collateralAmount
-                ),
-                'EnglishPeriodicAuction: Incorrect bid amount'
-            );
-            bid.collateralAmount += collateralAmount;
-        } else {
-            require(
-                _checkBidAmount(bidAmount, feeAmount),
-                'EnglishPeriodicAuction: Incorrect bid amount'
-            );
-            bid.collateralAmount = collateralAmount;
-        }
-
-        // Check if highest bid
         require(
-            bidAmount >= l.highestBid.bidAmount + l.minBidIncrement ||
-                l.highestBid.bidder == bidder,
-            'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
+            _checkBidAmount(bidAmount, feeAmount),
+            'EnglishPeriodicAuction: Incorrect bid amount'
         );
+        bid.collateralAmount = totalCollateralAmount;
 
         // Save bid
         bid.bidder = bidder;

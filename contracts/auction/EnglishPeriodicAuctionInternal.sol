@@ -152,7 +152,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         uint256 feeAmount;
-        if (bidder == l.currentBid.bidder) {
+        address currentBidder = IStewardLicense(address(this)).ownerOf(0);
+        if (bidder == currentBidder) {
             // If current bidder, collateral is entire fee amount
             feeAmount = totalCollateralAmount;
         } else {
@@ -200,8 +201,10 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
+        address currentBidder = IStewardLicense(address(this)).ownerOf(0);
+
         require(
-            bidder != l.currentBid.bidder,
+            bidder != currentBidder,
             'EnglishPeriodicAuction: Cannot withdraw bid if current bidder'
         );
         require(
@@ -236,7 +239,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        address oldBidder = l.currentBid.bidder;
+        address oldBidder = IStewardLicense(address(this)).ownerOf(0);
 
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime = block.timestamp;
@@ -253,7 +256,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             l.highestBid = repossessorBid;
         } else {
             // Transfer bid to previous bidder's collateral
-            l.bids[oldBidder].collateralAmount = l.bids[oldBidder].bidAmount;
+            l.bids[oldBidder].collateralAmount = l.currentBid.bidAmount;
         }
 
         // Reset auction

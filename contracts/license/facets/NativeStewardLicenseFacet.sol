@@ -47,6 +47,7 @@ contract NativeStewardLicenseFacet is StewardLicenseInternal, IStewardLicense {
             'NativeStewardLicense: Trigger transfer can only be called from another facet'
         );
 
-        _safeTransfer(from, to, tokenId, '');
+        // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
+        _transfer(from, to, tokenId);
     }
 }

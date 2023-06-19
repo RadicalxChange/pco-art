@@ -100,6 +100,9 @@ describe('EnglishPeriodicAuction', function () {
             'triggerTransfer(address,address,uint256)',
           ),
           licenseMock.interface.getSighash('ownerOf(uint256)'),
+          licenseMock.interface.getSighash(
+            'transferFrom(address,address,uint256)',
+          ),
         ],
       },
       {
@@ -163,6 +166,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('currentBid()'),
           facetFactory.interface.getSighash('auctionStartTime()'),
           facetFactory.interface.getSighash('auctionEndTime()'),
+          facetFactory.interface.getSighash('withdrawBid()'),
         ],
       },
     ]);
@@ -974,6 +978,279 @@ describe('EnglishPeriodicAuction', function () {
 
       // No fee is distributed to beneficiary
       expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(0);
+    });
+  });
+
+  describe('withdrawBid', function () {
+    it('should revert if current bidder tries to withdraw bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      await expect(instance.connect(owner).withdrawBid()).to.be.revertedWith(
+        'EnglishPeriodicAuction: Cannot withdraw bid if current bidder',
+      );
+    });
+
+    it('should revert if highest bidder tries to withdraw bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      await expect(instance.connect(bidder1).withdrawBid()).to.be.revertedWith(
+        'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder',
+      );
+    });
+
+    it('should revert if no collateral to withdraw', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      await time.increase(100);
+
+      await instance.connect(owner).closeAuction();
+
+      await expect(instance.connect(owner).withdrawBid()).to.be.revertedWith(
+        'EnglishPeriodicAuction: No collateral to withdraw',
+      );
+    });
+
+    it('should revert if caller fails to accept transfer', async function () {
+      // Auction start: Now + 200
+      // Auction end: Now + 500
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) + 200,
+        licensePeriod: 1000,
+      });
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      // MockBidder
+      const MockBidder = await ethers.getContractFactory('MockBidder');
+      const mockBidder = await MockBidder.deploy(instance.address);
+      await mockBidder.deployed();
+
+      await licenseMock
+        .connect(owner)
+        .transferFrom(owner.address, mockBidder.address, 0);
+
+      await time.increase(400);
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await instance.connect(owner).closeAuction();
+
+      await expect(mockBidder.withdrawBid()).to.be.revertedWith(
+        'EnglishPeriodicAuction: Failed to withdraw collateral',
+      );
+    });
+
+    it('should allow withdraw after being out bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: collateralAmount1 });
+
+      await instance.connect(bidder2).placeBid(bidAmount2, {
+        value: collateralAmount2,
+      });
+
+      const oldBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+      const res = await instance.connect(bidder1).withdrawBid();
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+
+      // Expect bidder1 balance to increase by collateralAmount1
+      expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
+        collateralAmount1,
+      );
+    });
+
+    it('should allow withdraw after losing auction', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount1, { value: collateralAmount1 });
+
+      await instance.connect(bidder2).placeBid(bidAmount2, {
+        value: collateralAmount2,
+      });
+
+      await time.increase(100);
+      await instance.closeAuction();
+
+      const oldBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+      const res = await instance.connect(bidder1).withdrawBid();
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+
+      // Expect bidder1 balance to increase by collateralAmount1
+      expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
+        collateralAmount1,
+      );
+    });
+
+    it('should allow withdraw of owner bid amount after auction', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+      await instance.closeAuction();
+
+      const oldOwnerBalance = await ethers.provider.getBalance(owner.address);
+      const res = await instance.connect(owner).withdrawBid();
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newOwnerBalance = await ethers.provider.getBalance(owner.address);
+
+      // Expect owner balance to increase by bid amount
+      expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
+        ethers.utils.parseEther('1.0'),
+      );
+    });
+
+    it('should allow withdraw of owner bid if ownership transferred during license period', async function () {
+      // Auction start: Now + 200
+      // Auction end: Now + 500
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) + 200,
+        licensePeriod: 1000,
+      });
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      await licenseMock
+        .connect(owner)
+        .transferFrom(owner.address, nonOwner.address, 0);
+
+      await time.increase(400);
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await instance.connect(owner).closeAuction();
+
+      const oldOwnerBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+      const res = await instance.connect(nonOwner).withdrawBid();
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newOwnerBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+
+      // Expect owner balance to increase by bid amount
+      expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
+        ethers.utils.parseEther('1.0'),
+      );
     });
   });
 });

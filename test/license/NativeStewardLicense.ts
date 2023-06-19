@@ -188,6 +188,22 @@ describe('NativeStewardLicense', function () {
       );
     });
 
+    it('should succeed if receiver does not implement ERC721Receiver', async function () {
+      const MockBidder = await ethers.getContractFactory('MockBidder');
+      const mockBidder = await MockBidder.deploy(instance.address);
+      await mockBidder.deployed();
+
+      await instance['testTriggerTransfer(address,address,uint256)'](
+        await owner.getAddress(),
+        mockBidder.address,
+        0,
+      );
+
+      expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
+        mockBidder.address,
+      );
+    });
+
     it('should fail if not called by facet', async function () {
       await expect(
         instance['triggerTransfer(address,address,uint256)'](

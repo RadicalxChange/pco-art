@@ -17,6 +17,5 @@ contract BeneficiaryMock is IBeneficiary, OwnableInternal {
      */
     function distribute() external payable {
         (bool success, ) = _owner().call{ value: msg.value }('');
-        require(success, 'MockBeneficiary: Failed to distribute');
     }
 }

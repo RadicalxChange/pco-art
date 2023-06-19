@@ -41,6 +41,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         l.currentBid.bidder = initialBidder;
         l.currentBid.bidAmount = startingBid;
         l.currentBid.collateralAmount = 0;
+        l.currentBid.feeAmount = 0;
         l.bids[initialBidder] = l.currentBid;
 
         l.highestBid.bidder = repossessor;
@@ -167,12 +168,13 @@ abstract contract EnglishPeriodicAuctionInternal is
             _checkBidAmount(bidAmount, feeAmount),
             'EnglishPeriodicAuction: Incorrect bid amount'
         );
-        bid.collateralAmount = totalCollateralAmount;
 
         // Save bid
         bid.bidder = bidder;
         bid.bidAmount = bidAmount;
         bid.round = l.currentAuctionRound;
+        bid.feeAmount = feeAmount;
+        bid.collateralAmount = totalCollateralAmount;
 
         l.highestBid = bid;
 
@@ -245,6 +247,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             repossessorBid.round = l.currentAuctionRound;
             repossessorBid.bidAmount = 0;
             repossessorBid.collateralAmount = 0;
+            repossessorBid.feeAmount = 0;
             repossessorBid.bidder = l.repossessor;
 
             l.highestBid = repossessorBid;
@@ -255,6 +258,7 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         // Reset auction
         l.currentBid = l.highestBid;
+        l.bids[l.highestBid.bidder].collateralAmount = 0;
         l.currentBid.collateralAmount = 0;
         l.currentAuctionLength = l.auctionLengthSeconds;
         l.currentAuctionRound = l.currentAuctionRound + 1;
@@ -267,10 +271,10 @@ abstract contract EnglishPeriodicAuctionInternal is
         );
 
         // Distribute fee to beneficiary
-        uint256 feeAmount = l.highestBid.collateralAmount -
-            l.highestBid.bidAmount;
-        if (feeAmount > 0) {
-            IBeneficiary(address(this)).distribute{ value: feeAmount }();
+        if (l.highestBid.feeAmount > 0) {
+            IBeneficiary(address(this)).distribute{
+                value: l.highestBid.feeAmount
+            }();
         }
     }
 

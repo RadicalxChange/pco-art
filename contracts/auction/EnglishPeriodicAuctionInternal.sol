@@ -120,10 +120,7 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Is token ready for transfer
      */
     function _isReadyForTransfer() internal view returns (bool) {
-        EnglishPeriodicAuctionStorage.Layout
-            storage l = EnglishPeriodicAuctionStorage.layout();
-
-        return block.timestamp >= _auctionStartTime() + l.currentAuctionLength;
+        return block.timestamp >= _auctionEndTime();
     }
 
     /**
@@ -180,15 +177,13 @@ abstract contract EnglishPeriodicAuctionInternal is
         l.highestBid = bid;
 
         // Check if auction should extend
-        uint256 timeRemaining;
-        uint256 auctionStartTime = _auctionStartTime();
-        if (block.timestamp < auctionStartTime) {
-            timeRemaining = 0;
-        } else {
-            timeRemaining = block.timestamp - auctionStartTime;
-        }
+        uint256 auctionEndTime = _auctionEndTime();
 
-        if (timeRemaining < _bidExtensionWindowLengthSeconds()) {
+        if (
+            auctionEndTime >= block.timestamp &&
+            auctionEndTime - block.timestamp <
+            _bidExtensionWindowLengthSeconds()
+        ) {
             // Extend auction
             l.currentAuctionLength =
                 l.currentAuctionLength +
@@ -302,6 +297,16 @@ abstract contract EnglishPeriodicAuctionInternal is
             // Auction starts at initial time
             auctionStartTime = initialPeriodStartTime;
         }
+    }
+
+    /**
+     * @notice Get auction end time
+     */
+    function _auctionEndTime() internal view returns (uint256 auctionEndTime) {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        auctionEndTime = _auctionStartTime() + l.currentAuctionLength;
     }
 
     /**

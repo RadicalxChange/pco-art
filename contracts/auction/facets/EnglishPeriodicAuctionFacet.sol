@@ -103,6 +103,20 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Get auction start time
+     */
+    function auctionStartTime() external view returns (uint256) {
+        return _auctionStartTime();
+    }
+
+    /**
+     * @notice Get auction end time
+     */
+    function auctionEndTime() external view returns (uint256) {
+        return _auctionEndTime();
+    }
+
+    /**
      * @notice Get auction length
      */
     function auctionLengthSeconds() external view returns (uint256) {

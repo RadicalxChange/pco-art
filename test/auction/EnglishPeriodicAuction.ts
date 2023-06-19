@@ -22,6 +22,8 @@ describe('EnglishPeriodicAuction', function () {
     licensePeriod = 1,
     initialPeriodStartTime = 2,
     startingBid = ethers.utils.parseEther('1'),
+    bidExtensionWindowLengthSeconds = 10,
+    bidExtensionSeconds = 20,
   } = {}) {
     const pcoParamsFacetFactory = await ethers.getContractFactory(
       'OwnablePeriodicPCOParamsFacet',
@@ -136,8 +138,8 @@ describe('EnglishPeriodicAuction', function () {
             startingBid,
             auctionLengthSeconds,
             200,
-            10,
-            20,
+            bidExtensionWindowLengthSeconds,
+            bidExtensionSeconds,
           ],
         ),
         selectors: [
@@ -157,6 +159,8 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('bidExtensionSeconds()'),
           facetFactory.interface.getSighash('bidOf(address)'),
           facetFactory.interface.getSighash('highestBid()'),
+          facetFactory.interface.getSighash('auctionStartTime()'),
+          facetFactory.interface.getSighash('auctionEndTime()'),
         ],
       },
     ]);
@@ -745,6 +749,31 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.bidder).to.be.equal(owner.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
+    it('should extend auction if bid placed in extension window', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        bidExtensionWindowLengthSeconds: 150,
+        bidExtensionSeconds: 100,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const auctionStartTime = await instance.auctionStartTime();
+
+      await instance
+        .connect(bidder1)
+        .placeBid(bidAmount, { value: collateralAmount });
+
+      expect(await instance.auctionEndTime()).to.be.equal(
+        auctionStartTime.add(300).add(100),
+      );
     });
   });
 

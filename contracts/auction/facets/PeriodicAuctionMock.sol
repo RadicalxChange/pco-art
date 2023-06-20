@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { IPeriodicAuction } from '../IPeriodicAuction.sol';
+import { IPeriodicAuctionReadable } from '../IPeriodicAuctionReadable.sol';
 
-contract PeriodicAuctionMock is IPeriodicAuction {
+contract PeriodicAuctionMock is IPeriodicAuctionReadable {
     struct Layout {
         bool isAuctionPeriod;
         bool shouldFail;

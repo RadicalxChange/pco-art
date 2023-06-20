@@ -18,6 +18,7 @@ describe('EnglishPeriodicAuction', function () {
   let instance: any;
 
   async function getInstance({
+    hasOwner = false,
     auctionLengthSeconds = 100,
     licensePeriod = 1,
     initialPeriodStartTime = 2,
@@ -134,33 +135,59 @@ describe('EnglishPeriodicAuction', function () {
       {
         target: facetInstance.address,
         initTarget: facetInstance.address,
-        initData: facetInstance.interface.encodeFunctionData(
-          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
-          [
-            await nonOwner.getAddress(),
-            await owner.getAddress(),
-            startingBid,
-            auctionLengthSeconds,
-            200,
-            bidExtensionWindowLengthSeconds,
-            bidExtensionSeconds,
-          ],
-        ),
+        initData: hasOwner
+          ? facetInstance.interface.encodeFunctionData(
+              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256)',
+              [
+                await owner.getAddress(),
+                await nonOwner.getAddress(),
+                await owner.getAddress(),
+                startingBid,
+                auctionLengthSeconds,
+                200,
+                bidExtensionWindowLengthSeconds,
+                bidExtensionSeconds,
+              ],
+            )
+          : facetInstance.interface.encodeFunctionData(
+              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
+              [
+                await nonOwner.getAddress(),
+                await owner.getAddress(),
+                startingBid,
+                auctionLengthSeconds,
+                200,
+                bidExtensionWindowLengthSeconds,
+                bidExtensionSeconds,
+              ],
+            ),
         selectors: [
-          facetFactory.interface.getSighash(
-            'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
-          ),
+          hasOwner
+            ? facetFactory.interface.getSighash(
+                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256)',
+              )
+            : facetFactory.interface.getSighash(
+                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)',
+              ),
           facetFactory.interface.getSighash('isAuctionPeriod()'),
           facetFactory.interface.getSighash('isReadyForTransfer()'),
           facetFactory.interface.getSighash('placeBid(uint256)'),
           facetFactory.interface.getSighash('closeAuction()'),
           facetFactory.interface.getSighash('calculateFeeFromBid(uint256)'),
+          facetFactory.interface.getSighash('repossessor()'),
+          facetFactory.interface.getSighash('setRepossessor(address)'),
+          facetFactory.interface.getSighash('setAuctionLengthSeconds(uint256)'),
           facetFactory.interface.getSighash('auctionLengthSeconds()'),
           facetFactory.interface.getSighash('minBidIncrement()'),
+          facetFactory.interface.getSighash('setMinBidIncrement(uint256)'),
+          facetFactory.interface.getSighash(
+            'setBidExtensionWindowLengthSeconds(uint256)',
+          ),
           facetFactory.interface.getSighash(
             'bidExtensionWindowLengthSeconds()',
           ),
           facetFactory.interface.getSighash('bidExtensionSeconds()'),
+          facetFactory.interface.getSighash('setBidExtensionSeconds(uint256)'),
           facetFactory.interface.getSighash('bidOf(address)'),
           facetFactory.interface.getSighash('highestBid()'),
           facetFactory.interface.getSighash('currentBid()'),
@@ -185,6 +212,14 @@ describe('EnglishPeriodicAuction', function () {
   });
 
   describe('initializeAuction', function () {
+    it('should set repossessor', async function () {
+      const instance = await getInstance();
+
+      expect(await instance.repossessor()).to.be.equal(
+        await nonOwner.getAddress(),
+      );
+    });
+
     it('should set auctionLengthSeconds', async function () {
       const instance = await getInstance();
 
@@ -213,7 +248,62 @@ describe('EnglishPeriodicAuction', function () {
       const instance = await getInstance();
 
       await expect(
-        instance.initializeAuction(
+        instance[
+          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256)'
+        ](
+          await nonOwner.getAddress(),
+          await owner.getAddress(),
+          0,
+          100,
+          200,
+          10,
+          20,
+        ),
+      ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
+    });
+  });
+
+  describe('initializeAuction with owner', function () {
+    it('should set repossessor', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.repossessor()).to.be.equal(
+        await nonOwner.getAddress(),
+      );
+    });
+
+    it('should set auctionLengthSeconds', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.auctionLengthSeconds()).to.be.equal(100);
+    });
+
+    it('should set minBidIncrement', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.minBidIncrement()).to.be.equal(200);
+    });
+
+    it('should set bidExtensionWindowLengthSeconds', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.bidExtensionWindowLengthSeconds()).to.be.equal(10);
+    });
+
+    it('should set bidExtensionSeconds', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.bidExtensionSeconds()).to.be.equal(20);
+    });
+
+    it('should revert if already initialized', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(
+        instance[
+          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256)'
+        ](
+          await owner.getAddress(),
           await nonOwner.getAddress(),
           await owner.getAddress(),
           0,
@@ -1251,6 +1341,128 @@ describe('EnglishPeriodicAuction', function () {
       expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
         ethers.utils.parseEther('1.0'),
       );
+    });
+  });
+
+  describe('setRepossessor', function () {
+    it('should allow owner to set repossessor', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await instance.connect(owner).setRepossessor(nonOwner.address);
+
+      expect(await instance.repossessor()).to.equal(nonOwner.address);
+    });
+
+    it('should not allow non-owner to set repossessor', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(instance.connect(nonOwner).setRepossessor(nonOwner.address))
+        .to.be.reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(instance.connect(owner).setRepossessor(nonOwner.address)).to
+        .be.reverted;
+    });
+  });
+
+  describe('setAuctionLengthSeconds', function () {
+    it('should allow owner to set auction length', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await instance.connect(owner).setAuctionLengthSeconds(123);
+
+      expect(await instance.auctionLengthSeconds()).to.equal(123);
+    });
+
+    it('should not allow non-owner to set auction length', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(instance.connect(nonOwner).setAuctionLengthSeconds(123)).to
+        .be.reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(instance.connect(owner).setAuctionLengthSeconds(123)).to.be
+        .reverted;
+    });
+  });
+
+  describe('setMinBidIncrement', function () {
+    it('should allow owner to set min bid increment', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await instance.connect(owner).setMinBidIncrement(123);
+
+      expect(await instance.minBidIncrement()).to.equal(123);
+    });
+
+    it('should not allow non-owner to set min bid increment', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(instance.connect(nonOwner).setMinBidIncrement(123)).to.be
+        .reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(instance.connect(owner).setMinBidIncrement(123)).to.be
+        .reverted;
+    });
+  });
+
+  describe('setBidExtensionSeconds', function () {
+    it('should allow owner to set bid extension', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await instance.connect(owner).setBidExtensionSeconds(123);
+
+      expect(await instance.bidExtensionSeconds()).to.equal(123);
+    });
+
+    it('should not allow non-owner to set bid extension', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(instance.connect(nonOwner).setBidExtensionSeconds(123)).to.be
+        .reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(instance.connect(owner).setBidExtensionSeconds(123)).to.be
+        .reverted;
+    });
+  });
+
+  describe('setBidExtensionWindowLengthSeconds', function () {
+    it('should allow owner to set bid extension window length', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await instance.connect(owner).setBidExtensionWindowLengthSeconds(123);
+
+      expect(await instance.bidExtensionWindowLengthSeconds()).to.equal(123);
+    });
+
+    it('should not allow non-owner to set bid extension window length', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(
+        instance.connect(nonOwner).setBidExtensionWindowLengthSeconds(123),
+      ).to.be.reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(
+        instance.connect(owner).setBidExtensionWindowLengthSeconds(123),
+      ).to.be.reverted;
     });
   });
 });

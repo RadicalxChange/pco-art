@@ -10,7 +10,7 @@ import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC1
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
-import { IPeriodicAuction } from '../auction/IPeriodicAuction.sol';
+import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -65,7 +65,7 @@ abstract contract StewardLicenseInternal is
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
         // Disable transfers if not mint
         if (from != address(0x0)) {
-            bool isAuctionPeriod = IPeriodicAuction(address(this))
+            bool isAuctionPeriod = IPeriodicAuctionReadable(address(this))
                 .isAuctionPeriod();
             require(
                 isAuctionPeriod == false,

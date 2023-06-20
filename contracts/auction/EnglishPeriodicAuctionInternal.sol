@@ -29,11 +29,11 @@ abstract contract EnglishPeriodicAuctionInternal is
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         l.isInitialized = true;
-        l.repossessor = repossessor;
-        l.auctionLengthSeconds = auctionLengthSeconds;
-        l.minBidIncrement = minBidIncrement;
-        l.bidExtensionWindowLengthSeconds = bidExtensionWindowLengthSeconds;
-        l.bidExtensionSeconds = bidExtensionSeconds;
+        _setRepossessor(repossessor);
+        _setAuctionLengthSeconds(auctionLengthSeconds);
+        _setMinBidIncrement(minBidIncrement);
+        _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
+        _setBidExtensionSeconds(bidExtensionSeconds);
         l.currentAuctionLength = auctionLengthSeconds;
         l.currentAuctionRound = 1;
 
@@ -55,6 +55,20 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get repossessor
+     */
+    function _repossessor() internal view returns (address) {
+        return EnglishPeriodicAuctionStorage.layout().repossessor;
+    }
+
+    /**
+     * @notice Set repossessor
+     */
+    function _setRepossessor(address repossessor) internal {
+        EnglishPeriodicAuctionStorage.layout().repossessor = repossessor;
+    }
+
+    /**
      * @notice Get auction length
      */
     function _auctionLengthSeconds() internal view returns (uint256) {
@@ -62,10 +76,28 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Set auction length
+     */
+    function _setAuctionLengthSeconds(uint256 auctionLengthSeconds) internal {
+        EnglishPeriodicAuctionStorage
+            .layout()
+            .auctionLengthSeconds = auctionLengthSeconds;
+    }
+
+    /**
      * @notice Get minimum bid increment
      */
     function _minBidIncrement() internal view returns (uint256) {
         return EnglishPeriodicAuctionStorage.layout().minBidIncrement;
+    }
+
+    /**
+     * @notice Set minimum bid increment
+     */
+    function _setMinBidIncrement(uint256 minBidIncrement) internal {
+        EnglishPeriodicAuctionStorage
+            .layout()
+            .minBidIncrement = minBidIncrement;
     }
 
     /**
@@ -83,10 +115,30 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Set bid extension window length
+     */
+    function _setBidExtensionWindowLengthSeconds(
+        uint256 bidExtensionWindowLengthSeconds
+    ) internal {
+        EnglishPeriodicAuctionStorage
+            .layout()
+            .bidExtensionWindowLengthSeconds = bidExtensionWindowLengthSeconds;
+    }
+
+    /**
      * @notice Get bid extension
      */
     function _bidExtensionSeconds() internal view returns (uint256) {
         return EnglishPeriodicAuctionStorage.layout().bidExtensionSeconds;
+    }
+
+    /**
+     * @notice Set bid extension
+     */
+    function _setBidExtensionSeconds(uint256 bidExtensionSeconds) internal {
+        EnglishPeriodicAuctionStorage
+            .layout()
+            .bidExtensionSeconds = bidExtensionSeconds;
     }
 
     /**

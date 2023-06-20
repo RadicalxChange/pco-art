@@ -3,7 +3,7 @@ pragma solidity ^0.8.17;
 
 import { EnglishPeriodicAuctionInternal } from '../EnglishPeriodicAuctionInternal.sol';
 import { IPeriodicAuction } from '../IPeriodicAuction.sol';
-import { IAllowlist } from '../../allowlist/IAllowlist.sol';
+import { IAllowlistReadable } from '../../allowlist/IAllowlistReadable.sol';
 
 /**
  * @title EnglishPeriodicAuctionFacet
@@ -67,7 +67,7 @@ contract EnglishPeriodicAuctionFacet is
             'EnglishPeriodicAuction: auction is over and awaiting transfer'
         );
         require(
-            IAllowlist(address(this)).isAllowed(msg.sender),
+            IAllowlistReadable(address(this)).isAllowed(msg.sender),
             'EnglishPeriodicAuction: sender is not allowed to place bid'
         );
 

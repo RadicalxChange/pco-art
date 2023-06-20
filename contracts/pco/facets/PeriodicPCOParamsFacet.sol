@@ -1,27 +1,55 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { IPeriodicPCOParams } from '../IPeriodicPCOParams.sol';
+import { IPeriodicPCOParamsReadable } from '../IPeriodicPCOParamsReadable.sol';
+import { IPeriodicPCOParamsWritable } from '../IPeriodicPCOParamsWritable.sol';
 import { PeriodicPCOParamsInternal } from '../PeriodicPCOParamsInternal.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
- * @title AccessControlPeriodicPCOParamsFacet
+ * @title PeriodicPCOParamsFacet
  * @dev Params store for periodic PCO
  */
-contract AccessControlPeriodicPCOParamsFacet is
+contract PeriodicPCOParamsFacet is
     AccessControlInternal,
-    IPeriodicPCOParams,
+    IPeriodicPCOParamsReadable,
+    IPeriodicPCOParamsWritable,
     PeriodicPCOParamsInternal,
     ERC165Base
 {
     // Component role
     bytes32 internal constant COMPONENT_ROLE =
-        keccak256('AccessControlPeriodicPCOParamsFacet.COMPONENT_ROLE');
+        keccak256('PeriodicPCOParamsFacet.COMPONENT_ROLE');
 
     /**
      * @notice Initialize params
+     */
+    function initializePCOParams(
+        uint256 _licensePeriod,
+        uint256 _initialPeriodStartTime,
+        uint256 _perSecondFeeNumerator,
+        uint256 _perSecondFeeDenominator
+    ) external {
+        require(
+            _isInitialized() == false,
+            'PeriodicPCOParamsFacet: already initialized'
+        );
+
+        _setSupportsInterface(
+            type(IPeriodicPCOParamsReadable).interfaceId,
+            true
+        );
+        _initializeParams(
+            _licensePeriod,
+            _initialPeriodStartTime,
+            _perSecondFeeNumerator,
+            _perSecondFeeDenominator
+        );
+    }
+
+    /**
+     * @notice Initialize params with owner
      */
     function initializePCOParams(
         address _owner,
@@ -32,10 +60,17 @@ contract AccessControlPeriodicPCOParamsFacet is
     ) external {
         require(
             _isInitialized() == false,
-            'AccessControlPeriodicPCOParamsFacet: already initialized'
+            'PeriodicPCOParamsFacet: already initialized'
         );
 
-        _setSupportsInterface(type(IPeriodicPCOParams).interfaceId, true);
+        _setSupportsInterface(
+            type(IPeriodicPCOParamsReadable).interfaceId,
+            true
+        );
+        _setSupportsInterface(
+            type(IPeriodicPCOParamsWritable).interfaceId,
+            true
+        );
         _grantRole(COMPONENT_ROLE, _owner);
         _initializeParams(
             _licensePeriod,

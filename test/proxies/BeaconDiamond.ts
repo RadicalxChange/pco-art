@@ -7,9 +7,7 @@ describe('BeaconDiamond', function () {
 
   beforeEach(async function () {
     // Use AccessControlAllowlistFacet as a mock facet
-    const facetFactory = await ethers.getContractFactory(
-      'AccessControlAllowlistFacet',
-    );
+    const facetFactory = await ethers.getContractFactory('AllowlistFacet');
     const facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
 

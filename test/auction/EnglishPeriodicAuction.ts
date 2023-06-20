@@ -26,7 +26,7 @@ describe('EnglishPeriodicAuction', function () {
     bidExtensionSeconds = 20,
   } = {}) {
     const pcoParamsFacetFactory = await ethers.getContractFactory(
-      'AccessControlPeriodicPCOParamsFacet',
+      'PeriodicPCOParamsFacet',
     );
     const pcoParamsFacetInstance = await pcoParamsFacetFactory.deploy();
     await pcoParamsFacetInstance.deployed();

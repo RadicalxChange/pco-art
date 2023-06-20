@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { IAllowlist } from './IAllowlist.sol';
-
 /**
- * @title IAccessControlAllowlist
+ * @title IAllowlistWritable
  */
-interface IAccessControlAllowlist is IAllowlist {
+interface IAllowlistWritable {
     /**
      * @notice Set allow any
      */

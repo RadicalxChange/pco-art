@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import { EnglishPeriodicAuctionStorage } from './EnglishPeriodicAuctionStorage.sol';
-import { IPeriodicPCOParams } from '../pco/IPeriodicPCOParams.sol';
+import { IPeriodicPCOParamsReadable } from '../pco/IPeriodicPCOParamsReadable.sol';
 import { IStewardLicense } from '../license/IStewardLicense.sol';
 import { IBeneficiary } from '../beneficiary/IBeneficiary.sol';
 import { IEnglishPeriodicAuctionInternal } from './IEnglishPeriodicAuctionInternal.sol';
@@ -292,9 +292,10 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        uint256 initialPeriodStartTime = IPeriodicPCOParams(address(this))
-            .initialPeriodStartTime();
-        uint256 licensePeriod = IPeriodicPCOParams(address(this))
+        uint256 initialPeriodStartTime = IPeriodicPCOParamsReadable(
+            address(this)
+        ).initialPeriodStartTime();
+        uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
             .licensePeriod();
 
         if (l.lastPeriodEndTime > initialPeriodStartTime) {
@@ -322,11 +323,13 @@ abstract contract EnglishPeriodicAuctionInternal is
     function _calculateFeeFromBid(
         uint256 bidAmount
     ) internal view returns (uint256) {
-        uint256 perSecondFeeNumerator = IPeriodicPCOParams(address(this))
-            .perSecondFeeNumerator();
-        uint256 perSecondFeeDenominator = IPeriodicPCOParams(address(this))
-            .perSecondFeeDenominator();
-        uint256 licensePeriod = IPeriodicPCOParams(address(this))
+        uint256 perSecondFeeNumerator = IPeriodicPCOParamsReadable(
+            address(this)
+        ).perSecondFeeNumerator();
+        uint256 perSecondFeeDenominator = IPeriodicPCOParamsReadable(
+            address(this)
+        ).perSecondFeeDenominator();
+        uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
             .licensePeriod();
 
         return

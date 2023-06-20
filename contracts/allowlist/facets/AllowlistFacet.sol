@@ -2,20 +2,22 @@
 pragma solidity ^0.8.17;
 
 import { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';
-import { IAccessControlAllowlist } from '../IAccessControlAllowlist.sol';
+import { IAllowlistWritable } from '../IAllowlistWritable.sol';
 import { AllowlistStorage } from '../AllowlistStorage.sol';
 import { AllowlistReadableInternal } from '../AllowlistReadableInternal.sol';
 import { AllowlistWritableInternal } from '../AllowlistWritableInternal.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
+import { IAllowlistReadable } from '../IAllowlistReadable.sol';
 
 /**
- * @title AccessControlAllowlistFacet
+ * @title AllowlistFacet
  * @dev Allows owner to set an allowlist of addresses
  */
-contract AccessControlAllowlistFacet is
+contract AllowlistFacet is
     AccessControlInternal,
-    IAccessControlAllowlist,
+    IAllowlistWritable,
+    IAllowlistReadable,
     AllowlistReadableInternal,
     AllowlistWritableInternal,
     ERC165Base
@@ -24,10 +26,26 @@ contract AccessControlAllowlistFacet is
 
     // Component role
     bytes32 internal constant COMPONENT_ROLE =
-        keccak256('AccessControlAllowlistFacet.COMPONENT_ROLE');
+        keccak256('AllowlistFacet.COMPONENT_ROLE');
 
     /**
      * @notice Initialize allowlist
+     */
+    function initializeAllowlist(
+        bool allowAny,
+        address[] memory _addresses
+    ) external {
+        require(
+            _isInitialized() == false,
+            'AllowlistFacet: already initialized'
+        );
+
+        _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);
+        _initializeAllowlist(allowAny, _addresses);
+    }
+
+    /**
+     * @notice Initialize allowlist with owner
      */
     function initializeAllowlist(
         address _owner,
@@ -36,10 +54,11 @@ contract AccessControlAllowlistFacet is
     ) external {
         require(
             _isInitialized() == false,
-            'AccessControlAllowlistFacet: already initialized'
+            'AllowlistFacet: already initialized'
         );
 
-        _setSupportsInterface(type(IAccessControlAllowlist).interfaceId, true);
+        _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);
+        _setSupportsInterface(type(IAllowlistWritable).interfaceId, true);
         _grantRole(COMPONENT_ROLE, _owner);
         _initializeAllowlist(allowAny, _addresses);
     }

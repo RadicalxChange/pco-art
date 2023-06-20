@@ -2,9 +2,9 @@
 pragma solidity ^0.8.17;
 
 /**
- * @title IAllowlist
+ * @title IAllowlistReadable
  */
-interface IAllowlist {
+interface IAllowlistReadable {
     /**
      * @notice Check if address is allowed
      */

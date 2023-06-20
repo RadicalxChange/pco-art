@@ -2,17 +2,15 @@ import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
 import { deployContractsAndToken } from '@superfluid-finance/ethereum-contracts/dev-scripts/deploy-contracts-and-token.js';
-
 import { InstantDistributionAgreementV1 } from '@superfluid-finance/sdk-core';
-describe('AccessControlIDABeneficiary', function () {
+
+describe('IDABeneficiary', function () {
   let owner: SignerWithAddress;
   let nomineeOwner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
 
   async function getInstance() {
-    const factory = await ethers.getContractFactory(
-      'AccessControlIDABeneficiaryFacet',
-    );
+    const factory = await ethers.getContractFactory('IDABeneficiaryFacet');
     const instance = await factory.deploy();
     await instance.deployed();
 
@@ -28,7 +26,57 @@ describe('AccessControlIDABeneficiary', function () {
       const instance = await getInstance();
       const { deployer, tokenDeploymentOutput } =
         await deployContractsAndToken();
-      await instance.initializeIDABeneficiary(
+      await instance['initializeIDABeneficiary(address,(address,uint128)[])'](
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const framework = await deployer.getFramework();
+      const ida = new InstantDistributionAgreementV1(
+        framework.host,
+        framework.ida,
+      );
+
+      const index = await ida.getIndex({
+        superToken:
+          tokenDeploymentOutput.nativeAssetSuperTokenData
+            .nativeAssetSuperTokenAddress,
+        indexId: '0',
+        publisher: instance.address,
+        providerOrSigner: owner,
+      });
+
+      expect(index.exist).to.be.true;
+    });
+
+    it('should revert if already initialized', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance['initializeIDABeneficiary(address,(address,uint128)[])'](
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      await expect(
+        instance['initializeIDABeneficiary(address,(address,uint128)[])'](
+          tokenDeploymentOutput.nativeAssetSuperTokenData
+            .nativeAssetSuperTokenAddress,
+          [],
+        ),
+      ).to.be.revertedWith('IDABeneficiaryFacet: already initialized');
+    });
+  });
+
+  describe('initializeIDABeneficiary with owner', function () {
+    it('should create index', async function () {
+      const instance = await getInstance();
+      const { deployer, tokenDeploymentOutput } =
+        await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -56,7 +104,9 @@ describe('AccessControlIDABeneficiary', function () {
     it('should revert if already initialized', async function () {
       const instance = await getInstance();
       const { tokenDeploymentOutput } = await deployContractsAndToken();
-      await instance.initializeIDABeneficiary(
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -64,15 +114,15 @@ describe('AccessControlIDABeneficiary', function () {
       );
 
       await expect(
-        instance.initializeIDABeneficiary(
+        instance[
+          'initializeIDABeneficiary(address,address,(address,uint128)[])'
+        ](
           await owner.getAddress(),
           tokenDeploymentOutput.nativeAssetSuperTokenData
             .nativeAssetSuperTokenAddress,
           [],
         ),
-      ).to.be.revertedWith(
-        'AccessControlIDABeneficiaryFacet: already initialized',
-      );
+      ).to.be.revertedWith('IDABeneficiaryFacet: already initialized');
     });
   });
 
@@ -81,7 +131,9 @@ describe('AccessControlIDABeneficiary', function () {
       const instance = await getInstance();
       const { deployer, tokenDeploymentOutput } =
         await deployContractsAndToken();
-      await instance.initializeIDABeneficiary(
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -114,7 +166,9 @@ describe('AccessControlIDABeneficiary', function () {
     it('should only allow owner to update', async function () {
       const instance = await getInstance();
       const { tokenDeploymentOutput } = await deployContractsAndToken();
-      await instance.initializeIDABeneficiary(
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -124,6 +178,22 @@ describe('AccessControlIDABeneficiary', function () {
       await expect(
         instance
           .connect(nomineeOwner)
+          .updateBeneficiaryUnits([[await nomineeOwner.getAddress(), 1]]),
+      ).to.be.reverted;
+    });
+
+    it('should not allow any updates if no owner', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance['initializeIDABeneficiary(address,(address,uint128)[])'](
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
           .updateBeneficiaryUnits([[await nomineeOwner.getAddress(), 1]]),
       ).to.be.reverted;
     });
@@ -140,7 +210,9 @@ describe('AccessControlIDABeneficiary', function () {
         framework.ida,
       );
 
-      await instance.initializeIDABeneficiary(
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -182,7 +254,9 @@ describe('AccessControlIDABeneficiary', function () {
       const instance = await getInstance();
       const { tokenDeploymentOutput } = await deployContractsAndToken();
 
-      await instance.initializeIDABeneficiary(
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
         await owner.getAddress(),
         tokenDeploymentOutput.nativeAssetSuperTokenData
           .nativeAssetSuperTokenAddress,
@@ -195,7 +269,7 @@ describe('AccessControlIDABeneficiary', function () {
       await expect(
         instance.distribute({ value: ethers.utils.parseEther('0') }),
       ).to.be.revertedWith(
-        'ImmutableIDABeneficiaryFacet: msg.value should be greater than 0',
+        'IDABeneficiaryFacet: msg.value should be greater than 0',
       );
     });
   });

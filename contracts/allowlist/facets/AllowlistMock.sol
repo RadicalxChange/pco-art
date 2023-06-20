@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { IAllowlist } from '../IAllowlist.sol';
+import { IAllowlistReadable } from '../IAllowlistReadable.sol';
 
-contract AllowlistMock is IAllowlist {
+contract AllowlistMock is IAllowlistReadable {
     struct Layout {
         bool isAllowed;
     }

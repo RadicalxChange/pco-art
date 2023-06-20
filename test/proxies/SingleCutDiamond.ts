@@ -13,7 +13,7 @@ describe('SingleCutDiamond', function () {
   beforeEach(async function () {
     // Use AccessControlAllowlistFacet as a mock facet
     const facetFactory: ContractFactory = await ethers.getContractFactory(
-      'AccessControlAllowlistFacet',
+      'AllowlistFacet',
     );
     const facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();

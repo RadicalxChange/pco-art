@@ -4,9 +4,9 @@ pragma solidity ^0.8.17;
 import { IAllowlist } from './IAllowlist.sol';
 
 /**
- * @title IOwnableAllowlist
+ * @title IAccessControlAllowlist
  */
-interface IOwnableAllowlist is IAllowlist {
+interface IAccessControlAllowlist is IAllowlist {
     /**
      * @notice Set allow any
      */

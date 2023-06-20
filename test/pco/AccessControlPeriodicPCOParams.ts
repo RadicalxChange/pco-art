@@ -1,16 +1,15 @@
-import { describeBehaviorOfSafeOwnable } from '@solidstate/spec';
 import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
 
-describe('OwnablePeriodicPCOParams', function () {
+describe('AccessControlPeriodicPCOParams', function () {
   let owner: SignerWithAddress;
   let nomineeOwner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
 
   async function getInstance() {
     const factory = await ethers.getContractFactory(
-      'OwnablePeriodicPCOParamsFacet',
+      'AccessControlPeriodicPCOParamsFacet',
     );
     const instance = await factory.deploy();
     await instance.deployed();
@@ -20,12 +19,6 @@ describe('OwnablePeriodicPCOParams', function () {
   }
   before(async function () {
     [owner, nomineeOwner, nonOwner] = await ethers.getSigners();
-  });
-
-  describeBehaviorOfSafeOwnable(async () => await getInstance(), {
-    getOwner: async () => owner,
-    getNomineeOwner: async () => nomineeOwner,
-    getNonOwner: async () => nonOwner,
   });
 
   describe('initializePCOParams', function () {
@@ -58,7 +51,9 @@ describe('OwnablePeriodicPCOParams', function () {
 
       await expect(
         instance.initializePCOParams(await owner.getAddress(), 1, 2, 3, 4),
-      ).to.be.revertedWith('PeriodicPCOParamsFacet: already initialized');
+      ).to.be.revertedWith(
+        'AccessControlPeriodicPCOParamsFacet: already initialized',
+      );
     });
   });
 
@@ -73,9 +68,8 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(
-        instance.connect(nonOwner).setLicensePeriod(11),
-      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+      await expect(instance.connect(nonOwner).setLicensePeriod(11)).to.be
+        .reverted;
     });
   });
 
@@ -91,9 +85,8 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(
-        instance.connect(nonOwner).setPerSecondFeeNumerator(12),
-      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+      await expect(instance.connect(nonOwner).setPerSecondFeeNumerator(12)).to
+        .be.reverted;
     });
   });
 
@@ -109,9 +102,8 @@ describe('OwnablePeriodicPCOParams', function () {
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(
-        instance.connect(nonOwner).setPerSecondFeeDenominator(13),
-      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+      await expect(instance.connect(nonOwner).setPerSecondFeeDenominator(13)).to
+        .be.reverted;
     });
   });
 });

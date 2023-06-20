@@ -5,20 +5,24 @@ import { ISETH } from '@superfluid-finance/ethereum-contracts/contracts/interfac
 import { SuperTokenV1Library } from '@superfluid-finance/ethereum-contracts/contracts/apps/SuperTokenV1Library.sol';
 import { IIDABeneficiary } from '../IIDABeneficiary.sol';
 import { IDABeneficiaryInternal } from '../IDABeneficiaryInternal.sol';
-import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
- * @title OwnableIDABeneficiaryFacet
+ * @title AccessControlIDABeneficiaryFacet
  * @dev Beneficiary implemented using a Superfluid IDA index
  */
-contract OwnableIDABeneficiaryFacet is
+contract AccessControlIDABeneficiaryFacet is
     IIDABeneficiary,
     IDABeneficiaryInternal,
-    SafeOwnable,
+    AccessControlInternal,
     ERC165Base
 {
     using SuperTokenV1Library for ISETH;
+
+    // Component role
+    bytes32 internal constant COMPONENT_ROLE =
+        keccak256('AccessControlIDABeneficiaryFacet.COMPONENT_ROLE');
 
     /**
      * @notice Initialize beneficiary
@@ -30,11 +34,11 @@ contract OwnableIDABeneficiaryFacet is
     ) external {
         require(
             _isInitialized() == false,
-            'OwnableIDABeneficiaryFacet: already initialized'
+            'AccessControlIDABeneficiaryFacet: already initialized'
         );
 
         _setSupportsInterface(type(IIDABeneficiary).interfaceId, true);
-        _setOwner(_owner);
+        _grantRole(COMPONENT_ROLE, _owner);
         _initializeIDABeneficiary(_token, _beneficiaries);
     }
 
@@ -43,7 +47,7 @@ contract OwnableIDABeneficiaryFacet is
      */
     function updateBeneficiaryUnits(
         Beneficiary[] memory _beneficiaries
-    ) external onlyOwner {
+    ) external onlyRole(COMPONENT_ROLE) {
         _updateBeneficiaryUnits(_beneficiaries);
     }
 

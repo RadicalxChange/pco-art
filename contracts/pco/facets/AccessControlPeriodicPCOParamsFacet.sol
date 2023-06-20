@@ -3,19 +3,23 @@ pragma solidity ^0.8.17;
 
 import { IPeriodicPCOParams } from '../IPeriodicPCOParams.sol';
 import { PeriodicPCOParamsInternal } from '../PeriodicPCOParamsInternal.sol';
-import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
- * @title OwnablePeriodicPCOParamsFacet
+ * @title AccessControlPeriodicPCOParamsFacet
  * @dev Params store for periodic PCO
  */
-contract OwnablePeriodicPCOParamsFacet is
-    SafeOwnable,
+contract AccessControlPeriodicPCOParamsFacet is
+    AccessControlInternal,
     IPeriodicPCOParams,
     PeriodicPCOParamsInternal,
     ERC165Base
 {
+    // Component role
+    bytes32 internal constant COMPONENT_ROLE =
+        keccak256('AccessControlPeriodicPCOParamsFacet.COMPONENT_ROLE');
+
     /**
      * @notice Initialize params
      */
@@ -28,11 +32,11 @@ contract OwnablePeriodicPCOParamsFacet is
     ) external {
         require(
             _isInitialized() == false,
-            'PeriodicPCOParamsFacet: already initialized'
+            'AccessControlPeriodicPCOParamsFacet: already initialized'
         );
 
         _setSupportsInterface(type(IPeriodicPCOParams).interfaceId, true);
-        _setOwner(_owner);
+        _grantRole(COMPONENT_ROLE, _owner);
         _initializeParams(
             _licensePeriod,
             _initialPeriodStartTime,
@@ -58,7 +62,9 @@ contract OwnablePeriodicPCOParamsFacet is
     /**
      * @notice Set license period
      */
-    function setLicensePeriod(uint256 _licensePeriod) external onlyOwner {
+    function setLicensePeriod(
+        uint256 _licensePeriod
+    ) external onlyRole(COMPONENT_ROLE) {
         return _setLicensePeriod(_licensePeriod);
     }
 
@@ -74,7 +80,7 @@ contract OwnablePeriodicPCOParamsFacet is
      */
     function setPerSecondFeeNumerator(
         uint256 _perSecondFeeNumerator
-    ) external onlyOwner {
+    ) external onlyRole(COMPONENT_ROLE) {
         return _setPerSecondFeeNumerator(_perSecondFeeNumerator);
     }
 
@@ -90,7 +96,7 @@ contract OwnablePeriodicPCOParamsFacet is
      */
     function setPerSecondFeeDenominator(
         uint256 _perSecondFeeDenominator
-    ) external onlyOwner {
+    ) external onlyRole(COMPONENT_ROLE) {
         return _setPerSecondFeeDenominator(_perSecondFeeDenominator);
     }
 }

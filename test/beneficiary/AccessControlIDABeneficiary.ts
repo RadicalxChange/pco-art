@@ -1,18 +1,17 @@
-import { describeBehaviorOfSafeOwnable } from '@solidstate/spec';
 import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
 import { deployContractsAndToken } from '@superfluid-finance/ethereum-contracts/dev-scripts/deploy-contracts-and-token.js';
 
 import { InstantDistributionAgreementV1 } from '@superfluid-finance/sdk-core';
-describe('OwnableIDABeneficiary', function () {
+describe('AccessControlIDABeneficiary', function () {
   let owner: SignerWithAddress;
   let nomineeOwner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
 
   async function getInstance() {
     const factory = await ethers.getContractFactory(
-      'OwnableIDABeneficiaryFacet',
+      'AccessControlIDABeneficiaryFacet',
     );
     const instance = await factory.deploy();
     await instance.deployed();
@@ -23,25 +22,6 @@ describe('OwnableIDABeneficiary', function () {
   before(async function () {
     [owner, nomineeOwner, nonOwner] = await ethers.getSigners();
   });
-
-  describeBehaviorOfSafeOwnable(
-    async () => {
-      const instance = await getInstance();
-      const { tokenDeploymentOutput } = await deployContractsAndToken();
-      await instance.initializeIDABeneficiary(
-        await owner.getAddress(),
-        tokenDeploymentOutput.nativeAssetSuperTokenData
-          .nativeAssetSuperTokenAddress,
-        [],
-      );
-      return instance;
-    },
-    {
-      getOwner: async () => owner,
-      getNomineeOwner: async () => nomineeOwner,
-      getNonOwner: async () => nonOwner,
-    },
-  );
 
   describe('initializeIDABeneficiary', function () {
     it('should create index', async function () {
@@ -90,7 +70,9 @@ describe('OwnableIDABeneficiary', function () {
             .nativeAssetSuperTokenAddress,
           [],
         ),
-      ).to.be.revertedWith('OwnableIDABeneficiaryFacet: already initialized');
+      ).to.be.revertedWith(
+        'AccessControlIDABeneficiaryFacet: already initialized',
+      );
     });
   });
 
@@ -143,7 +125,7 @@ describe('OwnableIDABeneficiary', function () {
         instance
           .connect(nomineeOwner)
           .updateBeneficiaryUnits([[await nomineeOwner.getAddress(), 1]]),
-      ).to.be.revertedWithCustomError(instance, 'Ownable__NotOwner');
+      ).to.be.reverted;
     });
   });
 

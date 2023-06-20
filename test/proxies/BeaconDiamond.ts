@@ -6,9 +6,9 @@ describe('BeaconDiamond', function () {
   let instance;
 
   beforeEach(async function () {
-    // Use OwnableAllowlistFacet as a mock facet
+    // Use AccessControlAllowlistFacet as a mock facet
     const facetFactory = await ethers.getContractFactory(
-      'OwnableAllowlistFacet',
+      'AccessControlAllowlistFacet',
     );
     const facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
@@ -19,7 +19,7 @@ describe('BeaconDiamond', function () {
         target: facetInstance.address,
         initTarget: ethers.constants.AddressZero,
         initData: '0x',
-        selectors: [facetInstance.interface.getSighash('owner()')],
+        selectors: [facetInstance.interface.getSighash('isAllowed(address)')],
       },
     ]);
     await beaconInstance.deployed();
@@ -32,8 +32,8 @@ describe('BeaconDiamond', function () {
   describeBehaviorOfProxy(
     async () => instance,
     {
-      implementationFunction: 'owner()',
-      implementationFunctionArgs: [],
+      implementationFunction: 'isAllowed(address)',
+      implementationFunctionArgs: [ethers.constants.AddressZero],
     },
     [],
   );

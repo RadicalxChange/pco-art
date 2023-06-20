@@ -1,26 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 import { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';
-import { IOwnableAllowlist } from '../IOwnableAllowlist.sol';
+import { IAccessControlAllowlist } from '../IAccessControlAllowlist.sol';
 import { AllowlistStorage } from '../AllowlistStorage.sol';
 import { AllowlistReadableInternal } from '../AllowlistReadableInternal.sol';
 import { AllowlistWritableInternal } from '../AllowlistWritableInternal.sol';
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
- * @title OwnableAllowlistFacet
+ * @title AccessControlAllowlistFacet
  * @dev Allows owner to set an allowlist of addresses
  */
-contract OwnableAllowlistFacet is
-    SafeOwnable,
-    IOwnableAllowlist,
+contract AccessControlAllowlistFacet is
+    AccessControlInternal,
+    IAccessControlAllowlist,
     AllowlistReadableInternal,
     AllowlistWritableInternal,
     ERC165Base
 {
     using EnumerableSet for EnumerableSet.AddressSet;
+
+    // Component role
+    bytes32 internal constant COMPONENT_ROLE =
+        keccak256('AccessControlAllowlistFacet.COMPONENT_ROLE');
 
     /**
      * @notice Initialize allowlist
@@ -32,11 +36,11 @@ contract OwnableAllowlistFacet is
     ) external {
         require(
             _isInitialized() == false,
-            'OwnableAllowlistFacet: already initialized'
+            'AccessControlAllowlistFacet: already initialized'
         );
 
-        _setSupportsInterface(type(IOwnableAllowlist).interfaceId, true);
-        _setOwner(_owner);
+        _setSupportsInterface(type(IAccessControlAllowlist).interfaceId, true);
+        _grantRole(COMPONENT_ROLE, _owner);
         _initializeAllowlist(allowAny, _addresses);
     }
 
@@ -50,21 +54,25 @@ contract OwnableAllowlistFacet is
     /**
      * @notice Set allow any
      */
-    function setAllowAny(bool _allowAny) external onlyOwner {
+    function setAllowAny(bool _allowAny) external onlyRole(COMPONENT_ROLE) {
         return _setAllowAny(_allowAny);
     }
 
     /**
      * @notice Add to allowlist
      */
-    function addToAllowlist(address _address) external onlyOwner {
+    function addToAllowlist(
+        address _address
+    ) external onlyRole(COMPONENT_ROLE) {
         return _addToAllowlist(_address);
     }
 
     /**
      * @notice Remove from allowlist
      */
-    function removeFromAllowlist(address _address) external onlyOwner {
+    function removeFromAllowlist(
+        address _address
+    ) external onlyRole(COMPONENT_ROLE) {
         return _removeFromAllowlist(_address);
     }
 }

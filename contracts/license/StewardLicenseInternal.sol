@@ -28,7 +28,7 @@ abstract contract StewardLicenseInternal is
         address _steward,
         string memory name,
         string memory symbol,
-        string memory baseURI
+        string memory tokenURI
     ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
@@ -39,7 +39,7 @@ abstract contract StewardLicenseInternal is
             .layout();
         ls.name = name;
         ls.symbol = symbol;
-        ls.baseURI = baseURI;
+        ls.tokenURIs[0] = tokenURI;
 
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);

@@ -7,6 +7,7 @@ import 'hardhat-contract-sizer';
 import 'hardhat-docgen';
 import 'hardhat-gas-reporter';
 import 'hardhat-spdx-license-identifier';
+import 'hardhat-abi-exporter';
 import 'solidity-coverage';
 import { HardhatUserConfig } from 'hardhat/types';
 
@@ -70,6 +71,13 @@ const config: HardhatUserConfig = {
 
   typechain: {
     alwaysGenerateOverloads: true,
+  },
+
+  abiExporter: {
+    runOnCompile: true,
+    clear: true,
+    flat: true,
+    only: ['Facet$', 'Diamond$'],
   },
 };
 

@@ -9,6 +9,7 @@ import 'hardhat-gas-reporter';
 import 'hardhat-spdx-license-identifier';
 import 'hardhat-abi-exporter';
 import 'solidity-coverage';
+import 'hardhat-deploy';
 import { HardhatUserConfig } from 'hardhat/types';
 
 import * as Dotenv from 'dotenv';
@@ -78,6 +79,12 @@ const config: HardhatUserConfig = {
     clear: true,
     flat: true,
     only: ['Facet$', 'Diamond$'],
+  },
+
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
   },
 };
 

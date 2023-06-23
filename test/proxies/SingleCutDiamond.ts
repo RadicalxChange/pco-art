@@ -5,9 +5,11 @@ import {
 } from '@solidstate/spec';
 import { ethers } from 'hardhat';
 import { ContractFactory } from 'ethers';
+import { expect } from 'chai';
 
 describe('SingleCutDiamond', function () {
   let instance;
+  let facetInstance;
   let facetCuts: any[] = [];
 
   beforeEach(async function () {
@@ -15,7 +17,7 @@ describe('SingleCutDiamond', function () {
     const facetFactory: ContractFactory = await ethers.getContractFactory(
       'AllowlistFacet',
     );
-    const facetInstance = await facetFactory.deploy();
+    facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
 
     const factory: ContractFactory = await ethers.getContractFactory(

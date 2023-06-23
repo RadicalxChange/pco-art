@@ -5,7 +5,7 @@ import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { ERC165Base, ERC165BaseStorage } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 import { DiamondBase } from '@solidstate/contracts/proxy/diamond/base/DiamondBase.sol';
 import { DiamondReadable, IDiamondReadable } from '@solidstate/contracts/proxy/diamond/readable/DiamondReadable.sol';
-import { DiamondWritable } from '@solidstate/contracts/proxy/diamond/writable/DiamondWritable.sol';
+import { DiamondWritableInternal } from '@solidstate/contracts/proxy/diamond/writable/DiamondWritableInternal.sol';
 
 /******************************************************************************\
 * EIP-2535 Diamonds implementation that is a single cut with no diamondCut selector after deployment
@@ -14,7 +14,7 @@ import { DiamondWritable } from '@solidstate/contracts/proxy/diamond/writable/Di
 contract SingleCutDiamond is
     DiamondBase,
     DiamondReadable,
-    DiamondWritable,
+    DiamondWritableInternal,
     ERC165Base
 {
     struct FacetInit {

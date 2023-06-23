@@ -79,16 +79,6 @@
   },
   {
     "inputs": [],
-    "name": "Ownable__NotOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Ownable__NotTransitiveOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "Proxy__ImplementationIsNotContract",
     "type": "error"
   },
@@ -135,67 +125,8 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
     "stateMutability": "payable",
     "type": "fallback"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "target",
-            "type": "address"
-          },
-          {
-            "internalType": "enum IDiamondWritableInternal.FacetCutAction",
-            "name": "action",
-            "type": "uint8"
-          },
-          {
-            "internalType": "bytes4[]",
-            "name": "selectors",
-            "type": "bytes4[]"
-          }
-        ],
-        "internalType": "struct IDiamondWritableInternal.FacetCut[]",
-        "name": "facetCuts",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
-    ],
-    "name": "diamondCut",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
   },
   {
     "inputs": [

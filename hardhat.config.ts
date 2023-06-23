@@ -78,7 +78,7 @@ const config: HardhatUserConfig = {
     runOnCompile: true,
     clear: true,
     flat: true,
-    only: ['Facet$', 'Diamond$'],
+    only: ['Facet$', 'Diamond$', 'DiamondFactory$'],
   },
 
   namedAccounts: {

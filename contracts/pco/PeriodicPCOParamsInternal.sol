@@ -13,7 +13,6 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
      */
     function _initializeParams(
         uint256 licensePeriod,
-        uint256 initialPeriodStartTime,
         uint256 perSecondFeeNumerator,
         uint256 perSecondFeeDenominator
     ) internal {
@@ -23,7 +22,6 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
         l.isInitialized = true;
 
         _setLicensePeriod(licensePeriod);
-        _setInitialPeriodStartTime(initialPeriodStartTime);
         _setPerSecondFeeNumerator(perSecondFeeNumerator);
         _setPerSecondFeeDenominator(perSecondFeeDenominator);
     }
@@ -33,27 +31,6 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
      */
     function _isInitialized() internal view returns (bool) {
         return PeriodicPCOParamsStorage.layout().isInitialized;
-    }
-
-    /**
-     * @notice Get initial period start time
-     */
-    function _initialPeriodStartTime() internal view returns (uint256) {
-        return PeriodicPCOParamsStorage.layout().initialPeriodStartTime;
-    }
-
-    /**
-     * @notice Set initial period start time
-     */
-    function _setInitialPeriodStartTime(
-        uint256 initialPeriodStartTime
-    ) internal {
-        PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
-            .layout();
-
-        l.initialPeriodStartTime = initialPeriodStartTime;
-
-        emit InitialPeriodStartTimeSet(initialPeriodStartTime);
     }
 
     /**

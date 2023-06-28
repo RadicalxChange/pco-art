@@ -28,6 +28,7 @@ contract EnglishPeriodicAuctionFacet is
     function initializeAuction(
         address _repossessor,
         address initialBidder,
+        uint256 _initialPeriodStartTime,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
@@ -43,6 +44,7 @@ contract EnglishPeriodicAuctionFacet is
         _initializeAuction(
             _repossessor,
             initialBidder,
+            _initialPeriodStartTime,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
@@ -58,6 +60,7 @@ contract EnglishPeriodicAuctionFacet is
         address _owner,
         address _repossessor,
         address initialBidder,
+        uint256 _initialPeriodStartTime,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
@@ -75,6 +78,7 @@ contract EnglishPeriodicAuctionFacet is
         _initializeAuction(
             _repossessor,
             initialBidder,
+            _initialPeriodStartTime,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
@@ -88,6 +92,13 @@ contract EnglishPeriodicAuctionFacet is
      */
     function isAuctionPeriod() external view returns (bool) {
         return _isAuctionPeriod();
+    }
+
+    /**
+     * @notice Get initial period start time
+     */
+    function initialPeriodStartTime() external view returns (uint256) {
+        return _initialPeriodStartTime();
     }
 
     /**

@@ -6,11 +6,6 @@ pragma solidity ^0.8.17;
  */
 interface IPeriodicPCOParamsReadable {
     /**
-     * @notice Get initial period start time
-     */
-    function initialPeriodStartTime() external view returns (uint256);
-
-    /**
      * @notice Get license period
      */
     function licensePeriod() external view returns (uint256);

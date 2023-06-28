@@ -13,6 +13,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "initialPeriodStartTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "InitialPeriodStartTimeSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "bytes32",
         "name": "role",
@@ -302,12 +315,20 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "initialPeriodStartTime",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
         "name": "_repossessor",
@@ -317,6 +338,11 @@
         "internalType": "address",
         "name": "initialBidder",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_initialPeriodStartTime",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -353,6 +379,11 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_repossessor",
         "type": "address"
       },
@@ -360,6 +391,11 @@
         "internalType": "address",
         "name": "initialBidder",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_initialPeriodStartTime",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",

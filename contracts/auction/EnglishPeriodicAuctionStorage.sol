@@ -7,6 +7,7 @@ library EnglishPeriodicAuctionStorage {
     struct Layout {
         bool isInitialized;
         address repossessor;
+        uint256 initialPeriodStartTime;
         uint256 auctionLengthSeconds;
         uint256 minBidIncrement;
         uint256 bidExtensionWindowLengthSeconds;

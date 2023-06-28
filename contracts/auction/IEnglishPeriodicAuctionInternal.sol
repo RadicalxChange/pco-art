@@ -12,4 +12,6 @@ interface IEnglishPeriodicAuctionInternal {
         uint256 feeAmount;
         uint256 collateralAmount;
     }
+
+    event InitialPeriodStartTimeSet(uint256 initialPeriodStartTime);
 }

@@ -12,9 +12,12 @@ describe('PeriodicPCOParams', function () {
     const instance = await factory.deploy();
     await instance.deployed();
 
-    await instance[
-      'initializePCOParams(address,uint256,uint256,uint256,uint256)'
-    ](await owner.getAddress(), 1, 2, 3, 4);
+    await instance['initializePCOParams(address,uint256,uint256,uint256)'](
+      await owner.getAddress(),
+      1,
+      3,
+      4,
+    );
     return instance;
   }
   before(async function () {
@@ -27,29 +30,9 @@ describe('PeriodicPCOParams', function () {
       const instance = await factory.deploy();
       await instance.deployed();
 
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
       expect(await instance.licensePeriod()).to.be.equal(1);
-    });
-
-    it('should set initialPeriodStartTime', async function () {
-      const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
-      const instance = await factory.deploy();
-      await instance.deployed();
-
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
-
-      expect(await instance.initialPeriodStartTime()).to.be.equal(2);
     });
 
     it('should set perSecondFeeNumerator', async function () {
@@ -57,12 +40,7 @@ describe('PeriodicPCOParams', function () {
       const instance = await factory.deploy();
       await instance.deployed();
 
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
       expect(await instance.perSecondFeeNumerator()).to.be.equal(3);
     });
@@ -72,12 +50,7 @@ describe('PeriodicPCOParams', function () {
       const instance = await factory.deploy();
       await instance.deployed();
 
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
       expect(await instance.perSecondFeeDenominator()).to.be.equal(4);
     });
@@ -87,20 +60,10 @@ describe('PeriodicPCOParams', function () {
       const instance = await factory.deploy();
       await instance.deployed();
 
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
       await expect(
-        instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-          1,
-          2,
-          3,
-          4,
-        ),
+        instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4),
       ).to.be.revertedWith('PeriodicPCOParamsFacet: already initialized');
     });
   });
@@ -112,12 +75,6 @@ describe('PeriodicPCOParams', function () {
       expect(await instance.licensePeriod()).to.be.equal(1);
     });
 
-    it('should set initialPeriodStartTime', async function () {
-      const instance = await getInstance();
-
-      expect(await instance.initialPeriodStartTime()).to.be.equal(2);
-    });
-
     it('should set perSecondFeeNumerator', async function () {
       const instance = await getInstance();
 
@@ -134,9 +91,12 @@ describe('PeriodicPCOParams', function () {
       const instance = await getInstance();
 
       await expect(
-        instance[
-          'initializePCOParams(address,uint256,uint256,uint256,uint256)'
-        ](await owner.getAddress(), 1, 2, 3, 4),
+        instance['initializePCOParams(address,uint256,uint256,uint256)'](
+          await owner.getAddress(),
+          1,
+          3,
+          4,
+        ),
       ).to.be.revertedWith('PeriodicPCOParamsFacet: already initialized');
     });
   });
@@ -161,12 +121,7 @@ describe('PeriodicPCOParams', function () {
       const instance = await factory.deploy();
       await instance.deployed();
 
-      await instance['initializePCOParams(uint256,uint256,uint256,uint256)'](
-        1,
-        2,
-        3,
-        4,
-      );
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
       await expect(instance.connect(owner).setLicensePeriod(11)).to.be.reverted;
     });

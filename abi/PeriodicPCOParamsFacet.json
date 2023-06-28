@@ -15,19 +15,6 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "initialPeriodStartTime",
-        "type": "uint256"
-      }
-    ],
-    "name": "InitialPeriodStartTimeSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "licensePeriod",
         "type": "uint256"
       }
@@ -137,28 +124,15 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "initialPeriodStartTime",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_licensePeriod",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_initialPeriodStartTime",
+        "name": "_licensePeriod",
         "type": "uint256"
       },
       {
@@ -180,18 +154,8 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_licensePeriod",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_initialPeriodStartTime",
         "type": "uint256"
       },
       {

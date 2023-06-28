@@ -19,6 +19,7 @@ abstract contract EnglishPeriodicAuctionInternal is
     function _initializeAuction(
         address repossessor,
         address initialBidder,
+        uint256 initialPeriodStartTime,
         uint256 startingBid,
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
@@ -30,6 +31,7 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         l.isInitialized = true;
         _setRepossessor(repossessor);
+        _setInitialPeriodStartTime(initialPeriodStartTime);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
         _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
@@ -66,6 +68,27 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _setRepossessor(address repossessor) internal {
         EnglishPeriodicAuctionStorage.layout().repossessor = repossessor;
+    }
+
+    /**
+     * @notice Get initial period start time
+     */
+    function _initialPeriodStartTime() internal view returns (uint256) {
+        return EnglishPeriodicAuctionStorage.layout().initialPeriodStartTime;
+    }
+
+    /**
+     * @notice Set initial period start time
+     */
+    function _setInitialPeriodStartTime(
+        uint256 initialPeriodStartTime
+    ) internal {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        l.initialPeriodStartTime = initialPeriodStartTime;
+
+        emit InitialPeriodStartTimeSet(initialPeriodStartTime);
     }
 
     /**
@@ -344,18 +367,15 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        uint256 initialPeriodStartTime = IPeriodicPCOParamsReadable(
-            address(this)
-        ).initialPeriodStartTime();
         uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
             .licensePeriod();
 
-        if (l.lastPeriodEndTime > initialPeriodStartTime) {
+        if (l.lastPeriodEndTime > l.initialPeriodStartTime) {
             // Auction starts after licensePeriod has elapsed
             auctionStartTime = l.lastPeriodEndTime + licensePeriod;
         } else {
             // Auction starts at initial time
-            auctionStartTime = initialPeriodStartTime;
+            auctionStartTime = l.initialPeriodStartTime;
         }
     }
 

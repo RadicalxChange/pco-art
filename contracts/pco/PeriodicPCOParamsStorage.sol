@@ -9,8 +9,6 @@ library PeriodicPCOParamsStorage {
         bool isInitialized;
         /// @dev Length of time in seconds for each period the license is valid for
         uint256 licensePeriod;
-        /// @dev Start timestamp of initial period
-        uint256 initialPeriodStartTime;
         /// @dev Fee numerator per second
         uint256 perSecondFeeNumerator;
         /// @dev Fee denominator per second

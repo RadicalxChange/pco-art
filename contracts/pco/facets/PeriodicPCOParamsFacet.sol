@@ -27,7 +27,6 @@ contract PeriodicPCOParamsFacet is
      */
     function initializePCOParams(
         uint256 _licensePeriod,
-        uint256 _initialPeriodStartTime,
         uint256 _perSecondFeeNumerator,
         uint256 _perSecondFeeDenominator
     ) external {
@@ -42,7 +41,6 @@ contract PeriodicPCOParamsFacet is
         );
         _initializeParams(
             _licensePeriod,
-            _initialPeriodStartTime,
             _perSecondFeeNumerator,
             _perSecondFeeDenominator
         );
@@ -54,7 +52,6 @@ contract PeriodicPCOParamsFacet is
     function initializePCOParams(
         address _owner,
         uint256 _licensePeriod,
-        uint256 _initialPeriodStartTime,
         uint256 _perSecondFeeNumerator,
         uint256 _perSecondFeeDenominator
     ) external {
@@ -74,17 +71,9 @@ contract PeriodicPCOParamsFacet is
         _grantRole(COMPONENT_ROLE, _owner);
         _initializeParams(
             _licensePeriod,
-            _initialPeriodStartTime,
             _perSecondFeeNumerator,
             _perSecondFeeDenominator
         );
-    }
-
-    /**
-     * @notice Get initial period start time
-     */
-    function initialPeriodStartTime() external view returns (uint256) {
-        return _initialPeriodStartTime();
     }
 
     /**

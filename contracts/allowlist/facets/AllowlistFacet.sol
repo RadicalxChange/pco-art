@@ -6,7 +6,7 @@ import { IAllowlistWritable } from '../IAllowlistWritable.sol';
 import { AllowlistStorage } from '../AllowlistStorage.sol';
 import { AllowlistReadableInternal } from '../AllowlistReadableInternal.sol';
 import { AllowlistWritableInternal } from '../AllowlistWritableInternal.sol';
-import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { ERC165BaseInternal } from '@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 import { IAllowlistReadable } from '../IAllowlistReadable.sol';
 
@@ -20,7 +20,7 @@ contract AllowlistFacet is
     IAllowlistReadable,
     AllowlistReadableInternal,
     AllowlistWritableInternal,
-    ERC165Base
+    ERC165BaseInternal
 {
     using EnumerableSet for EnumerableSet.AddressSet;
 

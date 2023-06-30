@@ -5,7 +5,7 @@ import { EnglishPeriodicAuctionInternal } from '../EnglishPeriodicAuctionInterna
 import { IPeriodicAuctionReadable } from '../IPeriodicAuctionReadable.sol';
 import { IPeriodicAuctionWritable } from '../IPeriodicAuctionWritable.sol';
 import { IAllowlistReadable } from '../../allowlist/IAllowlistReadable.sol';
-import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { ERC165BaseInternal } from '@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
@@ -16,7 +16,7 @@ contract EnglishPeriodicAuctionFacet is
     IPeriodicAuctionWritable,
     EnglishPeriodicAuctionInternal,
     AccessControlInternal,
-    ERC165Base
+    ERC165BaseInternal
 {
     // Component role
     bytes32 internal constant COMPONENT_ROLE =

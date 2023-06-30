@@ -5,7 +5,7 @@ import { ISETH } from '@superfluid-finance/ethereum-contracts/contracts/interfac
 import { SuperTokenV1Library } from '@superfluid-finance/ethereum-contracts/contracts/apps/SuperTokenV1Library.sol';
 import { IIDABeneficiary } from '../IIDABeneficiary.sol';
 import { IDABeneficiaryInternal } from '../IDABeneficiaryInternal.sol';
-import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { ERC165BaseInternal } from '@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 import { IBeneficiary } from '../IBeneficiary.sol';
 
@@ -17,7 +17,7 @@ contract IDABeneficiaryFacet is
     IIDABeneficiary,
     IDABeneficiaryInternal,
     AccessControlInternal,
-    ERC165Base
+    ERC165BaseInternal
 {
     using SuperTokenV1Library for ISETH;
 

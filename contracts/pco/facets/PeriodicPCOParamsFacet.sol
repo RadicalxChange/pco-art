@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 import { IPeriodicPCOParamsReadable } from '../IPeriodicPCOParamsReadable.sol';
 import { IPeriodicPCOParamsWritable } from '../IPeriodicPCOParamsWritable.sol';
 import { PeriodicPCOParamsInternal } from '../PeriodicPCOParamsInternal.sol';
-import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
+import { ERC165BaseInternal } from '@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
@@ -16,7 +16,7 @@ contract PeriodicPCOParamsFacet is
     IPeriodicPCOParamsReadable,
     IPeriodicPCOParamsWritable,
     PeriodicPCOParamsInternal,
-    ERC165Base
+    ERC165BaseInternal
 {
     // Component role
     bytes32 internal constant COMPONENT_ROLE =

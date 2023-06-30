@@ -23,6 +23,12 @@ describe('OwnableDiamond', function () {
   });
 
   beforeEach(async function () {
+    const diamondFactory = await ethers.getContractFactory(
+      'OwnableDiamondFactory',
+    );
+    const diamondFactoryInstance = await diamondFactory.deploy();
+    await diamondFactoryInstance.deployed();
+
     // Use AccessControlAllowlistFacet as a mock facet
     const facetFactory: ContractFactory = await ethers.getContractFactory(
       'AllowlistFacet',
@@ -30,10 +36,7 @@ describe('OwnableDiamond', function () {
     facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
 
-    const factory: ContractFactory = await ethers.getContractFactory(
-      'OwnableDiamond',
-    );
-    instance = await factory.deploy([
+    const res = await diamondFactoryInstance.createDiamond([
       {
         target: facetInstance.address,
         initTarget: ethers.constants.AddressZero,
@@ -41,7 +44,11 @@ describe('OwnableDiamond', function () {
         selectors: [facetInstance.interface.getSighash('isAllowed(address)')],
       },
     ]);
-    await instance.deployed();
+    const receipt = await res.wait();
+    const diamondAddress =
+      receipt.events[receipt.events.length - 1].args.diamondAddress;
+
+    instance = await ethers.getContractAt('OwnableDiamond', diamondAddress);
 
     const facets = await instance.callStatic['facets()']();
 

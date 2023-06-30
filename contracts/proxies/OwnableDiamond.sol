@@ -11,6 +11,7 @@ import { DiamondWritable, IDiamondWritable } from '@solidstate/contracts/proxy/d
 import { DiamondFallback, IDiamondFallback } from '@solidstate/contracts/proxy/diamond/fallback/DiamondFallback.sol';
 import { SafeOwnable } from '@solidstate/contracts/access/ownable/SafeOwnable.sol';
 import { Ownable, OwnableInternal } from '@solidstate/contracts/access/ownable/Ownable.sol';
+import { IDiamond } from './IDiamond.sol';
 
 contract OwnableDiamond is
     ISolidStateDiamond,
@@ -19,16 +20,10 @@ contract OwnableDiamond is
     DiamondReadable,
     DiamondWritable,
     SafeOwnable,
+    IDiamond,
     ERC165Base
 {
-    struct FacetInit {
-        address target;
-        address initTarget;
-        bytes initData;
-        bytes4[] selectors;
-    }
-
-    constructor(FacetInit[] memory facetInits) {
+    constructor(address owner, FacetInit[] memory facetInits) {
         bytes4[] memory selectors = new bytes4[](12);
         uint256 selectorIndex;
 
@@ -100,8 +95,7 @@ contract OwnableDiamond is
         }
 
         // set owner
-
-        _setOwner(msg.sender);
+        _setOwner(owner);
     }
 
     receive() external payable {}

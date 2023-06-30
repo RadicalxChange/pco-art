@@ -7,15 +7,15 @@ import { DiamondBase } from '@solidstate/contracts/proxy/diamond/base/DiamondBas
 import { DiamondReadable, IDiamondReadable } from '@solidstate/contracts/proxy/diamond/readable/DiamondReadable.sol';
 import { DiamondWritableInternal } from '@solidstate/contracts/proxy/diamond/writable/DiamondWritableInternal.sol';
 import { SingleCutDiamond } from './SingleCutDiamond.sol';
-import { ISingleCutDiamondFactory } from './ISingleCutDiamondFactory.sol';
+import { IDiamondFactory } from './IDiamondFactory.sol';
 
-contract SingleCutDiamondFactory is ISingleCutDiamondFactory {
-    function createSingleCutDiamond(
-        SingleCutDiamond.FacetInit[] memory facetInits
+contract SingleCutDiamondFactory is IDiamondFactory {
+    function createDiamond(
+        FacetInit[] memory facetInits
     ) external returns (address) {
         SingleCutDiamond singleCutDiamond = new SingleCutDiamond(facetInits);
 
-        emit SingleCutDiamondCreated(address(singleCutDiamond));
+        emit DiamondCreated(address(singleCutDiamond));
 
         return address(singleCutDiamond);
     }

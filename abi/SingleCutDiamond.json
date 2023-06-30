@@ -24,7 +24,7 @@
             "type": "bytes4[]"
           }
         ],
-        "internalType": "struct SingleCutDiamond.FacetInit[]",
+        "internalType": "struct IDiamond.FacetInit[]",
         "name": "facetInits",
         "type": "tuple[]"
       }

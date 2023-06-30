@@ -6,12 +6,20 @@ import { ERC165Base, ERC165BaseStorage } from '@solidstate/contracts/introspecti
 import { DiamondBase } from '@solidstate/contracts/proxy/diamond/base/DiamondBase.sol';
 import { DiamondReadable, IDiamondReadable } from '@solidstate/contracts/proxy/diamond/readable/DiamondReadable.sol';
 import { DiamondWritableInternal } from '@solidstate/contracts/proxy/diamond/writable/DiamondWritableInternal.sol';
-import { SingleCutDiamond } from './SingleCutDiamond.sol';
+import { OwnableDiamond } from './OwnableDiamond.sol';
+import { IDiamondFactory } from './IDiamondFactory.sol';
 
-interface ISingleCutDiamondFactory {
-    event SingleCutDiamondCreated(address indexed singleCutDiamond);
+contract OwnableDiamondFactory is IDiamondFactory {
+    function createDiamond(
+        FacetInit[] memory facetInits
+    ) external returns (address) {
+        OwnableDiamond ownableDiamond = new OwnableDiamond(
+            msg.sender,
+            facetInits
+        );
 
-    function createSingleCutDiamond(
-        SingleCutDiamond.FacetInit[] memory facetInits
-    ) external returns (address);
+        emit DiamondCreated(address(ownableDiamond));
+
+        return address(ownableDiamond);
+    }
 }

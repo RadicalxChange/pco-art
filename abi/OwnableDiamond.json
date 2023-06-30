@@ -2,6 +2,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
         "components": [
           {
             "internalType": "address",
@@ -24,7 +29,7 @@
             "type": "bytes4[]"
           }
         ],
-        "internalType": "struct OwnableDiamond.FacetInit[]",
+        "internalType": "struct IDiamond.FacetInit[]",
         "name": "facetInits",
         "type": "tuple[]"
       }

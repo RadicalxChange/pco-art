@@ -26,7 +26,7 @@ describe('SingleCutDiamond', function () {
     facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
 
-    const res = await diamondFactoryInstance.createSingleCutDiamond([
+    const res = await diamondFactoryInstance.createDiamond([
       {
         target: facetInstance.address,
         initTarget: ethers.constants.AddressZero,
@@ -36,7 +36,7 @@ describe('SingleCutDiamond', function () {
     ]);
     const receipt = await res.wait();
     const singleCutDiamondAddress =
-      receipt.events[receipt.events.length - 1].args.singleCutDiamond;
+      receipt.events[receipt.events.length - 1].args.diamondAddress;
 
     instance = await ethers.getContractAt(
       'SingleCutDiamond',

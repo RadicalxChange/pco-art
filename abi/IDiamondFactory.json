@@ -5,11 +5,11 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "singleCutDiamond",
+        "name": "diamondAddress",
         "type": "address"
       }
     ],
-    "name": "SingleCutDiamondCreated",
+    "name": "DiamondCreated",
     "type": "event"
   },
   {
@@ -37,12 +37,12 @@
             "type": "bytes4[]"
           }
         ],
-        "internalType": "struct SingleCutDiamond.FacetInit[]",
+        "internalType": "struct IDiamond.FacetInit[]",
         "name": "facetInits",
         "type": "tuple[]"
       }
     ],
-    "name": "createSingleCutDiamond",
+    "name": "createDiamond",
     "outputs": [
       {
         "internalType": "address",

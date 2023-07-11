@@ -9,14 +9,14 @@ const tokenURI = 'ERC721Metadata.tokenURI';
 describe('WrappedERC721StewardLicense', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
-  let instance: any;
   let mockTokenInstance: any;
+  let mockTokenInstance1: any;
 
   before(async function () {
     [, , , , owner, nonOwner] = await ethers.getSigners();
   });
 
-  beforeEach(async function () {
+  async function deployFacet(initialize = true) {
     const erc721Base = await ethers.getContractAt(
       'ERC721Base',
       ethers.constants.AddressZero,
@@ -42,6 +42,11 @@ describe('WrappedERC721StewardLicense', function () {
     await mockTokenInstance.mint(owner.address, 1);
     await mockTokenInstance.mint(owner.address, 2);
 
+    mockTokenInstance1 = await mockToken.deploy(name, symbol, tokenURI);
+    await mockTokenInstance1.deployed();
+
+    await mockTokenInstance1.mint(owner.address, 1);
+
     const facetFactory = await ethers.getContractFactory(
       'WrappedERC721StewardLicenseFacet',
     );
@@ -59,9 +64,12 @@ describe('WrappedERC721StewardLicense', function () {
       erc721Receiver.interface.getSighash(
         'onERC721Received(address,address,uint256,bytes)',
       ),
+      facetFactory.interface.getSighash(
+        'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+      ),
     ];
 
-    instance = await factory.deploy([
+    let instance = await factory.deploy([
       {
         target: mockAuction.address,
         initTarget: ethers.constants.AddressZero,
@@ -74,21 +82,26 @@ describe('WrappedERC721StewardLicense', function () {
       },
       {
         target: facetInstance.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: initialize
+          ? facetInstance.address
+          : ethers.constants.AddressZero,
+        initData: initialize
+          ? facetInstance.interface.encodeFunctionData(
+              'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+              [
+                mockTokenInstance.address,
+                1,
+                await owner.getAddress(),
+                name,
+                symbol,
+                tokenURI,
+              ],
+            )
+          : '0x',
         selectors: selectors,
       },
     ]);
     await instance.deployed();
-
-    await mockTokenInstance
-      .connect(owner)
-      ['safeTransferFrom(address,address,uint256,bytes)'](
-        owner.address,
-        instance.address,
-        1,
-        ethers.utils.defaultAbiCoder.encode(['address'], [owner.address]),
-      );
 
     instance = await ethers.getContractAt(
       'WrappedERC721StewardLicenseFacet',
@@ -100,33 +113,80 @@ describe('WrappedERC721StewardLicense', function () {
       instance.address,
     );
     await auctionMockFacet['setIsAuctionPeriod(bool)'](false);
-  });
+
+    return instance;
+  }
 
   describe('onERC721Received', function () {
     it('should mint token to steward', async function () {
+      const instance = await deployFacet();
+
+      await mockTokenInstance
+        .connect(owner)
+        ['safeTransferFrom(address,address,uint256)'](
+          owner.address,
+          instance.address,
+          1,
+        );
+
       expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
         await owner.getAddress(),
       );
     });
 
-    it('should revert if already initialized', async function () {
+    it('should revert if not initialized yet', async function () {
+      const instance = await deployFacet(false);
+
       await expect(
         mockTokenInstance
           .connect(owner)
-          ['safeTransferFrom(address,address,uint256,bytes)'](
+          ['safeTransferFrom(address,address,uint256)'](
+            owner.address,
+            instance.address,
+            1,
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC721StewardLicenseFacet: must be initialized',
+      );
+    });
+
+    it('should revert if wrong token address', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance1
+          .connect(owner)
+          ['safeTransferFrom(address,address,uint256)'](
+            owner.address,
+            instance.address,
+            1,
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC721StewardLicenseFacet: cannot accept this token address',
+      );
+    });
+
+    it('should revert if wrong token id', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance
+          .connect(owner)
+          ['safeTransferFrom(address,address,uint256)'](
             owner.address,
             instance.address,
             2,
-            ethers.utils.defaultAbiCoder.encode(['address'], [owner.address]),
           ),
       ).to.be.revertedWith(
-        'WrappedERC721StewardLicenseFacet: already initialized',
+        'WrappedERC721StewardLicenseFacet: cannot accept this token ID',
       );
     });
   });
 
   describe('transfer', function () {
     it('should fail if during auction period', async function () {
+      const instance = await deployFacet();
+
       const auctionMockFacet = await ethers.getContractAt(
         'PeriodicAuctionMock',
         instance.address,
@@ -147,6 +207,8 @@ describe('WrappedERC721StewardLicense', function () {
     });
 
     it('should fail if call to auction fails', async function () {
+      const instance = await deployFacet();
+
       const auctionMockFacet = await ethers.getContractAt(
         'PeriodicAuctionMock',
         instance.address,

@@ -12,37 +12,60 @@ import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { StewardLicenseInternal } from '../StewardLicenseInternal.sol';
+import { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.sol';
 import { IStewardLicense } from '../IStewardLicense.sol';
 import { StewardLicenseBase } from '../StewardLicenseBase.sol';
 
 /**
  * @title WrappedERC721StewardLicenseFacet
- * @dev ERC-721 token license for Steward that wraps existing ERC-721. Transfers are disabled during an auction.
+ * @dev ERC-721 token license for Steward that wraps existing ERC-721. Only a particular ERC721 transfer is accepted.
  */
 contract WrappedERC721StewardLicenseFacet is
     StewardLicenseInternal,
+    WrappedStewardLicenseInternal,
     IStewardLicense,
     StewardLicenseBase,
     IERC721Receiver
 {
-    function onERC721Received(
-        address,
-        address,
+    /**
+     * @notice Initialize license
+     */
+    function initializeWrappedStewardLicense(
+        address tokenAddress,
         uint256 tokenId,
-        bytes calldata data
-    ) external override returns (bytes4) {
+        address _steward,
+        string memory name,
+        string memory symbol,
+        string memory tokenURI
+    ) external {
         require(
             _isInitialized() == false,
             'WrappedERC721StewardLicenseFacet: already initialized'
         );
 
-        address steward = abi.decode(data, (address));
+        _initializeWrappedLicense(tokenAddress, tokenId);
+        _initializeStewardLicense(_steward, name, symbol, tokenURI);
+    }
 
-        _initializeStewardLicense(
-            steward,
-            IERC721Metadata(msg.sender).name(),
-            IERC721Metadata(msg.sender).symbol(),
-            IERC721Metadata(msg.sender).tokenURI(tokenId)
+    function onERC721Received(
+        address,
+        address,
+        uint256 tokenId,
+        bytes calldata
+    ) external view override returns (bytes4) {
+        require(
+            _isInitialized() == true,
+            'WrappedERC721StewardLicenseFacet: must be initialized'
+        );
+
+        require(
+            msg.sender == _wrappedTokenAddress(),
+            'WrappedERC721StewardLicenseFacet: cannot accept this token address'
+        );
+
+        require(
+            tokenId == _wrappedTokenId(),
+            'WrappedERC721StewardLicenseFacet: cannot accept this token ID'
         );
 
         return this.onERC721Received.selector;

@@ -510,7 +510,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await expect(
         instance
@@ -533,7 +533,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await expect(
         instance
@@ -555,7 +555,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       const allowlistMock = await ethers.getContractAt(
         'AllowlistMock',
@@ -583,11 +583,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1.1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('1.1').add(100);
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -613,11 +613,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('0.9');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -643,7 +643,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await expect(
         instance
@@ -663,11 +663,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('0.9');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -693,7 +693,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await expect(
         instance
@@ -735,7 +735,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -768,7 +768,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('0.9');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -801,11 +801,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1.1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('1.2');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -874,7 +874,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
       const auctionStartTime = await instance.auctionStartTime();
 
       await instance
@@ -916,7 +916,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('0.9');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -935,7 +935,7 @@ describe('EnglishPeriodicAuction', function () {
       );
 
       const oldBid = await instance.bidOf(owner.address);
-      expect(oldBid.collateralAmount).to.be.equal(oldBid.bidAmount);
+      expect(oldBid.collateralAmount).to.be.equal(bidAmount);
 
       const currentBid = await instance.currentBid();
       const highestBid = await instance.highestBid();
@@ -1091,7 +1091,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -1113,7 +1113,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -1168,7 +1168,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -1194,11 +1194,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1.1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('1.2');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -1236,11 +1236,11 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount1 = ethers.utils.parseEther('1.1');
       const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
-      const collateralAmount1 = feeAmount1.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
 
       const bidAmount2 = ethers.utils.parseEther('1.2');
       const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
-      const collateralAmount2 = feeAmount2.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
 
       await instance
         .connect(bidder1)
@@ -1281,7 +1281,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -1299,7 +1299,7 @@ describe('EnglishPeriodicAuction', function () {
 
       // Expect owner balance to increase by bid amount
       expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
-        ethers.utils.parseEther('1.0'),
+        bidAmount,
       );
     });
 
@@ -1324,7 +1324,7 @@ describe('EnglishPeriodicAuction', function () {
 
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(ethers.utils.parseEther('1.0'));
+      const collateralAmount = feeAmount.add(bidAmount);
 
       await instance
         .connect(bidder1)
@@ -1347,7 +1347,7 @@ describe('EnglishPeriodicAuction', function () {
 
       // Expect owner balance to increase by bid amount
       expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
-        ethers.utils.parseEther('1.0'),
+        bidAmount,
       );
     });
   });

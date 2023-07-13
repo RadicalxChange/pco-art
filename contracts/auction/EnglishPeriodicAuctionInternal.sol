@@ -233,11 +233,11 @@ abstract contract EnglishPeriodicAuctionInternal is
             feeAmount = totalCollateralAmount;
         } else {
             require(
-                totalCollateralAmount > l.currentBid.bidAmount,
+                totalCollateralAmount > bidAmount,
                 'EnglishPeriodicAuction: Collateral must be greater than current bid'
             );
-            // If new bidder, collateral is current bid + fee
-            feeAmount = totalCollateralAmount - l.currentBid.bidAmount;
+            // If new bidder, collateral is bidAmount + fee
+            feeAmount = totalCollateralAmount - bidAmount;
         }
 
         require(
@@ -331,7 +331,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             l.highestBid = repossessorBid;
         } else {
             // Transfer bid to previous bidder's collateral
-            l.bids[oldBidder].collateralAmount = l.currentBid.bidAmount;
+            l.bids[oldBidder].collateralAmount = l.highestBid.bidAmount;
         }
 
         // Reset auction

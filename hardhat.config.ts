@@ -42,9 +42,10 @@ const config: HardhatUserConfig = {
       accounts: [PKEY_MAINNET],
     },
 
-    testnet: {
+    gnosis: {
       url: NODE_URL_TESTNET,
       accounts: [PKEY_TESTNET],
+      chainId: 100,
     },
   },
 

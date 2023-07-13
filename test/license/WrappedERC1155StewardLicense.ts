@@ -9,14 +9,14 @@ const tokenURI = 'ERC721Metadata.tokenURI';
 describe('WrappedERC1155StewardLicense', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
-  let instance: any;
   let mockTokenInstance: any;
+  let mockTokenInstance1: any;
 
   before(async function () {
     [, , , , owner, nonOwner] = await ethers.getSigners();
   });
 
-  beforeEach(async function () {
+  async function deployFacet(initialize = true) {
     const erc721Base = await ethers.getContractAt(
       'ERC721Base',
       ethers.constants.AddressZero,
@@ -42,6 +42,11 @@ describe('WrappedERC1155StewardLicense', function () {
     await mockTokenInstance.__mint(owner.address, 1, 2);
     await mockTokenInstance.__mint(owner.address, 2, 1);
 
+    mockTokenInstance1 = await mockToken.deploy(tokenURI);
+    await mockTokenInstance1.deployed();
+
+    await mockTokenInstance1.__mint(owner.address, 1, 2);
+
     const facetFactory = await ethers.getContractFactory(
       'WrappedERC1155StewardLicenseFacet',
     );
@@ -62,9 +67,12 @@ describe('WrappedERC1155StewardLicense', function () {
       erc1155Receiver.interface.getSighash(
         'onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)',
       ),
+      facetFactory.interface.getSighash(
+        'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+      ),
     ];
 
-    instance = await factory.deploy([
+    let instance = await factory.deploy([
       {
         target: mockAuction.address,
         initTarget: ethers.constants.AddressZero,
@@ -77,8 +85,22 @@ describe('WrappedERC1155StewardLicense', function () {
       },
       {
         target: facetInstance.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: initialize
+          ? facetInstance.address
+          : ethers.constants.AddressZero,
+        initData: initialize
+          ? facetInstance.interface.encodeFunctionData(
+              'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+              [
+                mockTokenInstance.address,
+                1,
+                await owner.getAddress(),
+                name,
+                symbol,
+                tokenURI,
+              ],
+            )
+          : '0x',
         selectors: selectors,
       },
     ]);
@@ -94,10 +116,33 @@ describe('WrappedERC1155StewardLicense', function () {
       instance.address,
     );
     await auctionMockFacet['setIsAuctionPeriod(bool)'](false);
+
+    return instance;
+  }
+
+  describe('initializeWrappedStewardLicense', function () {
+    it('should revert if already initialized', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        instance.initializeWrappedStewardLicense(
+          mockTokenInstance.address,
+          1,
+          await owner.getAddress(),
+          name,
+          symbol,
+          tokenURI,
+        ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: already initialized',
+      );
+    });
   });
 
   describe('onERC1155Received', function () {
     it('should mint token to steward', async function () {
+      const instance = await deployFacet();
+
       await mockTokenInstance
         .connect(owner)
         ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
@@ -105,10 +150,7 @@ describe('WrappedERC1155StewardLicense', function () {
           instance.address,
           1,
           1,
-          ethers.utils.defaultAbiCoder.encode(
-            ['address', 'string', 'string'],
-            [owner.address, name, symbol],
-          ),
+          '0x',
         );
 
       expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
@@ -116,39 +158,9 @@ describe('WrappedERC1155StewardLicense', function () {
       );
     });
 
-    it('should revert if already initialized', async function () {
-      await mockTokenInstance
-        .connect(owner)
-        ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
-          owner.address,
-          instance.address,
-          1,
-          1,
-          ethers.utils.defaultAbiCoder.encode(
-            ['address', 'string', 'string'],
-            [owner.address, name, symbol],
-          ),
-        );
-
-      await expect(
-        mockTokenInstance
-          .connect(owner)
-          ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
-            owner.address,
-            instance.address,
-            2,
-            1,
-            ethers.utils.defaultAbiCoder.encode(
-              ['address', 'string', 'string'],
-              [owner.address, name, symbol],
-            ),
-          ),
-      ).to.be.revertedWith(
-        'WrappedERC1155StewardLicenseFacet: already initialized',
-      );
-    });
-
     it('should revert if sending multiple tokens', async function () {
+      const instance = await deployFacet();
+
       await expect(
         mockTokenInstance
           .connect(owner)
@@ -157,19 +169,72 @@ describe('WrappedERC1155StewardLicense', function () {
             instance.address,
             1,
             2,
-            ethers.utils.defaultAbiCoder.encode(
-              ['address', 'string', 'string'],
-              [owner.address, name, symbol],
-            ),
+            '0x',
           ),
       ).to.be.revertedWith(
         'WrappedERC1155StewardLicenseFacet: can only receive one token',
+      );
+    });
+
+    it('should revert if not initialized yet', async function () {
+      const instance = await deployFacet(false);
+
+      await expect(
+        mockTokenInstance
+          .connect(owner)
+          ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
+            owner.address,
+            instance.address,
+            1,
+            1,
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: must be initialized',
+      );
+    });
+
+    it('should revert if wrong token address', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance1
+          .connect(owner)
+          ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
+            owner.address,
+            instance.address,
+            1,
+            1,
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: cannot accept this token address',
+      );
+    });
+
+    it('should revert if wrong token id', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance
+          .connect(owner)
+          ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
+            owner.address,
+            instance.address,
+            2,
+            1,
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: cannot accept this token ID',
       );
     });
   });
 
   describe('onERC1155BatchReceived', function () {
     it('should mint token to steward', async function () {
+      const instance = await deployFacet();
+
       await mockTokenInstance
         .connect(owner)
         ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
@@ -177,10 +242,7 @@ describe('WrappedERC1155StewardLicense', function () {
           instance.address,
           [1],
           [1],
-          ethers.utils.defaultAbiCoder.encode(
-            ['address', 'string', 'string'],
-            [owner.address, name, symbol],
-          ),
+          '0x',
         );
 
       expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
@@ -188,39 +250,9 @@ describe('WrappedERC1155StewardLicense', function () {
       );
     });
 
-    it('should revert if already initialized', async function () {
-      await mockTokenInstance
-        .connect(owner)
-        ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
-          owner.address,
-          instance.address,
-          [1],
-          [1],
-          ethers.utils.defaultAbiCoder.encode(
-            ['address', 'string', 'string'],
-            [owner.address, name, symbol],
-          ),
-        );
-
-      await expect(
-        mockTokenInstance
-          .connect(owner)
-          ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
-            owner.address,
-            instance.address,
-            [2],
-            [1],
-            ethers.utils.defaultAbiCoder.encode(
-              ['address', 'string', 'string'],
-              [owner.address, name, symbol],
-            ),
-          ),
-      ).to.be.revertedWith(
-        'WrappedERC1155StewardLicenseFacet: already initialized',
-      );
-    });
-
     it('should revert if sending multiple tokens', async function () {
+      const instance = await deployFacet();
+
       await expect(
         mockTokenInstance
           .connect(owner)
@@ -229,10 +261,7 @@ describe('WrappedERC1155StewardLicense', function () {
             instance.address,
             [1, 2],
             [1, 1],
-            ethers.utils.defaultAbiCoder.encode(
-              ['address', 'string', 'string'],
-              [owner.address, name, symbol],
-            ),
+            '0x',
           ),
       ).to.be.revertedWith(
         'WrappedERC1155StewardLicenseFacet: can only receive one token',
@@ -240,6 +269,8 @@ describe('WrappedERC1155StewardLicense', function () {
     });
 
     it('should revert if sending multiple of same token', async function () {
+      const instance = await deployFacet();
+
       await expect(
         mockTokenInstance
           .connect(owner)
@@ -248,19 +279,73 @@ describe('WrappedERC1155StewardLicense', function () {
             instance.address,
             [1],
             [2],
-            ethers.utils.defaultAbiCoder.encode(
-              ['address', 'string', 'string'],
-              [owner.address, name, symbol],
-            ),
+            '0x',
           ),
       ).to.be.revertedWith(
         'WrappedERC1155StewardLicenseFacet: can only receive one token',
       );
     });
+
+    it('should revert if not initialized yet', async function () {
+      const instance = await deployFacet(false);
+
+      await expect(
+        mockTokenInstance
+          .connect(owner)
+          ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
+            owner.address,
+            instance.address,
+            [1],
+            [1],
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: must be initialized',
+      );
+    });
+
+    it('should revert if wrong token address', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance1
+          .connect(owner)
+          ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
+            owner.address,
+            instance.address,
+            [1],
+            [1],
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: cannot accept this token address',
+      );
+    });
+
+    it('should revert if wrong token id', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        mockTokenInstance
+          .connect(owner)
+          ['safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)'](
+            owner.address,
+            instance.address,
+            [2],
+            [1],
+            '0x',
+          ),
+      ).to.be.revertedWith(
+        'WrappedERC1155StewardLicenseFacet: cannot accept this token ID',
+      );
+    });
   });
 
   describe('transfer', function () {
+    let instance: any;
     beforeEach(async function () {
+      instance = await deployFacet();
+
       await mockTokenInstance
         .connect(owner)
         ['safeTransferFrom(address,address,uint256,uint256,bytes)'](
@@ -268,10 +353,7 @@ describe('WrappedERC1155StewardLicense', function () {
           instance.address,
           1,
           1,
-          ethers.utils.defaultAbiCoder.encode(
-            ['address', 'string', 'string'],
-            [owner.address, name, symbol],
-          ),
+          '0x',
         );
     });
 

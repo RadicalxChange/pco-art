@@ -214,6 +214,44 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_steward",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenURI",
+        "type": "string"
+      }
+    ],
+    "name": "initializeWrappedStewardLicense",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "account",
         "type": "address"
       },
@@ -271,7 +309,7 @@
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "",
         "type": "bytes"
       }
     ],
@@ -283,7 +321,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -310,7 +348,7 @@
       },
       {
         "internalType": "bytes",
-        "name": "data",
+        "name": "",
         "type": "bytes"
       }
     ],
@@ -322,7 +360,7 @@
         "type": "bytes4"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {

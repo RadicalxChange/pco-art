@@ -10,6 +10,7 @@ import { StewardLicenseInternal } from '../StewardLicenseInternal.sol';
 import { IStewardLicense } from '../IStewardLicense.sol';
 import { StewardLicenseBase } from '../StewardLicenseBase.sol';
 import { IERC1155Receiver } from '@solidstate/contracts/interfaces/IERC1155Receiver.sol';
+import { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.sol';
 
 /**
  * @title WrappedERC1155StewardLicenseFacet
@@ -17,35 +18,56 @@ import { IERC1155Receiver } from '@solidstate/contracts/interfaces/IERC1155Recei
  */
 contract WrappedERC1155StewardLicenseFacet is
     StewardLicenseInternal,
+    WrappedStewardLicenseInternal,
     IStewardLicense,
     StewardLicenseBase,
     IERC1155Receiver
 {
-    function onERC1155Received(
-        address,
-        address,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external override returns (bytes4) {
+    /**
+     * @notice Initialize license
+     */
+    function initializeWrappedStewardLicense(
+        address tokenAddress,
+        uint256 tokenId,
+        address _steward,
+        string memory name,
+        string memory symbol,
+        string memory tokenURI
+    ) external {
         require(
             _isInitialized() == false,
             'WrappedERC1155StewardLicenseFacet: already initialized'
         );
 
+        _initializeWrappedLicense(tokenAddress, tokenId);
+        _initializeStewardLicense(_steward, name, symbol, tokenURI);
+    }
+
+    function onERC1155Received(
+        address,
+        address,
+        uint256 id,
+        uint256 value,
+        bytes calldata
+    ) external view override returns (bytes4) {
         require(
             value == 1,
             'WrappedERC1155StewardLicenseFacet: can only receive one token'
         );
 
-        (address steward, string memory name, string memory symbol) = abi
-            .decode(data, (address, string, string));
+        require(
+            _isInitialized() == true,
+            'WrappedERC1155StewardLicenseFacet: must be initialized'
+        );
 
-        _initializeStewardLicense(
-            steward,
-            name,
-            symbol,
-            IERC1155Metadata(msg.sender).uri(id)
+        require(
+            msg.sender == _wrappedTokenAddress(),
+            'WrappedERC1155StewardLicenseFacet: cannot accept this token address'
+        );
+
+        require(
+            id == _wrappedTokenId(),
+            'WrappedERC1155StewardLicenseFacet: cannot accept this token ID'
         );
 
         return this.onERC1155Received.selector;
@@ -56,26 +78,26 @@ contract WrappedERC1155StewardLicenseFacet is
         address,
         uint256[] calldata ids,
         uint256[] calldata values,
-        bytes calldata data
-    ) external override returns (bytes4) {
-        require(
-            _isInitialized() == false,
-            'WrappedERC1155StewardLicenseFacet: already initialized'
-        );
-
+        bytes calldata
+    ) external view override returns (bytes4) {
         require(
             ids.length == 1 && values.length == 1 && values[0] == 1,
             'WrappedERC1155StewardLicenseFacet: can only receive one token'
         );
 
-        (address steward, string memory name, string memory symbol) = abi
-            .decode(data, (address, string, string));
+        require(
+            _isInitialized() == true,
+            'WrappedERC1155StewardLicenseFacet: must be initialized'
+        );
 
-        _initializeStewardLicense(
-            steward,
-            name,
-            symbol,
-            IERC1155Metadata(msg.sender).uri(ids[0])
+        require(
+            msg.sender == _wrappedTokenAddress(),
+            'WrappedERC1155StewardLicenseFacet: cannot accept this token address'
+        );
+
+        require(
+            ids[0] == _wrappedTokenId(),
+            'WrappedERC1155StewardLicenseFacet: cannot accept this token ID'
         );
 
         return this.onERC1155BatchReceived.selector;

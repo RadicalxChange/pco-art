@@ -117,6 +117,25 @@ describe('WrappedERC721StewardLicense', function () {
     return instance;
   }
 
+  describe('initializeWrappedStewardLicense', function () {
+    it('should revert if already initialized', async function () {
+      const instance = await deployFacet();
+
+      await expect(
+        instance.initializeWrappedStewardLicense(
+          mockTokenInstance.address,
+          1,
+          await owner.getAddress(),
+          name,
+          symbol,
+          tokenURI,
+        ),
+      ).to.be.revertedWith(
+        'WrappedERC721StewardLicenseFacet: already initialized',
+      );
+    });
+  });
+
   describe('onERC721Received', function () {
     it('should mint token to steward', async function () {
       const instance = await deployFacet();

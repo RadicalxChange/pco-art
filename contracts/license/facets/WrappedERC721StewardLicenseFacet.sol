@@ -13,7 +13,6 @@ import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { StewardLicenseInternal } from '../StewardLicenseInternal.sol';
 import { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.sol';
-import { IStewardLicense } from '../IStewardLicense.sol';
 import { StewardLicenseBase } from '../StewardLicenseBase.sol';
 
 /**
@@ -23,7 +22,6 @@ import { StewardLicenseBase } from '../StewardLicenseBase.sol';
 contract WrappedERC721StewardLicenseFacet is
     StewardLicenseInternal,
     WrappedStewardLicenseInternal,
-    IStewardLicense,
     StewardLicenseBase,
     IERC721Receiver
 {

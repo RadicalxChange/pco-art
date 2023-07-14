@@ -7,6 +7,7 @@ pragma solidity ^0.8.17;
 library StewardLicenseStorage {
     struct Layout {
         bool isInitialized;
+        address initialSteward;
     }
 
     bytes32 private constant STORAGE_SLOT =

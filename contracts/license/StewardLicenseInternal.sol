@@ -9,7 +9,6 @@ import { ERC721MetadataStorage } from '@solidstate/contracts/token/ERC721/metada
 import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
-import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 
 /**
@@ -25,27 +24,25 @@ abstract contract StewardLicenseInternal is
      * @notice Initialize license
      */
     function _initializeStewardLicense(
-        address _steward,
+        address _initialSteward,
         string memory name,
         string memory symbol,
-        string memory tokenURI
+        string memory baseURI
     ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
         l.isInitialized = true;
+        l.initialSteward = _initialSteward;
 
         // Initialize ERC721
         ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
             .layout();
         ls.name = name;
         ls.symbol = symbol;
-        ls.tokenURIs[0] = tokenURI;
+        ls.baseURI = baseURI;
 
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);
-
-        // Mint single token to steward
-        _mint(_steward, 0);
     }
 
     /**

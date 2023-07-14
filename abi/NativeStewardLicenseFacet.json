@@ -229,7 +229,7 @@
       },
       {
         "internalType": "string",
-        "name": "tokenURI",
+        "name": "baseURI",
         "type": "string"
       }
     ],

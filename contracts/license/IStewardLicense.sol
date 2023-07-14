@@ -2,11 +2,12 @@
 pragma solidity ^0.8.17;
 
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
+import { IERC721Metadata } from '@solidstate/contracts/token/ERC721/metadata/IERC721Metadata.sol';
 
 /**
  * @title IStewardLicense
  */
-interface IStewardLicense is IERC721 {
+interface IStewardLicense is IERC721, IERC721Metadata {
     /**
      * @notice Trigger transfer of license
      */

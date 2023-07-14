@@ -128,7 +128,7 @@ describe('EnglishPeriodicAuction', function () {
         initTarget: facetInstance.address,
         initData: hasOwner
           ? facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await owner.getAddress(),
                 await nonOwner.getAddress(),
@@ -139,10 +139,11 @@ describe('EnglishPeriodicAuction', function () {
                 200,
                 bidExtensionWindowLengthSeconds,
                 bidExtensionSeconds,
+                10,
               ],
             )
           : facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await nonOwner.getAddress(),
                 await owner.getAddress(),
@@ -152,21 +153,23 @@ describe('EnglishPeriodicAuction', function () {
                 200,
                 bidExtensionWindowLengthSeconds,
                 bidExtensionSeconds,
+                10,
               ],
             ),
         selectors: [
           hasOwner
             ? facetFactory.interface.getSighash(
-                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               )
             : facetFactory.interface.getSighash(
-                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               ),
-          facetFactory.interface.getSighash('isAuctionPeriod()'),
-          facetFactory.interface.getSighash('isReadyForTransfer()'),
-          facetFactory.interface.getSighash('placeBid(uint256)'),
-          facetFactory.interface.getSighash('closeAuction()'),
+          facetFactory.interface.getSighash('isAuctionPeriod(uint256)'),
+          facetFactory.interface.getSighash('isReadyForTransfer(uint256)'),
+          facetFactory.interface.getSighash('placeBid(uint256,uint256)'),
+          facetFactory.interface.getSighash('closeAuction(uint256)'),
           facetFactory.interface.getSighash('calculateFeeFromBid(uint256)'),
+          facetFactory.interface.getSighash('maxTokenCount()'),
           facetFactory.interface.getSighash('repossessor()'),
           facetFactory.interface.getSighash('setRepossessor(address)'),
           facetFactory.interface.getSighash('initialPeriodStartTime()'),
@@ -182,12 +185,12 @@ describe('EnglishPeriodicAuction', function () {
           ),
           facetFactory.interface.getSighash('bidExtensionSeconds()'),
           facetFactory.interface.getSighash('setBidExtensionSeconds(uint256)'),
-          facetFactory.interface.getSighash('bidOf(address)'),
-          facetFactory.interface.getSighash('highestBid()'),
-          facetFactory.interface.getSighash('currentBid()'),
-          facetFactory.interface.getSighash('auctionStartTime()'),
-          facetFactory.interface.getSighash('auctionEndTime()'),
-          facetFactory.interface.getSighash('withdrawBid()'),
+          facetFactory.interface.getSighash('bidOf(uint256,address)'),
+          facetFactory.interface.getSighash('highestBid(uint256)'),
+          facetFactory.interface.getSighash('currentBid(uint256)'),
+          facetFactory.interface.getSighash('auctionStartTime(uint256)'),
+          facetFactory.interface.getSighash('auctionEndTime(uint256)'),
+          facetFactory.interface.getSighash('withdrawBid(uint256)'),
         ],
       },
     ]);
@@ -214,6 +217,12 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should set max token count', async function () {
+      const instance = await getInstance();
+
+      expect(await instance.maxTokenCount()).to.be.equal(10);
+    });
+
     it('should set initialPeriodStartTime', async function () {
       const instance = await getInstance();
 
@@ -249,7 +258,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await nonOwner.getAddress(),
           await owner.getAddress(),
@@ -259,6 +268,7 @@ describe('EnglishPeriodicAuction', function () {
           200,
           10,
           20,
+          10,
         ),
       ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
     });
@@ -273,6 +283,12 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should set max token count', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.maxTokenCount()).to.be.equal(10);
+    });
+
     it('should set initialPeriodStartTime', async function () {
       const instance = await getInstance({ hasOwner: true });
 
@@ -308,7 +324,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await owner.getAddress(),
           await nonOwner.getAddress(),
@@ -319,6 +335,7 @@ describe('EnglishPeriodicAuction', function () {
           200,
           10,
           20,
+          10,
         ),
       ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
     });
@@ -333,7 +350,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
     });
 
     it('should return false if initial auction ended', async function () {
@@ -346,9 +363,9 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(false);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(false);
     });
 
     it('should return true if another auction is in progress', async function () {
@@ -363,10 +380,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1050);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
     });
 
     it('should return false if another auction ended', async function () {
@@ -381,11 +398,11 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(false);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(false);
     });
   });
 
@@ -398,7 +415,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return true if initial auction ended', async function () {
@@ -411,7 +428,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
     });
 
     it('should return false if initial auction transferred', async function () {
@@ -424,9 +441,9 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return false if another auction is in progress', async function () {
@@ -441,10 +458,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1050);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return true if another auction ended', async function () {
@@ -459,10 +476,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
     });
 
     it('should return false if another auction transferred', async function () {
@@ -477,11 +494,11 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
   });
 

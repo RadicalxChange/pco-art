@@ -8,5 +8,5 @@ interface IPeriodicAuctionReadable {
     /**
      * @notice Get is auction period
      */
-    function isAuctionPeriod() external view returns (bool);
+    function isAuctionPeriod(uint256 tokenId) external view returns (bool);
 }

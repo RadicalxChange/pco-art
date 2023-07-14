@@ -63,7 +63,7 @@ abstract contract StewardLicenseInternal is
         // Disable transfers if not mint
         if (from != address(0x0)) {
             bool isAuctionPeriod = IPeriodicAuctionReadable(address(this))
-                .isAuctionPeriod();
+                .isAuctionPeriod(tokenId);
             require(
                 isAuctionPeriod == false,
                 'StewardLicenseFacet: Cannot transfer during auction period'

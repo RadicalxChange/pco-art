@@ -19,7 +19,7 @@ contract PeriodicAuctionMock is IPeriodicAuctionReadable {
         }
     }
 
-    function isAuctionPeriod() external view returns (bool) {
+    function isAuctionPeriod(uint256) external view returns (bool) {
         require(!layout().shouldFail, 'PeriodicAuctionMock: failed');
         return layout().isAuctionPeriod;
     }

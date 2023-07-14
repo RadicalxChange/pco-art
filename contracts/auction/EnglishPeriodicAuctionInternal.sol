@@ -24,29 +24,22 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
         uint256 bidExtensionWindowLengthSeconds,
-        uint256 bidExtensionSeconds
+        uint256 bidExtensionSeconds,
+        uint256 maxTokenCount
     ) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         l.isInitialized = true;
+        l.maxTokenCount = maxTokenCount;
+        l.initialBidder = initialBidder;
+        l.startingBid = startingBid;
         _setRepossessor(repossessor);
         _setInitialPeriodStartTime(initialPeriodStartTime);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
         _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
         _setBidExtensionSeconds(bidExtensionSeconds);
-        l.currentAuctionLength = auctionLengthSeconds;
-        l.currentAuctionRound = 1;
-
-        l.currentBid.round = 1;
-        l.currentBid.bidder = initialBidder;
-        l.currentBid.bidAmount = startingBid;
-        l.currentBid.collateralAmount = 0;
-        l.currentBid.feeAmount = 0;
-        l.bids[initialBidder] = l.currentBid;
-
-        l.highestBid.bidder = repossessor;
     }
 
     /**
@@ -54,6 +47,13 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _isInitialized() internal view returns (bool) {
         return EnglishPeriodicAuctionStorage.layout().isInitialized;
+    }
+
+    /**
+     * @notice Get max token count
+     */
+    function _maxTokenCount() internal view returns (uint256) {
+        return EnglishPeriodicAuctionStorage.layout().maxTokenCount;
     }
 
     /**
@@ -167,42 +167,46 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Get highest outstanding bid
      */
-    function _highestBid() internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().highestBid;
+    function _highestBid(uint256 tokenId) internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().highestBids[tokenId];
     }
 
     /**
      * @notice Get current bid
      */
-    function _currentBid() internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().currentBid;
+    function _currentBid(uint256 tokenId) internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().currentBids[tokenId];
     }
 
     /**
      * @notice Get bid for address
      */
-    function _bidOf(address bidder) internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().bids[bidder];
+    function _bidOf(
+        uint256 tokenId,
+        address bidder
+    ) internal view returns (Bid storage) {
+        return EnglishPeriodicAuctionStorage.layout().bids[tokenId][bidder];
     }
 
     /**
      * @notice Get is auction period
      */
-    function _isAuctionPeriod() internal view returns (bool) {
-        return block.timestamp >= _auctionStartTime();
+    function _isAuctionPeriod(uint256 tokenId) internal view returns (bool) {
+        return block.timestamp >= _auctionStartTime(tokenId);
     }
 
     /**
      * @notice Is token ready for transfer
      */
-    function _isReadyForTransfer() internal view returns (bool) {
-        return block.timestamp >= _auctionEndTime();
+    function _isReadyForTransfer(uint256 tokenId) internal view returns (bool) {
+        return block.timestamp >= _auctionEndTime(tokenId);
     }
 
     /**
      * @notice Place a bid
      */
     function _placeBid(
+        uint256 tokenId,
         address bidder,
         uint256 bidAmount,
         uint256 collateralAmount
@@ -210,16 +214,16 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        Bid storage bid = l.bids[bidder];
+        Bid storage bid = l.bids[tokenId][bidder];
 
         // Check if highest bid
         require(
-            bidAmount >= l.highestBid.bidAmount + l.minBidIncrement,
+            bidAmount >= l.highestBids[tokenId].bidAmount + l.minBidIncrement,
             'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
         );
 
         uint256 totalCollateralAmount;
-        if (bid.round == l.currentAuctionRound) {
+        if (bid.round == l.currentAuctionRound[tokenId]) {
             // If bidder has bid for round, add to existing bid
             totalCollateralAmount = bid.collateralAmount + collateralAmount;
         } else {
@@ -227,7 +231,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         uint256 feeAmount;
-        address currentBidder = IStewardLicense(address(this)).ownerOf(0);
+        address currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
         if (bidder == currentBidder) {
             // If current bidder, collateral is entire fee amount
             feeAmount = totalCollateralAmount;
@@ -248,23 +252,29 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Save bid
         bid.bidder = bidder;
         bid.bidAmount = bidAmount;
-        bid.round = l.currentAuctionRound;
+        bid.round = l.currentAuctionRound[tokenId];
         bid.feeAmount = feeAmount;
         bid.collateralAmount = totalCollateralAmount;
 
-        l.highestBid = bid;
+        l.highestBids[tokenId] = bid;
 
         // Check if auction should extend
-        uint256 auctionEndTime = _auctionEndTime();
+        uint256 auctionEndTime = _auctionEndTime(tokenId);
 
         if (
             auctionEndTime >= block.timestamp &&
             auctionEndTime - block.timestamp <
             _bidExtensionWindowLengthSeconds()
         ) {
+            uint256 auctionLengthSeconds;
+            if (l.currentAuctionLength[tokenId] == 0) {
+                auctionLengthSeconds = _auctionLengthSeconds();
+            } else {
+                auctionLengthSeconds = l.currentAuctionLength[tokenId];
+            }
             // Extend auction
-            l.currentAuctionLength =
-                l.currentAuctionLength +
+            l.currentAuctionLength[tokenId] =
+                auctionLengthSeconds +
                 _bidExtensionSeconds();
         }
     }
@@ -272,22 +282,22 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Withdraw bid collateral if not highest bidder
      */
-    function _withdrawBid(address bidder) internal {
+    function _withdrawBid(uint256 tokenId, address bidder) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        address currentBidder = IStewardLicense(address(this)).ownerOf(0);
+        address currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
 
         require(
             bidder != currentBidder,
             'EnglishPeriodicAuction: Cannot withdraw bid if current bidder'
         );
         require(
-            bidder != l.highestBid.bidder,
+            bidder != l.highestBids[tokenId].bidder,
             'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder'
         );
 
-        Bid storage bid = l.bids[bidder];
+        Bid storage bid = l.bids[tokenId][bidder];
 
         require(
             bid.collateralAmount > 0,
@@ -310,48 +320,50 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Close auction and trigger a transfer to the highest bidder
      */
-    function _closeAuction() internal {
+    function _closeAuction(uint256 tokenId) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        address oldBidder = IStewardLicense(address(this)).ownerOf(0);
+        address oldBidder = IStewardLicense(address(this)).ownerOf(tokenId);
 
         // Set lastPeriodEndTime to the end of the current auction period
-        l.lastPeriodEndTime = block.timestamp;
+        l.lastPeriodEndTime[tokenId] = block.timestamp;
 
-        if (l.highestBid.round != l.currentAuctionRound) {
+        if (l.highestBids[tokenId].round != l.currentAuctionRound[tokenId]) {
             // No bids were placed, transfer to reposssessor
-            Bid storage repossessorBid = l.bids[l.repossessor];
-            repossessorBid.round = l.currentAuctionRound;
+            Bid storage repossessorBid = l.bids[tokenId][l.repossessor];
+            repossessorBid.round = l.currentAuctionRound[tokenId];
             repossessorBid.bidAmount = 0;
             repossessorBid.collateralAmount = 0;
             repossessorBid.feeAmount = 0;
             repossessorBid.bidder = l.repossessor;
 
-            l.highestBid = repossessorBid;
-        } else {
-            // Transfer bid to previous bidder's collateral
-            l.bids[oldBidder].collateralAmount = l.highestBid.bidAmount;
+            l.highestBids[tokenId] = repossessorBid;
+        } else if (oldBidder != address(0)) {
+            // Transfer bid to previous bidder's collateral if not initial auction
+            l.bids[tokenId][oldBidder].collateralAmount = l
+                .highestBids[tokenId]
+                .bidAmount;
         }
 
         // Reset auction
-        l.currentBid = l.highestBid;
-        l.bids[l.highestBid.bidder].collateralAmount = 0;
-        l.currentBid.collateralAmount = 0;
-        l.currentAuctionLength = l.auctionLengthSeconds;
-        l.currentAuctionRound = l.currentAuctionRound + 1;
+        l.currentBids[tokenId] = l.highestBids[tokenId];
+        l.bids[tokenId][l.highestBids[tokenId].bidder].collateralAmount = 0;
+        l.currentBids[tokenId].collateralAmount = 0;
+        l.currentAuctionLength[tokenId] = l.auctionLengthSeconds;
+        l.currentAuctionRound[tokenId] = l.currentAuctionRound[tokenId] + 1;
 
         // Transfer to highest bidder
         IStewardLicense(address(this)).triggerTransfer(
             oldBidder,
-            l.highestBid.bidder,
-            0
+            l.highestBids[tokenId].bidder,
+            tokenId
         );
 
         // Distribute fee to beneficiary
-        if (l.highestBid.feeAmount > 0) {
+        if (l.highestBids[tokenId].feeAmount > 0) {
             IBeneficiary(address(this)).distribute{
-                value: l.highestBid.feeAmount
+                value: l.highestBids[tokenId].feeAmount
             }();
         }
     }
@@ -359,20 +371,18 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Get auction start time
      */
-    function _auctionStartTime()
-        internal
-        view
-        returns (uint256 auctionStartTime)
-    {
+    function _auctionStartTime(
+        uint256 tokenId
+    ) internal view returns (uint256 auctionStartTime) {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
             .licensePeriod();
 
-        if (l.lastPeriodEndTime > l.initialPeriodStartTime) {
+        if (l.lastPeriodEndTime[tokenId] > l.initialPeriodStartTime) {
             // Auction starts after licensePeriod has elapsed
-            auctionStartTime = l.lastPeriodEndTime + licensePeriod;
+            auctionStartTime = l.lastPeriodEndTime[tokenId] + licensePeriod;
         } else {
             // Auction starts at initial time
             auctionStartTime = l.initialPeriodStartTime;
@@ -382,11 +392,20 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Get auction end time
      */
-    function _auctionEndTime() internal view returns (uint256 auctionEndTime) {
+    function _auctionEndTime(
+        uint256 tokenId
+    ) internal view returns (uint256 auctionEndTime) {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        auctionEndTime = _auctionStartTime() + l.currentAuctionLength;
+        uint256 auctionLengthSeconds;
+        if (l.currentAuctionLength[tokenId] == 0) {
+            auctionLengthSeconds = _auctionLengthSeconds();
+        } else {
+            auctionLengthSeconds = l.currentAuctionLength[tokenId];
+        }
+
+        auctionEndTime = _auctionStartTime(tokenId) + auctionLengthSeconds;
     }
 
     /**

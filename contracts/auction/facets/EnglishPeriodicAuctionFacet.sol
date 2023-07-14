@@ -33,7 +33,8 @@ contract EnglishPeriodicAuctionFacet is
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds
+        uint256 _bidExtensionSeconds,
+        uint256 _maxTokenCount
     ) external {
         require(
             _isInitialized() == false,
@@ -49,7 +50,8 @@ contract EnglishPeriodicAuctionFacet is
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds
+            _bidExtensionSeconds,
+            _maxTokenCount
         );
     }
 
@@ -65,7 +67,8 @@ contract EnglishPeriodicAuctionFacet is
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds
+        uint256 _bidExtensionSeconds,
+        uint256 _maxTokenCount
     ) external {
         require(
             _isInitialized() == false,
@@ -83,15 +86,23 @@ contract EnglishPeriodicAuctionFacet is
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds
+            _bidExtensionSeconds,
+            _maxTokenCount
         );
+    }
+
+    /**
+     * @notice Get max token count
+     */
+    function maxTokenCount() external view returns (uint256) {
+        return _maxTokenCount();
     }
 
     /**
      * @notice Get is auction period
      */
-    function isAuctionPeriod() external view returns (bool) {
-        return _isAuctionPeriod();
+    function isAuctionPeriod(uint256 tokenId) external view returns (bool) {
+        return _isAuctionPeriod(tokenId);
     }
 
     /**
@@ -104,20 +115,20 @@ contract EnglishPeriodicAuctionFacet is
     /**
      * @notice Is token ready for transfer
      */
-    function isReadyForTransfer() external view returns (bool) {
-        return _isReadyForTransfer();
+    function isReadyForTransfer(uint256 tokenId) external view returns (bool) {
+        return _isReadyForTransfer(tokenId);
     }
 
     /**
      * @notice Place a bid
      */
-    function placeBid(uint256 bidAmount) external payable {
+    function placeBid(uint256 tokenId, uint256 bidAmount) external payable {
         require(
-            _isAuctionPeriod(),
+            _isAuctionPeriod(tokenId),
             'EnglishPeriodicAuction: can only place bid in auction period'
         );
         require(
-            _isReadyForTransfer() == false,
+            _isReadyForTransfer(tokenId) == false,
             'EnglishPeriodicAuction: auction is over and awaiting transfer'
         );
         require(
@@ -125,26 +136,26 @@ contract EnglishPeriodicAuctionFacet is
             'EnglishPeriodicAuction: sender is not allowed to place bid'
         );
 
-        _placeBid(msg.sender, bidAmount, msg.value);
+        _placeBid(tokenId, msg.sender, bidAmount, msg.value);
     }
 
     /**
      * @notice Withdraw bid collateral
      */
-    function withdrawBid() external {
-        _withdrawBid(msg.sender);
+    function withdrawBid(uint256 tokenId) external {
+        _withdrawBid(tokenId, msg.sender);
     }
 
     /**
      * @notice Close auction and trigger a transfer to the highest bidder
      */
-    function closeAuction() external {
+    function closeAuction(uint256 tokenId) external {
         require(
-            _isReadyForTransfer(),
+            _isReadyForTransfer(tokenId),
             'EnglishPeriodicAuction: auction is not over'
         );
 
-        _closeAuction();
+        _closeAuction(tokenId);
     }
 
     /**
@@ -159,15 +170,15 @@ contract EnglishPeriodicAuctionFacet is
     /**
      * @notice Get auction start time
      */
-    function auctionStartTime() external view returns (uint256) {
-        return _auctionStartTime();
+    function auctionStartTime(uint256 tokenId) external view returns (uint256) {
+        return _auctionStartTime(tokenId);
     }
 
     /**
      * @notice Get auction end time
      */
-    function auctionEndTime() external view returns (uint256) {
-        return _auctionEndTime();
+    function auctionEndTime(uint256 tokenId) external view returns (uint256) {
+        return _auctionEndTime(tokenId);
     }
 
     /**
@@ -253,21 +264,24 @@ contract EnglishPeriodicAuctionFacet is
     /**
      * @notice Get highest outstanding bid
      */
-    function highestBid() external view returns (Bid memory) {
-        return _highestBid();
+    function highestBid(uint256 tokenId) external view returns (Bid memory) {
+        return _highestBid(tokenId);
     }
 
     /**
      * @notice Get current bid
      */
-    function currentBid() external view returns (Bid memory) {
-        return _currentBid();
+    function currentBid(uint256 tokenId) external view returns (Bid memory) {
+        return _currentBid(tokenId);
     }
 
     /**
      * @notice Get bid for address
      */
-    function bidOf(address bidder) external view returns (Bid memory) {
-        return _bidOf(bidder);
+    function bidOf(
+        uint256 tokenId,
+        address bidder
+    ) external view returns (Bid memory) {
+        return _bidOf(tokenId, bidder);
     }
 }

@@ -79,7 +79,7 @@ describe('WrappedERC1155StewardLicense', function () {
         initTarget: ethers.constants.AddressZero,
         initData: '0x',
         selectors: [
-          mockAuction.interface.getSighash('isAuctionPeriod()'),
+          mockAuction.interface.getSighash('isAuctionPeriod(uint256)'),
           mockAuction.interface.getSighash('setIsAuctionPeriod(bool)'),
           mockAuction.interface.getSighash('setShouldFail(bool)'),
         ],

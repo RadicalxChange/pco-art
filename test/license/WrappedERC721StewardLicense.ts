@@ -48,7 +48,7 @@ describe('WrappedERC721StewardLicense', function () {
     await mockTokenInstance1.mint(owner.address, 1);
 
     const facetFactory = await ethers.getContractFactory(
-      'WrappedERC721StewardLicenseFacet',
+      'WrappedERC721StewardLicenseMock',
     );
     const facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
@@ -67,6 +67,7 @@ describe('WrappedERC721StewardLicense', function () {
       facetFactory.interface.getSighash(
         'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
       ),
+      facetFactory.interface.getSighash('mint(address,uint256)'),
     ];
 
     let instance = await factory.deploy([
@@ -104,9 +105,11 @@ describe('WrappedERC721StewardLicense', function () {
     await instance.deployed();
 
     instance = await ethers.getContractAt(
-      'WrappedERC721StewardLicenseFacet',
+      'WrappedERC721StewardLicenseMock',
       instance.address,
     );
+
+    await instance.mint(await owner.getAddress(), 0);
 
     const auctionMockFacet = await ethers.getContractAt(
       'PeriodicAuctionMock',

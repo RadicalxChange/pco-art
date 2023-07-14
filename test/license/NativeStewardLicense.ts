@@ -97,6 +97,8 @@ describe('NativeStewardLicense', function () {
       instance.address,
     );
 
+    await instance.mint(await owner.getAddress(), 0);
+
     const auctionMockFacet = await ethers.getContractAt(
       'PeriodicAuctionMock',
       instance.address,
@@ -117,12 +119,6 @@ describe('NativeStewardLicense', function () {
   });
 
   describe('initializeStewardLicense', function () {
-    it('should mint token to steward', async function () {
-      expect(await instance.ownerOf(ethers.constants.Zero)).to.be.equal(
-        await owner.getAddress(),
-      );
-    });
-
     it('should revert if already initialized', async function () {
       await expect(
         instance['initializeStewardLicense(address,string,string,string)'](

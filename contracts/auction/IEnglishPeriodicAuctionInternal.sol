@@ -21,14 +21,16 @@ interface IEnglishPeriodicAuctionInternal {
     event BidExtensionSet(uint256 bidExtensionSeconds);
 
     event BidPlaced(
+        uint256 indexed tokenId,
         uint256 indexed round,
         address indexed bidder,
         uint256 bidAmount
     );
     event AuctionClosed(
+        uint256 indexed tokenId,
         uint256 indexed round,
-        address indexed previousOwner,
         address indexed winningBidder,
+        address previousOwner,
         uint256 bidAmount
     );
 }

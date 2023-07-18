@@ -16,4 +16,9 @@ interface IStewardLicense is IERC721, IERC721Metadata {
         address to,
         uint256 tokenId
     ) external;
+
+    /**
+     * @notice Check if token exists
+     */
+    function exists(uint256 tokenId) external view returns (bool);
 }

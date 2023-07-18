@@ -226,11 +226,14 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         Bid storage bid = l.bids[tokenId][bidder];
 
-        // Check if highest bid
-        require(
-            bidAmount >= l.highestBids[tokenId].bidAmount + l.minBidIncrement,
-            'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
-        );
+        if (l.highestBids[tokenId].round == l.currentAuctionRound[tokenId]) {
+            // Check if highest bid
+            require(
+                bidAmount >=
+                    l.highestBids[tokenId].bidAmount + l.minBidIncrement,
+                'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
+            );
+        }
 
         uint256 totalCollateralAmount;
         if (bid.round == l.currentAuctionRound[tokenId]) {
@@ -241,7 +244,13 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         uint256 feeAmount;
-        address currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        address currentBidder;
+        if (IStewardLicense(address(this)).exists(tokenId)) {
+            currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        } else {
+            currentBidder = l.initialBidder;
+        }
+
         if (bidder == currentBidder) {
             // If current bidder, collateral is entire fee amount
             feeAmount = totalCollateralAmount;
@@ -268,7 +277,7 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         l.highestBids[tokenId] = bid;
 
-        emit BidPlaced(bid.round, bid.bidder, bid.bidAmount);
+        emit BidPlaced(tokenId, bid.round, bid.bidder, bid.bidAmount);
 
         // Check if auction should extend
         uint256 auctionEndTime = _auctionEndTime(tokenId);
@@ -298,7 +307,12 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        address currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        address currentBidder;
+        if (IStewardLicense(address(this)).exists(tokenId)) {
+            currentBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        } else {
+            currentBidder = l.initialBidder;
+        }
 
         require(
             bidder != currentBidder,
@@ -336,12 +350,17 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        address oldBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        address oldBidder;
+        if (IStewardLicense(address(this)).exists(tokenId)) {
+            oldBidder = IStewardLicense(address(this)).ownerOf(tokenId);
+        } else {
+            oldBidder = l.initialBidder;
+        }
 
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime[tokenId] = block.timestamp;
 
-        if (l.highestBids[tokenId].round != l.currentAuctionRound[tokenId]) {
+        if (l.highestBids[tokenId].bidder == address(0)) {
             // No bids were placed, transfer to reposssessor
             Bid storage repossessorBid = l.bids[tokenId][l.repossessor];
             repossessorBid.round = l.currentAuctionRound[tokenId];
@@ -351,18 +370,19 @@ abstract contract EnglishPeriodicAuctionInternal is
             repossessorBid.bidder = l.repossessor;
 
             l.highestBids[tokenId] = repossessorBid;
-        } else if (oldBidder != address(0)) {
-            // Transfer bid to previous bidder's collateral if not initial auction
+        } else {
+            // Transfer bid to previous bidder's collateral
             l.bids[tokenId][oldBidder].collateralAmount = l
                 .highestBids[tokenId]
                 .bidAmount;
         }
 
         emit AuctionClosed(
-            l.currentAuctionRound,
+            tokenId,
+            l.currentAuctionRound[tokenId],
+            l.highestBids[tokenId].bidder,
             oldBidder,
-            l.highestBid.bidder,
-            l.highestBid.bidAmount
+            l.highestBids[tokenId].bidAmount
         );
 
         // Reset auction

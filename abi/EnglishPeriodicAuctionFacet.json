@@ -15,19 +15,25 @@
       {
         "indexed": true,
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
         "name": "round",
         "type": "uint256"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "winningBidder",
         "type": "address"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address",
-        "name": "winningBidder",
+        "name": "previousOwner",
         "type": "address"
       },
       {
@@ -82,6 +88,12 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
       {
         "indexed": true,
         "internalType": "uint256",

@@ -21,12 +21,19 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
             'NativeStewardLicense: Trigger transfer can only be called from another facet'
         );
 
-        if (_ownerOf(tokenId) == address(0)) {
+        if (_exists(tokenId) == false) {
             // Mint token
             _mint(to, tokenId);
         } else {
             // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
             _transfer(from, to, tokenId);
         }
+    }
+
+    /**
+     * @notice Check if token exists
+     */
+    function exists(uint256 tokenId) external view returns (bool) {
+        return _exists(tokenId);
     }
 }

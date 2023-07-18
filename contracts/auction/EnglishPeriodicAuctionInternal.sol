@@ -68,6 +68,8 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _setRepossessor(address repossessor) internal {
         EnglishPeriodicAuctionStorage.layout().repossessor = repossessor;
+
+        emit RepossessorSet(repossessor);
     }
 
     /**
@@ -105,6 +107,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage
             .layout()
             .auctionLengthSeconds = auctionLengthSeconds;
+
+        emit AuctionLengthSet(auctionLengthSeconds);
     }
 
     /**
@@ -121,6 +125,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage
             .layout()
             .minBidIncrement = minBidIncrement;
+
+        emit MinBidIncrementSet(minBidIncrement);
     }
 
     /**
@@ -146,6 +152,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage
             .layout()
             .bidExtensionWindowLengthSeconds = bidExtensionWindowLengthSeconds;
+
+        emit BidExtensionWindowLengthSet(bidExtensionWindowLengthSeconds);
     }
 
     /**
@@ -162,6 +170,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage
             .layout()
             .bidExtensionSeconds = bidExtensionSeconds;
+
+        emit BidExtensionSet(bidExtensionSeconds);
     }
 
     /**
@@ -258,6 +268,8 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         l.highestBids[tokenId] = bid;
 
+        emit BidPlaced(bid.round, bid.bidder, bid.bidAmount);
+
         // Check if auction should extend
         uint256 auctionEndTime = _auctionEndTime(tokenId);
 
@@ -345,6 +357,13 @@ abstract contract EnglishPeriodicAuctionInternal is
                 .highestBids[tokenId]
                 .bidAmount;
         }
+
+        emit AuctionClosed(
+            l.currentAuctionRound,
+            oldBidder,
+            l.highestBid.bidder,
+            l.highestBid.bidAmount
+        );
 
         // Reset auction
         l.currentBids[tokenId] = l.highestBids[tokenId];

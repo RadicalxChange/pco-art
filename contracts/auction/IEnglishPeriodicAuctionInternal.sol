@@ -14,4 +14,21 @@ interface IEnglishPeriodicAuctionInternal {
     }
 
     event InitialPeriodStartTimeSet(uint256 initialPeriodStartTime);
+    event RepossessorSet(address repossessor);
+    event AuctionLengthSet(uint256 auctionLengthSeconds);
+    event MinBidIncrementSet(uint256 minBidIncrement);
+    event BidExtensionWindowLengthSet(uint256 bidExtensionWindowLengthSeconds);
+    event BidExtensionSet(uint256 bidExtensionSeconds);
+
+    event BidPlaced(
+        uint256 indexed round,
+        address indexed bidder,
+        uint256 bidAmount
+    );
+    event AuctionClosed(
+        uint256 indexed round,
+        address indexed previousOwner,
+        address indexed winningBidder,
+        uint256 bidAmount
+    );
 }

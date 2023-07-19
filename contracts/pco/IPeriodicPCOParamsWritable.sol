@@ -13,12 +13,10 @@ interface IPeriodicPCOParamsWritable {
     /**
      * @notice Set fee numerator
      */
-    function setPerSecondFeeNumerator(uint256 _perSecondFeeNumerator) external;
+    function setFeeNumerator(uint256 _feeNumerator) external;
 
     /**
      * @notice Set fee denominator
      */
-    function setPerSecondFeeDenominator(
-        uint256 _perSecondFeeDenominator
-    ) external;
+    function setFeeDenominator(uint256 _feeDenominator) external;
 }

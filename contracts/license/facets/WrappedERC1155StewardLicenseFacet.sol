@@ -7,7 +7,6 @@ import { IERC1155 } from '@solidstate/contracts/interfaces/IERC1155.sol';
 import { IERC1155Metadata } from '@solidstate/contracts/token/ERC1155/metadata/IERC1155Metadata.sol';
 import { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';
 import { StewardLicenseInternal } from '../StewardLicenseInternal.sol';
-import { IStewardLicense } from '../IStewardLicense.sol';
 import { StewardLicenseBase } from '../StewardLicenseBase.sol';
 import { IERC1155Receiver } from '@solidstate/contracts/interfaces/IERC1155Receiver.sol';
 import { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.sol';
@@ -19,7 +18,6 @@ import { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.
 contract WrappedERC1155StewardLicenseFacet is
     StewardLicenseInternal,
     WrappedStewardLicenseInternal,
-    IStewardLicense,
     StewardLicenseBase,
     IERC1155Receiver
 {

@@ -6,18 +6,23 @@ import { IEnglishPeriodicAuctionInternal } from './IEnglishPeriodicAuctionIntern
 library EnglishPeriodicAuctionStorage {
     struct Layout {
         bool isInitialized;
+        // Same for all tokens
+        address initialBidder;
+        uint256 startingBid;
         address repossessor;
         uint256 initialPeriodStartTime;
         uint256 auctionLengthSeconds;
         uint256 minBidIncrement;
         uint256 bidExtensionWindowLengthSeconds;
         uint256 bidExtensionSeconds;
-        uint256 lastPeriodEndTime;
-        uint256 currentAuctionRound;
-        uint256 currentAuctionLength;
-        mapping(address => IEnglishPeriodicAuctionInternal.Bid) bids;
-        IEnglishPeriodicAuctionInternal.Bid currentBid;
-        IEnglishPeriodicAuctionInternal.Bid highestBid;
+        uint256 maxTokenCount;
+        // Per token config
+        mapping(uint256 => uint256) lastPeriodEndTime;
+        mapping(uint256 => uint256) currentAuctionRound;
+        mapping(uint256 => uint256) currentAuctionLength;
+        mapping(uint256 => mapping(address => IEnglishPeriodicAuctionInternal.Bid)) bids;
+        mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid) currentBids;
+        mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid) highestBids;
     }
 
     bytes32 private constant STORAGE_SLOT =

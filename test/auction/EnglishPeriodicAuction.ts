@@ -92,6 +92,8 @@ describe('EnglishPeriodicAuction', function () {
             'triggerTransfer(address,address,uint256)',
           ),
           licenseMock.interface.getSighash('ownerOf(uint256)'),
+          licenseMock.interface.getSighash('mint(address,uint256)'),
+          licenseMock.interface.getSighash('exists(uint256)'),
           licenseMock.interface.getSighash(
             'transferFrom(address,address,uint256)',
           ),
@@ -128,7 +130,7 @@ describe('EnglishPeriodicAuction', function () {
         initTarget: facetInstance.address,
         initData: hasOwner
           ? facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await owner.getAddress(),
                 await nonOwner.getAddress(),
@@ -139,10 +141,11 @@ describe('EnglishPeriodicAuction', function () {
                 200,
                 bidExtensionWindowLengthSeconds,
                 bidExtensionSeconds,
+                10,
               ],
             )
           : facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await nonOwner.getAddress(),
                 await owner.getAddress(),
@@ -152,21 +155,23 @@ describe('EnglishPeriodicAuction', function () {
                 200,
                 bidExtensionWindowLengthSeconds,
                 bidExtensionSeconds,
+                10,
               ],
             ),
         selectors: [
           hasOwner
             ? facetFactory.interface.getSighash(
-                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               )
             : facetFactory.interface.getSighash(
-                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               ),
-          facetFactory.interface.getSighash('isAuctionPeriod()'),
-          facetFactory.interface.getSighash('isReadyForTransfer()'),
-          facetFactory.interface.getSighash('placeBid(uint256)'),
-          facetFactory.interface.getSighash('closeAuction()'),
+          facetFactory.interface.getSighash('isAuctionPeriod(uint256)'),
+          facetFactory.interface.getSighash('isReadyForTransfer(uint256)'),
+          facetFactory.interface.getSighash('placeBid(uint256,uint256)'),
+          facetFactory.interface.getSighash('closeAuction(uint256)'),
           facetFactory.interface.getSighash('calculateFeeFromBid(uint256)'),
+          facetFactory.interface.getSighash('maxTokenCount()'),
           facetFactory.interface.getSighash('repossessor()'),
           facetFactory.interface.getSighash('setRepossessor(address)'),
           facetFactory.interface.getSighash('initialPeriodStartTime()'),
@@ -182,12 +187,12 @@ describe('EnglishPeriodicAuction', function () {
           ),
           facetFactory.interface.getSighash('bidExtensionSeconds()'),
           facetFactory.interface.getSighash('setBidExtensionSeconds(uint256)'),
-          facetFactory.interface.getSighash('bidOf(address)'),
-          facetFactory.interface.getSighash('highestBid()'),
-          facetFactory.interface.getSighash('currentBid()'),
-          facetFactory.interface.getSighash('auctionStartTime()'),
-          facetFactory.interface.getSighash('auctionEndTime()'),
-          facetFactory.interface.getSighash('withdrawBid()'),
+          facetFactory.interface.getSighash('bidOf(uint256,address)'),
+          facetFactory.interface.getSighash('highestBid(uint256)'),
+          facetFactory.interface.getSighash('currentBid(uint256)'),
+          facetFactory.interface.getSighash('auctionStartTime(uint256)'),
+          facetFactory.interface.getSighash('auctionEndTime(uint256)'),
+          facetFactory.interface.getSighash('withdrawBid(uint256)'),
         ],
       },
     ]);
@@ -214,6 +219,12 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should set max token count', async function () {
+      const instance = await getInstance();
+
+      expect(await instance.maxTokenCount()).to.be.equal(10);
+    });
+
     it('should set initialPeriodStartTime', async function () {
       const instance = await getInstance();
 
@@ -249,7 +260,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await nonOwner.getAddress(),
           await owner.getAddress(),
@@ -259,6 +270,7 @@ describe('EnglishPeriodicAuction', function () {
           200,
           10,
           20,
+          10,
         ),
       ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
     });
@@ -273,6 +285,12 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should set max token count', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.maxTokenCount()).to.be.equal(10);
+    });
+
     it('should set initialPeriodStartTime', async function () {
       const instance = await getInstance({ hasOwner: true });
 
@@ -308,7 +326,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await owner.getAddress(),
           await nonOwner.getAddress(),
@@ -319,6 +337,7 @@ describe('EnglishPeriodicAuction', function () {
           200,
           10,
           20,
+          10,
         ),
       ).to.be.revertedWith('EnglishPeriodicAuctionFacet: already initialized');
     });
@@ -333,7 +352,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
     });
 
     it('should return false if initial auction ended', async function () {
@@ -346,9 +365,9 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(false);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(false);
     });
 
     it('should return true if another auction is in progress', async function () {
@@ -363,10 +382,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1050);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
     });
 
     it('should return false if another auction ended', async function () {
@@ -381,11 +400,11 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isAuctionPeriod()).to.be.equal(false);
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(false);
     });
   });
 
@@ -398,7 +417,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return true if initial auction ended', async function () {
@@ -411,7 +430,7 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
     });
 
     it('should return false if initial auction transferred', async function () {
@@ -424,9 +443,9 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return false if another auction is in progress', async function () {
@@ -441,10 +460,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1050);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
     it('should return true if another auction ended', async function () {
@@ -459,10 +478,10 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
     });
 
     it('should return false if another auction transferred', async function () {
@@ -477,11 +496,11 @@ describe('EnglishPeriodicAuction', function () {
         licensePeriod: 1000,
       });
 
-      await instance.closeAuction();
+      await instance.closeAuction(0);
       await time.increase(1150);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
-      expect(await instance.isReadyForTransfer()).to.be.equal(false);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
   });
 
@@ -515,7 +534,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount }),
+          .placeBid(0, bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: can only place bid in auction period',
       );
@@ -538,7 +557,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount }),
+          .placeBid(0, bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: auction is over and awaiting transfer',
       );
@@ -566,7 +585,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount }),
+          .placeBid(0, bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: sender is not allowed to place bid',
       );
@@ -591,10 +610,10 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
 
       await expect(
-        instance.connect(bidder2).placeBid(bidAmount2, {
+        instance.connect(bidder2).placeBid(0, bidAmount2, {
           value: collateralAmount2,
         }),
       ).to.be.revertedWith(
@@ -621,10 +640,10 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
 
       await expect(
-        instance.connect(bidder2).placeBid(bidAmount2, {
+        instance.connect(bidder2).placeBid(0, bidAmount2, {
           value: collateralAmount2,
         }),
       ).to.be.revertedWith(
@@ -648,7 +667,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount.add(1) }),
+          .placeBid(0, bidAmount, { value: collateralAmount.add(1) }),
       ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
     });
 
@@ -671,12 +690,12 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
 
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount2, { value: collateralAmount2 }),
+          .placeBid(0, bidAmount2, { value: collateralAmount2 }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid',
       );
@@ -698,7 +717,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount.add(1) }),
+          .placeBid(0, bidAmount, { value: collateralAmount.add(1) }),
       ).to.be.revertedWith('EnglishPeriodicAuction: Incorrect bid amount');
     });
 
@@ -718,7 +737,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(bidder1)
-          .placeBid(bidAmount, { value: collateralAmount }),
+          .placeBid(0, bidAmount, { value: collateralAmount }),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: Collateral must be greater than current bid',
       );
@@ -739,22 +758,63 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      const bid = await instance.bidOf(bidder1.address);
-      const highestBid = await instance.highestBid();
+      const bid = await instance.bidOf(0, bidder1.address);
+      const highestBid = await instance.highestBid(0);
 
-      expect(bid.round).to.be.equal(1);
+      expect(bid.round).to.be.equal(0);
       expect(bid.bidder).to.be.equal(bidder1.address);
       expect(bid.bidAmount).to.be.equal(bidAmount);
       expect(bid.feeAmount).to.be.equal(feeAmount);
       expect(bid.collateralAmount).to.be.equal(collateralAmount);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
+    it('should place new highest bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      const bid = await instance.bidOf(0, bidder2.address);
+      const highestBid = await instance.highestBid(0);
+
+      expect(bid.round).to.be.equal(0);
+      expect(bid.bidder).to.be.equal(bidder2.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount2);
+      expect(bid.feeAmount).to.be.equal(feeAmount2);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount2);
+
+      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.bidder).to.be.equal(bidder2.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount2);
+      expect(highestBid.feeAmount).to.be.equal(feeAmount2);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount2);
     });
 
     it('should place bid lower than old bid', async function () {
@@ -772,18 +832,18 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      const bid = await instance.bidOf(bidder1.address);
-      const highestBid = await instance.highestBid();
+      const bid = await instance.bidOf(0, bidder1.address);
+      const highestBid = await instance.highestBid(0);
 
-      expect(bid.round).to.be.equal(1);
+      expect(bid.round).to.be.equal(0);
       expect(bid.bidder).to.be.equal(bidder1.address);
       expect(bid.bidAmount).to.be.equal(bidAmount);
       expect(bid.feeAmount).to.be.equal(feeAmount);
       expect(bid.collateralAmount).to.be.equal(collateralAmount);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
@@ -809,23 +869,78 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
-      await instance.connect(bidder1).placeBid(bidAmount2, {
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+      await instance.connect(bidder1).placeBid(0, bidAmount2, {
         value: collateralAmount2.sub(collateralAmount1),
       });
 
-      const bid = await instance.bidOf(bidder1.address);
-      const highestBid = await instance.highestBid();
+      const bid = await instance.bidOf(0, bidder1.address);
+      const highestBid = await instance.highestBid(0);
 
-      expect(bid.round).to.be.equal(1);
+      expect(bid.round).to.be.equal(0);
       expect(bid.bidder).to.be.equal(bidder1.address);
       expect(bid.bidAmount).to.be.equal(bidAmount2);
       expect(bid.collateralAmount).to.be.equal(collateralAmount2);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount2);
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount2);
+    });
+
+    it('should place bid in another round', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1100);
+
+      const bidAmount3 = ethers.utils.parseEther('1.1');
+      const feeAmount3 = await instance.calculateFeeFromBid(bidAmount3);
+      const collateralAmount3 = feeAmount3.add(bidAmount3);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount3, { value: collateralAmount3 });
+
+      const bid = await instance.bidOf(0, bidder1.address);
+      const highestBid = await instance.highestBid(0);
+
+      expect(bid.round).to.be.equal(1);
+      expect(bid.bidder).to.be.equal(bidder1.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount3);
+      expect(bid.feeAmount).to.be.equal(feeAmount3);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount3);
+
+      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount3);
+      expect(highestBid.feeAmount).to.be.equal(feeAmount3);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount3);
     });
 
     it('should place bid if current bidder', async function () {
@@ -843,18 +958,18 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(owner)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      const bid = await instance.bidOf(owner.address);
-      const highestBid = await instance.highestBid();
+      const bid = await instance.bidOf(0, owner.address);
+      const highestBid = await instance.highestBid(0);
 
-      expect(bid.round).to.be.equal(1);
+      expect(bid.round).to.be.equal(0);
       expect(bid.bidder).to.be.equal(owner.address);
       expect(bid.bidAmount).to.be.equal(bidAmount);
       expect(bid.feeAmount).to.be.equal(feeAmount);
       expect(bid.collateralAmount).to.be.equal(collateralAmount);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(owner.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
@@ -875,14 +990,48 @@ describe('EnglishPeriodicAuction', function () {
       const bidAmount = ethers.utils.parseEther('1.1');
       const feeAmount = await instance.calculateFeeFromBid(bidAmount);
       const collateralAmount = feeAmount.add(bidAmount);
-      const auctionStartTime = await instance.auctionStartTime();
+      const auctionStartTime = await instance.auctionStartTime(0);
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      expect(await instance.auctionEndTime()).to.be.equal(
+      expect(await instance.auctionEndTime(0)).to.be.equal(
         auctionStartTime.add(300).add(100),
+      );
+    });
+
+    it('should extend auction for token that has previously been extended', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        bidExtensionWindowLengthSeconds: 150,
+        bidExtensionSeconds: 100,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+      const auctionStartTime = await instance.auctionStartTime(0);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      expect(await instance.auctionEndTime(0)).to.be.equal(
+        auctionStartTime.add(300).add(200),
       );
     });
   });
@@ -896,7 +1045,7 @@ describe('EnglishPeriodicAuction', function () {
         initialPeriodStartTime: await time.latest(),
       });
 
-      await expect(instance.closeAuction()).to.be.revertedWith(
+      await expect(instance.closeAuction(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: auction is not over',
       );
     });
@@ -920,7 +1069,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
       await time.increase(100);
 
@@ -928,20 +1077,20 @@ describe('EnglishPeriodicAuction', function () {
         nonOwner.address,
       );
 
-      await instance.connect(bidder1).closeAuction();
+      await instance.connect(bidder1).closeAuction(0);
 
       const newBeneficiaryBalance = await ethers.provider.getBalance(
         nonOwner.address,
       );
 
-      const oldBid = await instance.bidOf(owner.address);
+      const oldBid = await instance.bidOf(0, owner.address);
       expect(oldBid.collateralAmount).to.be.equal(bidAmount);
 
-      const currentBid = await instance.currentBid();
-      const highestBid = await instance.highestBid();
-      const bidder1Bid = await instance.bidOf(bidder1.address);
+      const currentBid = await instance.currentBid(0);
+      const highestBid = await instance.highestBid(0);
+      const bidder1Bid = await instance.bidOf(0, bidder1.address);
 
-      expect(currentBid.round).to.be.equal(1);
+      expect(currentBid.round).to.be.equal(0);
       expect(currentBid.bidder).to.be.equal(bidder1.address);
       expect(currentBid.bidAmount).to.be.equal(bidAmount);
       expect(currentBid.feeAmount).to.be.equal(feeAmount);
@@ -949,7 +1098,7 @@ describe('EnglishPeriodicAuction', function () {
 
       expect(bidder1Bid.collateralAmount).to.be.equal(0);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
@@ -982,7 +1131,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(owner)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
       await time.increase(100);
 
@@ -990,17 +1139,17 @@ describe('EnglishPeriodicAuction', function () {
         nonOwner.address,
       );
 
-      await instance.connect(owner).closeAuction();
+      await instance.connect(owner).closeAuction(0);
 
       const newBeneficiaryBalance = await ethers.provider.getBalance(
         nonOwner.address,
       );
 
-      const ownerBid = await instance.bidOf(owner.address);
-      const currentBid = await instance.currentBid();
-      const highestBid = await instance.highestBid();
+      const ownerBid = await instance.bidOf(0, owner.address);
+      const currentBid = await instance.currentBid(0);
+      const highestBid = await instance.highestBid(0);
 
-      expect(currentBid.round).to.be.equal(1);
+      expect(currentBid.round).to.be.equal(0);
       expect(currentBid.bidder).to.be.equal(owner.address);
       expect(currentBid.bidAmount).to.be.equal(bidAmount);
       expect(currentBid.feeAmount).to.be.equal(feeAmount);
@@ -1008,7 +1157,7 @@ describe('EnglishPeriodicAuction', function () {
 
       expect(ownerBid.collateralAmount).to.be.equal(0);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(owner.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
@@ -1041,24 +1190,24 @@ describe('EnglishPeriodicAuction', function () {
         nonOwner.address,
       );
 
-      await instance.connect(owner).closeAuction();
+      await instance.connect(owner).closeAuction(0);
 
       const newBeneficiaryBalance = await ethers.provider.getBalance(
         nonOwner.address,
       );
 
-      const repossessorBid = await instance.bidOf(nonOwner.address);
-      const ownerBid = await instance.bidOf(owner.address);
-      const currentBid = await instance.currentBid();
-      const highestBid = await instance.highestBid();
+      const repossessorBid = await instance.bidOf(0, nonOwner.address);
+      const ownerBid = await instance.bidOf(0, owner.address);
+      const currentBid = await instance.currentBid(0);
+      const highestBid = await instance.highestBid(0);
 
-      expect(currentBid.round).to.be.equal(1);
+      expect(currentBid.round).to.be.equal(0);
       expect(currentBid.bidder).to.be.equal(nonOwner.address);
       expect(currentBid.bidAmount).to.be.equal(0);
       expect(currentBid.feeAmount).to.be.equal(0);
       expect(currentBid.collateralAmount).to.be.equal(0);
 
-      expect(repossessorBid.round).to.be.equal(1);
+      expect(repossessorBid.round).to.be.equal(0);
       expect(repossessorBid.bidder).to.be.equal(nonOwner.address);
       expect(repossessorBid.bidAmount).to.be.equal(0);
       expect(repossessorBid.feeAmount).to.be.equal(0);
@@ -1066,7 +1215,7 @@ describe('EnglishPeriodicAuction', function () {
 
       expect(ownerBid.collateralAmount).to.be.equal(0);
 
-      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.round).to.be.equal(0);
       expect(highestBid.bidder).to.be.equal(nonOwner.address);
       expect(highestBid.bidAmount).to.be.equal(0);
       expect(highestBid.feeAmount).to.be.equal(0);
@@ -1095,9 +1244,9 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      await expect(instance.connect(owner).withdrawBid()).to.be.revertedWith(
+      await expect(instance.connect(owner).withdrawBid(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: Cannot withdraw bid if current bidder',
       );
     });
@@ -1117,9 +1266,9 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
-      await expect(instance.connect(bidder1).withdrawBid()).to.be.revertedWith(
+      await expect(instance.connect(bidder1).withdrawBid(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder',
       );
     });
@@ -1135,9 +1284,9 @@ describe('EnglishPeriodicAuction', function () {
 
       await time.increase(100);
 
-      await instance.connect(owner).closeAuction();
+      await instance.connect(owner).closeAuction(0);
 
-      await expect(instance.connect(owner).withdrawBid()).to.be.revertedWith(
+      await expect(instance.connect(owner).withdrawBid(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: No collateral to withdraw',
       );
     });
@@ -1160,9 +1309,7 @@ describe('EnglishPeriodicAuction', function () {
       const mockBidder = await MockBidder.deploy(instance.address);
       await mockBidder.deployed();
 
-      await licenseMock
-        .connect(owner)
-        .transferFrom(owner.address, mockBidder.address, 0);
+      await licenseMock.connect(owner).mint(mockBidder.address, 0);
 
       await time.increase(400);
 
@@ -1172,13 +1319,13 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
       await time.increase(100);
 
-      await instance.connect(owner).closeAuction();
+      await instance.connect(owner).closeAuction(0);
 
-      await expect(mockBidder.withdrawBid()).to.be.revertedWith(
+      await expect(mockBidder.withdrawBid(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: Failed to withdraw collateral',
       );
     });
@@ -1202,16 +1349,16 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
 
-      await instance.connect(bidder2).placeBid(bidAmount2, {
+      await instance.connect(bidder2).placeBid(0, bidAmount2, {
         value: collateralAmount2,
       });
 
       const oldBidderBalance = await ethers.provider.getBalance(
         bidder1.address,
       );
-      const res = await instance.connect(bidder1).withdrawBid();
+      const res = await instance.connect(bidder1).withdrawBid(0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 
@@ -1244,19 +1391,19 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount1, { value: collateralAmount1 });
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
 
-      await instance.connect(bidder2).placeBid(bidAmount2, {
+      await instance.connect(bidder2).placeBid(0, bidAmount2, {
         value: collateralAmount2,
       });
 
       await time.increase(100);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
       const oldBidderBalance = await ethers.provider.getBalance(
         bidder1.address,
       );
-      const res = await instance.connect(bidder1).withdrawBid();
+      const res = await instance.connect(bidder1).withdrawBid(0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 
@@ -1285,13 +1432,13 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
       await time.increase(100);
-      await instance.closeAuction();
+      await instance.closeAuction(0);
 
       const oldOwnerBalance = await ethers.provider.getBalance(owner.address);
-      const res = await instance.connect(owner).withdrawBid();
+      const res = await instance.connect(owner).withdrawBid(0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 
@@ -1316,9 +1463,7 @@ describe('EnglishPeriodicAuction', function () {
         instance.address,
       );
 
-      await licenseMock
-        .connect(owner)
-        .transferFrom(owner.address, nonOwner.address, 0);
+      await licenseMock.connect(owner).mint(nonOwner.address, 0);
 
       await time.increase(400);
 
@@ -1328,16 +1473,16 @@ describe('EnglishPeriodicAuction', function () {
 
       await instance
         .connect(bidder1)
-        .placeBid(bidAmount, { value: collateralAmount });
+        .placeBid(0, bidAmount, { value: collateralAmount });
 
       await time.increase(100);
 
-      await instance.connect(owner).closeAuction();
+      await instance.connect(owner).closeAuction(0);
 
       const oldOwnerBalance = await ethers.provider.getBalance(
         nonOwner.address,
       );
-      const res = await instance.connect(nonOwner).withdrawBid();
+      const res = await instance.connect(nonOwner).withdrawBid(0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 

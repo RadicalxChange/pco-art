@@ -11,8 +11,8 @@ contract MockBidder {
     }
 
     // Withdraw bid
-    function withdrawBid() external {
-        auction.withdrawBid();
+    function withdrawBid(uint256 tokenId) external {
+        auction.withdrawBid(tokenId);
     }
 
     // Fail on receive

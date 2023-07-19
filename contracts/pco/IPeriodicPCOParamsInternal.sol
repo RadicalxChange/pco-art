@@ -6,6 +6,6 @@ pragma solidity ^0.8.17;
  */
 interface IPeriodicPCOParamsInternal {
     event LicensePeriodSet(uint256 licensePeriod);
-    event PerSecondFeeNumeratorSet(uint256 perSecondFeeNumerator);
-    event PerSecondFeeDenominatorSet(uint256 perSecondFeeDenominator);
+    event FeeNumeratorSet(uint256 feeNumerator);
+    event FeeDenominatorSet(uint256 feeDenominator);
 }

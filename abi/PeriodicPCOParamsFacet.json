@@ -15,37 +15,37 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "feeDenominator",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeDenominatorSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "feeNumerator",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeNumeratorSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "licensePeriod",
         "type": "uint256"
       }
     ],
     "name": "LicensePeriodSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "perSecondFeeDenominator",
-        "type": "uint256"
-      }
-    ],
-    "name": "PerSecondFeeDenominatorSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "perSecondFeeNumerator",
-        "type": "uint256"
-      }
-    ],
-    "name": "PerSecondFeeNumeratorSet",
     "type": "event"
   },
   {
@@ -124,6 +124,32 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "feeDenominator",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeNumerator",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -137,12 +163,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_perSecondFeeNumerator",
+        "name": "_feeNumerator",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_perSecondFeeDenominator",
+        "name": "_feeDenominator",
         "type": "uint256"
       }
     ],
@@ -160,12 +186,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_perSecondFeeNumerator",
+        "name": "_feeNumerator",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_perSecondFeeDenominator",
+        "name": "_feeDenominator",
         "type": "uint256"
       }
     ],
@@ -188,29 +214,29 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "perSecondFeeDenominator",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_feeDenominator",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "setFeeDenominator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "perSecondFeeNumerator",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_feeNumerator",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "setFeeNumerator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -222,32 +248,6 @@
       }
     ],
     "name": "setLicensePeriod",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_perSecondFeeDenominator",
-        "type": "uint256"
-      }
-    ],
-    "name": "setPerSecondFeeDenominator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_perSecondFeeNumerator",
-        "type": "uint256"
-      }
-    ],
-    "name": "setPerSecondFeeNumerator",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

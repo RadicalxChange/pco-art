@@ -35,24 +35,24 @@ describe('PeriodicPCOParams', function () {
       expect(await instance.licensePeriod()).to.be.equal(1);
     });
 
-    it('should set perSecondFeeNumerator', async function () {
+    it('should set feeNumerator', async function () {
       const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
       const instance = await factory.deploy();
       await instance.deployed();
 
       await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
-      expect(await instance.perSecondFeeNumerator()).to.be.equal(3);
+      expect(await instance.feeNumerator()).to.be.equal(3);
     });
 
-    it('should set perSecondFeeDenominator', async function () {
+    it('should set feeDenominator', async function () {
       const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
       const instance = await factory.deploy();
       await instance.deployed();
 
       await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
 
-      expect(await instance.perSecondFeeDenominator()).to.be.equal(4);
+      expect(await instance.feeDenominator()).to.be.equal(4);
     });
 
     it('should revert if already initialized', async function () {
@@ -75,16 +75,16 @@ describe('PeriodicPCOParams', function () {
       expect(await instance.licensePeriod()).to.be.equal(1);
     });
 
-    it('should set perSecondFeeNumerator', async function () {
+    it('should set feeNumerator', async function () {
       const instance = await getInstance();
 
-      expect(await instance.perSecondFeeNumerator()).to.be.equal(3);
+      expect(await instance.feeNumerator()).to.be.equal(3);
     });
 
-    it('should set perSecondFeeDenominator', async function () {
+    it('should set feeDenominator', async function () {
       const instance = await getInstance();
 
-      expect(await instance.perSecondFeeDenominator()).to.be.equal(4);
+      expect(await instance.feeDenominator()).to.be.equal(4);
     });
 
     it('should revert if already initialized', async function () {
@@ -127,37 +127,37 @@ describe('PeriodicPCOParams', function () {
     });
   });
 
-  describe('perSecondFeeNumerator', function () {
+  describe('feeNumerator', function () {
     it('should allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(owner).setPerSecondFeeNumerator(12)).to.not
-        .be.reverted;
-      expect(await instance.perSecondFeeNumerator()).to.be.equal(12);
+      await expect(instance.connect(owner).setFeeNumerator(12)).to.not.be
+        .reverted;
+      expect(await instance.feeNumerator()).to.be.equal(12);
     });
 
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(nonOwner).setPerSecondFeeNumerator(12)).to
-        .be.reverted;
+      await expect(instance.connect(nonOwner).setFeeNumerator(12)).to.be
+        .reverted;
     });
   });
 
-  describe('perSecondFeeDenominator', function () {
+  describe('feeDenominator', function () {
     it('should allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(owner).setPerSecondFeeDenominator(13)).to
-        .not.be.reverted;
-      expect(await instance.perSecondFeeDenominator()).to.be.equal(13);
+      await expect(instance.connect(owner).setFeeDenominator(13)).to.not.be
+        .reverted;
+      expect(await instance.feeDenominator()).to.be.equal(13);
     });
 
     it('should only allow owner to set', async function () {
       const instance = await getInstance();
 
-      await expect(instance.connect(nonOwner).setPerSecondFeeDenominator(13)).to
-        .be.reverted;
+      await expect(instance.connect(nonOwner).setFeeDenominator(13)).to.be
+        .reverted;
     });
   });
 });

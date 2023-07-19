@@ -13,8 +13,8 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
      */
     function _initializeParams(
         uint256 licensePeriod,
-        uint256 perSecondFeeNumerator,
-        uint256 perSecondFeeDenominator
+        uint256 feeNumerator,
+        uint256 feeDenominator
     ) internal {
         PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
             .layout();
@@ -22,8 +22,8 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
         l.isInitialized = true;
 
         _setLicensePeriod(licensePeriod);
-        _setPerSecondFeeNumerator(perSecondFeeNumerator);
-        _setPerSecondFeeDenominator(perSecondFeeDenominator);
+        _setFeeNumerator(feeNumerator);
+        _setFeeDenominator(feeDenominator);
     }
 
     /**
@@ -55,39 +55,37 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
     /**
      * @notice Get fee numerator
      */
-    function _perSecondFeeNumerator() internal view returns (uint256) {
-        return PeriodicPCOParamsStorage.layout().perSecondFeeNumerator;
+    function _feeNumerator() internal view returns (uint256) {
+        return PeriodicPCOParamsStorage.layout().feeNumerator;
     }
 
     /**
      * @notice Set fee numerator
      */
-    function _setPerSecondFeeNumerator(uint256 perSecondFeeNumerator) internal {
+    function _setFeeNumerator(uint256 feeNumerator) internal {
         PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
             .layout();
 
-        l.perSecondFeeNumerator = perSecondFeeNumerator;
+        l.feeNumerator = feeNumerator;
 
-        emit PerSecondFeeNumeratorSet(perSecondFeeNumerator);
+        emit FeeNumeratorSet(feeNumerator);
     }
 
     /**
      * @notice Get fee denominator
      */
-    function _perSecondFeeDenominator() internal view returns (uint256) {
-        return PeriodicPCOParamsStorage.layout().perSecondFeeDenominator;
+    function _feeDenominator() internal view returns (uint256) {
+        return PeriodicPCOParamsStorage.layout().feeDenominator;
     }
 
     /**
      * @notice Set fee denominator
      */
-    function _setPerSecondFeeDenominator(
-        uint256 perSecondFeeDenominator
-    ) internal {
+    function _setFeeDenominator(uint256 feeDenominator) internal {
         PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
             .layout();
-        l.perSecondFeeDenominator = perSecondFeeDenominator;
+        l.feeDenominator = feeDenominator;
 
-        emit PerSecondFeeDenominatorSet(perSecondFeeDenominator);
+        emit FeeDenominatorSet(feeDenominator);
     }
 }

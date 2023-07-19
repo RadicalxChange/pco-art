@@ -453,18 +453,12 @@ abstract contract EnglishPeriodicAuctionInternal is
     function _calculateFeeFromBid(
         uint256 bidAmount
     ) internal view returns (uint256) {
-        uint256 perSecondFeeNumerator = IPeriodicPCOParamsReadable(
-            address(this)
-        ).perSecondFeeNumerator();
-        uint256 perSecondFeeDenominator = IPeriodicPCOParamsReadable(
-            address(this)
-        ).perSecondFeeDenominator();
-        uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
-            .licensePeriod();
+        uint256 feeNumerator = IPeriodicPCOParamsReadable(address(this))
+            .feeNumerator();
+        uint256 feeDenominator = IPeriodicPCOParamsReadable(address(this))
+            .feeDenominator();
 
-        return
-            ((bidAmount * perSecondFeeNumerator) / perSecondFeeDenominator) *
-            licensePeriod;
+        return (bidAmount * feeNumerator) / feeDenominator;
     }
 
     /**

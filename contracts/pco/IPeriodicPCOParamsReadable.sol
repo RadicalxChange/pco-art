@@ -13,10 +13,10 @@ interface IPeriodicPCOParamsReadable {
     /**
      * @notice Get fee numerator
      */
-    function perSecondFeeNumerator() external view returns (uint256);
+    function feeNumerator() external view returns (uint256);
 
     /**
      * @notice Get fee denominator
      */
-    function perSecondFeeDenominator() external view returns (uint256);
+    function feeDenominator() external view returns (uint256);
 }

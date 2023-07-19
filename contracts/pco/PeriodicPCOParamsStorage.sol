@@ -9,10 +9,10 @@ library PeriodicPCOParamsStorage {
         bool isInitialized;
         /// @dev Length of time in seconds for each period the license is valid for
         uint256 licensePeriod;
-        /// @dev Fee numerator per second
-        uint256 perSecondFeeNumerator;
-        /// @dev Fee denominator per second
-        uint256 perSecondFeeDenominator;
+        /// @dev Fee numerator
+        uint256 feeNumerator;
+        /// @dev Fee denominator
+        uint256 feeDenominator;
     }
 
     bytes32 private constant STORAGE_SLOT =

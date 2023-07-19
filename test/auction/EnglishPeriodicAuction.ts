@@ -3,13 +3,6 @@ import { expect } from 'chai';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { time } from '@nomicfoundation/hardhat-network-helpers';
 
-function perYearToPerSecondRate(annualRate: number) {
-  return {
-    numerator: annualRate * 100,
-    denominator: 60 * 60 * 24 * 365 * 100,
-  };
-}
-
 describe('EnglishPeriodicAuction', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
@@ -55,26 +48,21 @@ describe('EnglishPeriodicAuction', function () {
     await facetInstance.deployed();
 
     const factory = await ethers.getContractFactory('SingleCutDiamond');
-    const { numerator, denominator } = perYearToPerSecondRate(0.1);
     instance = await factory.deploy([
       {
         target: pcoParamsFacetInstance.address,
         initTarget: pcoParamsFacetInstance.address,
         initData: pcoParamsFacetInstance.interface.encodeFunctionData(
           'initializePCOParams(address,uint256,uint256,uint256)',
-          [await owner.getAddress(), licensePeriod, numerator, denominator],
+          [await owner.getAddress(), licensePeriod, 1, 10],
         ),
         selectors: [
           pcoParamsFacetInstance.interface.getSighash(
             'initializePCOParams(address,uint256,uint256,uint256)',
           ),
           pcoParamsFacetInstance.interface.getSighash('licensePeriod()'),
-          pcoParamsFacetInstance.interface.getSighash(
-            'perSecondFeeNumerator()',
-          ),
-          pcoParamsFacetInstance.interface.getSighash(
-            'perSecondFeeDenominator()',
-          ),
+          pcoParamsFacetInstance.interface.getSighash('feeNumerator()'),
+          pcoParamsFacetInstance.interface.getSighash('feeDenominator()'),
         ],
       },
       {
@@ -506,12 +494,10 @@ describe('EnglishPeriodicAuction', function () {
 
   describe('calculateFeeFromBid', function () {
     it('should return correct fee amount', async function () {
-      const instance = await getInstance({
-        licensePeriod: 60 * 60 * 24 * 365,
-      });
+      const instance = await getInstance();
 
       const bidAmount = ethers.utils.parseEther('1');
-      const expectedFeeAmount = ethers.utils.parseEther('0.099999999988128000');
+      const expectedFeeAmount = ethers.utils.parseEther('0.1');
 
       expect(await instance.calculateFeeFromBid(bidAmount)).to.be.equal(
         expectedFeeAmount,

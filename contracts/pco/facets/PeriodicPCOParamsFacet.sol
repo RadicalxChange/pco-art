@@ -27,8 +27,8 @@ contract PeriodicPCOParamsFacet is
      */
     function initializePCOParams(
         uint256 _licensePeriod,
-        uint256 _perSecondFeeNumerator,
-        uint256 _perSecondFeeDenominator
+        uint256 _feeNumerator,
+        uint256 _feeDenominator
     ) external {
         require(
             _isInitialized() == false,
@@ -39,11 +39,7 @@ contract PeriodicPCOParamsFacet is
             type(IPeriodicPCOParamsReadable).interfaceId,
             true
         );
-        _initializeParams(
-            _licensePeriod,
-            _perSecondFeeNumerator,
-            _perSecondFeeDenominator
-        );
+        _initializeParams(_licensePeriod, _feeNumerator, _feeDenominator);
     }
 
     /**
@@ -52,8 +48,8 @@ contract PeriodicPCOParamsFacet is
     function initializePCOParams(
         address _owner,
         uint256 _licensePeriod,
-        uint256 _perSecondFeeNumerator,
-        uint256 _perSecondFeeDenominator
+        uint256 _feeNumerator,
+        uint256 _feeDenominator
     ) external {
         require(
             _isInitialized() == false,
@@ -69,11 +65,7 @@ contract PeriodicPCOParamsFacet is
             true
         );
         _grantRole(COMPONENT_ROLE, _owner);
-        _initializeParams(
-            _licensePeriod,
-            _perSecondFeeNumerator,
-            _perSecondFeeDenominator
-        );
+        _initializeParams(_licensePeriod, _feeNumerator, _feeDenominator);
     }
 
     /**
@@ -95,32 +87,32 @@ contract PeriodicPCOParamsFacet is
     /**
      * @notice Get fee numerator
      */
-    function perSecondFeeNumerator() external view returns (uint256) {
-        return _perSecondFeeNumerator();
+    function feeNumerator() external view returns (uint256) {
+        return _feeNumerator();
     }
 
     /**
      * @notice Set fee numerator
      */
-    function setPerSecondFeeNumerator(
-        uint256 _perSecondFeeNumerator
+    function setFeeNumerator(
+        uint256 _feeNumerator
     ) external onlyRole(COMPONENT_ROLE) {
-        return _setPerSecondFeeNumerator(_perSecondFeeNumerator);
+        return _setFeeNumerator(_feeNumerator);
     }
 
     /**
      * @notice Get fee denominator
      */
-    function perSecondFeeDenominator() external view returns (uint256) {
-        return _perSecondFeeDenominator();
+    function feeDenominator() external view returns (uint256) {
+        return _feeDenominator();
     }
 
     /**
      * @notice Set fee denominator
      */
-    function setPerSecondFeeDenominator(
-        uint256 _perSecondFeeDenominator
+    function setFeeDenominator(
+        uint256 _feeDenominator
     ) external onlyRole(COMPONENT_ROLE) {
-        return _setPerSecondFeeDenominator(_perSecondFeeDenominator);
+        return _setFeeDenominator(_feeDenominator);
     }
 }

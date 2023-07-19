@@ -13,7 +13,7 @@
       };
     in {
       devShells.default = pkgs.mkShell {
-        nativeBuildInputs = [ pkgs.yarn pkgs.nodejs-16_x ];
+        nativeBuildInputs = [ pkgs.yarn pkgs.nodejs-16_x pkgs.git-cliff ];
         buildInputs = [ ];
       };
     });

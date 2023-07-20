@@ -181,6 +181,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('auctionStartTime(uint256)'),
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('withdrawBid(uint256)'),
+          facetFactory.interface.getSighash('mintToken(address,uint256)'),
         ],
       },
     ]);
@@ -1602,6 +1603,64 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance.connect(owner).setBidExtensionWindowLengthSeconds(123),
       ).to.be.reverted;
+    });
+  });
+
+  describe('mintToken', function () {
+    it('should allow mint from initial bidder if token does not exist', async function () {
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
+
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      await instance.connect(owner).mintToken(bidder1.address, 0);
+
+      expect(await licenseMock.ownerOf(0)).to.equal(bidder1.address);
+    });
+
+    it('should not allow mint if not initial bidder', async function () {
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
+
+      await expect(
+        instance.connect(nonOwner).mintToken(bidder1.address, 0),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: only initial bidder can mint token',
+      );
+    });
+
+    it('should not allow mint if token exists', async function () {
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
+
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      await licenseMock.connect(owner).mint(bidder1.address, 0);
+
+      await expect(
+        instance.connect(owner).mintToken(bidder1.address, 0),
+      ).to.be.revertedWith('EnglishPeriodicAuction: Token already exists');
+    });
+
+    it('should not allow mint if initial period has started', async function () {
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) - 100,
+      });
+
+      await expect(
+        instance.connect(owner).mintToken(bidder1.address, 0),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: cannot mint after initial period start time',
+      );
     });
   });
 });

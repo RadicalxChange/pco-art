@@ -1608,7 +1608,9 @@ describe('EnglishPeriodicAuction', function () {
 
   describe('mintToken', function () {
     it('should allow mint from initial bidder if token does not exist', async function () {
-      const instance = await getInstance();
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
 
       const licenseMock = await ethers.getContractAt(
         'NativeStewardLicenseMock',
@@ -1621,7 +1623,9 @@ describe('EnglishPeriodicAuction', function () {
     });
 
     it('should not allow mint if not initial bidder', async function () {
-      const instance = await getInstance();
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
 
       await expect(
         instance.connect(nonOwner).mintToken(bidder1.address, 0),
@@ -1631,7 +1635,9 @@ describe('EnglishPeriodicAuction', function () {
     });
 
     it('should not allow mint if token exists', async function () {
-      const instance = await getInstance();
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) + 100,
+      });
 
       const licenseMock = await ethers.getContractAt(
         'NativeStewardLicenseMock',
@@ -1643,6 +1649,18 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance.connect(owner).mintToken(bidder1.address, 0),
       ).to.be.revertedWith('EnglishPeriodicAuction: Token already exists');
+    });
+
+    it('should not allow mint if initial period has started', async function () {
+      const instance = await getInstance({
+        initialPeriodStartTime: (await time.latest()) - 100,
+      });
+
+      await expect(
+        instance.connect(owner).mintToken(bidder1.address, 0),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: cannot mint after initial period start time',
+      );
     });
   });
 });

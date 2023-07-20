@@ -175,6 +175,13 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get initial bidder
+     */
+    function _initialBidder() internal view returns (address) {
+        return EnglishPeriodicAuctionStorage.layout().initialBidder;
+    }
+
+    /**
      * @notice Get highest outstanding bid
      */
     function _highestBid(uint256 tokenId) internal view returns (Bid storage) {
@@ -405,6 +412,18 @@ abstract contract EnglishPeriodicAuctionInternal is
                 value: l.highestBids[tokenId].feeAmount
             }();
         }
+    }
+
+    /**
+     * @notice Mint token if it doesn't exist
+     */
+    function _mintToken(address to, uint256 tokenId) internal {
+        require(
+            IStewardLicense(address(this)).exists(tokenId) == false,
+            'EnglishPeriodicAuction: Token already exists'
+        );
+
+        IStewardLicense(address(this)).triggerTransfer(address(0), to, tokenId);
     }
 
     /**

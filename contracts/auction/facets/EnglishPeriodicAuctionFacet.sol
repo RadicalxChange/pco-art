@@ -159,6 +159,18 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Initial bidder can mint token if it doesn't exist
+     */
+    function mintToken(address to, uint256 tokenId) external {
+        require(
+            msg.sender == _initialBidder(),
+            'EnglishPeriodicAuction: only initial bidder can mint token'
+        );
+
+        _mintToken(to, tokenId);
+    }
+
+    /**
      * @notice Calculate fee from bid
      */
     function calculateFeeFromBid(

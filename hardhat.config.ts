@@ -16,7 +16,7 @@ import * as Dotenv from 'dotenv';
 
 Dotenv.config();
 
-const { API_KEY_ETHERSCAN, NODE_URL_MAINNET, PKEY_MAINNET, REPORT_GAS } =
+const { API_KEY_ETHERSCAN, NODE_URL_TESTNET, PKEY_TESTNET, REPORT_GAS } =
   process.env;
 
 const config: HardhatUserConfig = {
@@ -32,8 +32,8 @@ const config: HardhatUserConfig = {
 
   networks: {
     gnosis: {
-      url: NODE_URL_MAINNET ?? '',
-      accounts: PKEY_MAINNET ? [PKEY_MAINNET] : [],
+      url: NODE_URL_TESTNET ?? '',
+      accounts: PKEY_TESTNET ? [PKEY_TESTNET] : [],
       chainId: 100,
     },
   },

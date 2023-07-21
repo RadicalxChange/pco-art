@@ -11,6 +11,7 @@ library EnglishPeriodicAuctionStorage {
         uint256 startingBid;
         address repossessor;
         uint256 initialPeriodStartTime;
+        uint256 initialPeriodStartTimeOffset;
         uint256 auctionLengthSeconds;
         uint256 minBidIncrement;
         uint256 bidExtensionWindowLengthSeconds;

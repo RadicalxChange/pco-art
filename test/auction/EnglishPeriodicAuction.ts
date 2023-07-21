@@ -15,6 +15,7 @@ describe('EnglishPeriodicAuction', function () {
     auctionLengthSeconds = 100,
     licensePeriod = 1,
     initialPeriodStartTime = 2,
+    initialPeriodStartTimeOffset = 0,
     startingBid = ethers.utils.parseEther('1'),
     bidExtensionWindowLengthSeconds = 10,
     bidExtensionSeconds = 20,
@@ -124,12 +125,13 @@ describe('EnglishPeriodicAuction', function () {
         initTarget: facetInstance.address,
         initData: hasOwner
           ? facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await owner.getAddress(),
                 await nonOwner.getAddress(),
                 await owner.getAddress(),
                 initialPeriodStartTime,
+                initialPeriodStartTimeOffset,
                 startingBid,
                 auctionLengthSeconds,
                 200,
@@ -139,11 +141,12 @@ describe('EnglishPeriodicAuction', function () {
               ],
             )
           : facetInstance.interface.encodeFunctionData(
-              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               [
                 await nonOwner.getAddress(),
                 await owner.getAddress(),
                 initialPeriodStartTime,
+                initialPeriodStartTimeOffset,
                 startingBid,
                 auctionLengthSeconds,
                 200,
@@ -155,10 +158,10 @@ describe('EnglishPeriodicAuction', function () {
         selectors: [
           hasOwner
             ? facetFactory.interface.getSighash(
-                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               )
             : facetFactory.interface.getSighash(
-                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
               ),
           facetFactory.interface.getSighash('isAuctionPeriod(uint256)'),
           facetFactory.interface.getSighash('isReadyForTransfer(uint256)'),
@@ -189,7 +192,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('withdrawBid(uint256)'),
           facetFactory.interface.getSighash('mintToken(address,uint256)'),
           facetFactory.interface.getSighash(
-            'setAuctionParameters(address,uint256,uint256,uint256,uint256,uint256)',
+            'setAuctionParameters(address,uint256,uint256,uint256,uint256)',
           ),
         ],
       },
@@ -258,11 +261,12 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await nonOwner.getAddress(),
           await owner.getAddress(),
           2,
+          0,
           0,
           100,
           200,
@@ -324,12 +328,13 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance[
-          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
+          'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)'
         ](
           await owner.getAddress(),
           await nonOwner.getAddress(),
           await owner.getAddress(),
           2,
+          0,
           0,
           100,
           200,
@@ -403,6 +408,27 @@ describe('EnglishPeriodicAuction', function () {
       await instance.closeAuction(0);
 
       expect(await instance.isAuctionPeriod(0)).to.be.equal(false);
+    });
+
+    it('should offset auction starts', async function () {
+      // Auction 0 start: Now - 100
+      // Auction 0 end: Now
+      // Auction 1 start: Now - 50
+      // Auction 1 end: Now + 50
+      // Auction 2 start: Now
+      // Auction 2 end: Now + 100
+      // Auction 3 start: Now + 50
+      // Auction 3 end: Now + 150
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 100,
+        initialPeriodStartTimeOffset: 50,
+      });
+
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(1)).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(2)).to.be.equal(true);
+      expect(await instance.isAuctionPeriod(3)).to.be.equal(false);
     });
   });
 
@@ -1576,9 +1602,8 @@ describe('EnglishPeriodicAuction', function () {
     it('should allow owner to set', async function () {
       const instance = await getInstance({ hasOwner: true });
 
-      instance.setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21);
+      instance.setAuctionParameters(bidder1.address, 101, 201, 11, 21);
       expect(await instance.repossessor()).to.equal(bidder1.address);
-      expect(await instance.initialPeriodStartTime()).to.equal(3);
       expect(await instance.auctionLengthSeconds()).to.equal(101);
       expect(await instance.minBidIncrement()).to.equal(201);
       expect(await instance.bidExtensionWindowLengthSeconds()).to.equal(11);
@@ -1591,7 +1616,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(nonOwner)
-          .setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21),
+          .setAuctionParameters(bidder1.address, 101, 201, 11, 21),
       ).to.be.reverted;
     });
 
@@ -1601,7 +1626,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(owner)
-          .setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21),
+          .setAuctionParameters(bidder1.address, 101, 201, 11, 21),
       ).to.be.reverted;
     });
   });

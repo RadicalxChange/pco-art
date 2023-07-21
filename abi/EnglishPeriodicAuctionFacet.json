@@ -514,6 +514,11 @@
       },
       {
         "internalType": "uint256",
+        "name": "_initialPeriodStartTimeOffset",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "startingBid",
         "type": "uint256"
       },
@@ -568,6 +573,11 @@
       {
         "internalType": "uint256",
         "name": "_initialPeriodStartTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_initialPeriodStartTimeOffset",
         "type": "uint256"
       },
       {
@@ -738,11 +748,6 @@
         "internalType": "address",
         "name": "_repossessor",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_initialPeriodStartTime",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",

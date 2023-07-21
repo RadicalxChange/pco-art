@@ -930,7 +930,7 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount3);
     });
 
-    it('should place bid if current bidder', async function () {
+    it('should place bid if current steward', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100
       const instance = await getInstance({
@@ -961,6 +961,85 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
+    it('should place additional bid if current steward', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1;
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2;
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+      await instance.connect(owner).placeBid(0, bidAmount2, {
+        value: collateralAmount2.sub(collateralAmount1),
+      });
+
+      const bid = await instance.bidOf(0, owner.address);
+      const highestBid = await instance.highestBid(0);
+
+      expect(bid.round).to.be.equal(0);
+      expect(bid.bidder).to.be.equal(owner.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount2);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount2);
+
+      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.bidder).to.be.equal(owner.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount2);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount2);
+    });
+
+    it('should place new highest bid if current steward', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2;
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      const bid = await instance.bidOf(0, owner.address);
+      const highestBid = await instance.highestBid(0);
+
+      expect(bid.round).to.be.equal(0);
+      expect(bid.bidder).to.be.equal(owner.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount2);
+      expect(bid.feeAmount).to.be.equal(feeAmount2);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount2);
+
+      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.bidder).to.be.equal(owner.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount2);
+      expect(highestBid.feeAmount).to.be.equal(feeAmount2);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount2);
     });
 
     it('should extend auction if bid placed in extension window', async function () {

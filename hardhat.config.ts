@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
   networks: {
     gnosis: {
       url: NODE_URL_MAINNET ?? '',
-      accounts: [PKEY_MAINNET ?? ''],
+      accounts: PKEY_MAINNET ? [PKEY_MAINNET] : [],
       chainId: 100,
     },
   },

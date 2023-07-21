@@ -735,6 +735,44 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_repossessor",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_initialPeriodStartTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_auctionLengthSeconds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minBidIncrement",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bidExtensionWindowLengthSeconds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_bidExtensionSeconds",
+        "type": "uint256"
+      }
+    ],
+    "name": "setAuctionParameters",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_bidExtensionSeconds",
         "type": "uint256"

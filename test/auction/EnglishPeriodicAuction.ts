@@ -188,6 +188,9 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('withdrawBid(uint256)'),
           facetFactory.interface.getSighash('mintToken(address,uint256)'),
+          facetFactory.interface.getSighash(
+            'setAuctionParameters(address,uint256,uint256,uint256,uint256,uint256)',
+          ),
         ],
       },
     ]);
@@ -1566,6 +1569,40 @@ describe('EnglishPeriodicAuction', function () {
       expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
         bidAmount,
       );
+    });
+  });
+
+  describe('setAuctionParameters', function () {
+    it('should allow owner to set', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      instance.setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21);
+      expect(await instance.repossessor()).to.equal(bidder1.address);
+      expect(await instance.initialPeriodStartTime()).to.equal(3);
+      expect(await instance.auctionLengthSeconds()).to.equal(101);
+      expect(await instance.minBidIncrement()).to.equal(201);
+      expect(await instance.bidExtensionWindowLengthSeconds()).to.equal(11);
+      expect(await instance.bidExtensionSeconds()).to.equal(21);
+    });
+
+    it('should not allow non-owner to set', async function () {
+      const instance = await getInstance();
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          .setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21),
+      ).to.be.reverted;
+    });
+
+    it('should not allow anyone to set when no owner', async function () {
+      const instance = await getInstance({ hasOwner: false });
+
+      await expect(
+        instance
+          .connect(owner)
+          .setAuctionParameters(bidder1.address, 3, 101, 201, 11, 21),
+      ).to.be.reverted;
     });
   });
 

@@ -69,6 +69,17 @@ contract PeriodicPCOParamsFacet is
     }
 
     /**
+     * @notice Set PCO parameters
+     */
+    function setPCOParameters(
+        uint256 _licensePeriod,
+        uint256 _feeNumerator,
+        uint256 _feeDenominator
+    ) external onlyRole(COMPONENT_ROLE) {
+        _setPCOParameters(_licensePeriod, _feeNumerator, _feeDenominator);
+    }
+
+    /**
      * @notice Get license period
      */
     function licensePeriod() external view returns (uint256) {

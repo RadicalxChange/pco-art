@@ -29,6 +29,7 @@ contract EnglishPeriodicAuctionFacet is
         address _repossessor,
         address initialBidder,
         uint256 _initialPeriodStartTime,
+        uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
@@ -46,6 +47,7 @@ contract EnglishPeriodicAuctionFacet is
             _repossessor,
             initialBidder,
             _initialPeriodStartTime,
+            _initialPeriodStartTimeOffset,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
@@ -63,6 +65,7 @@ contract EnglishPeriodicAuctionFacet is
         address _repossessor,
         address initialBidder,
         uint256 _initialPeriodStartTime,
+        uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
@@ -82,6 +85,7 @@ contract EnglishPeriodicAuctionFacet is
             _repossessor,
             initialBidder,
             _initialPeriodStartTime,
+            _initialPeriodStartTimeOffset,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
@@ -96,7 +100,6 @@ contract EnglishPeriodicAuctionFacet is
      */
     function setAuctionParameters(
         address _repossessor,
-        uint256 _initialPeriodStartTime,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
@@ -104,7 +107,6 @@ contract EnglishPeriodicAuctionFacet is
     ) external onlyRole(COMPONENT_ROLE) {
         _setAuctionParameters(
             _repossessor,
-            _initialPeriodStartTime,
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,

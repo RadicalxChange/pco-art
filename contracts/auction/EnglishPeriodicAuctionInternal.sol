@@ -20,6 +20,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         address repossessor,
         address initialBidder,
         uint256 initialPeriodStartTime,
+        uint256 initialPeriodStartTimeOffset,
         uint256 startingBid,
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
@@ -34,8 +35,9 @@ abstract contract EnglishPeriodicAuctionInternal is
         l.maxTokenCount = maxTokenCount;
         l.initialBidder = initialBidder;
         l.startingBid = startingBid;
+        l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;
+        l.initialPeriodStartTime = initialPeriodStartTime;
         _setRepossessor(repossessor);
-        _setInitialPeriodStartTime(initialPeriodStartTime);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
         _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
@@ -47,14 +49,12 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _setAuctionParameters(
         address repossessor,
-        uint256 initialPeriodStartTime,
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
         uint256 bidExtensionWindowLengthSeconds,
         uint256 bidExtensionSeconds
     ) internal {
         _setRepossessor(repossessor);
-        _setInitialPeriodStartTime(initialPeriodStartTime);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
         _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
@@ -96,20 +96,6 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _initialPeriodStartTime() internal view returns (uint256) {
         return EnglishPeriodicAuctionStorage.layout().initialPeriodStartTime;
-    }
-
-    /**
-     * @notice Set initial period start time
-     */
-    function _setInitialPeriodStartTime(
-        uint256 initialPeriodStartTime
-    ) internal {
-        EnglishPeriodicAuctionStorage.Layout
-            storage l = EnglishPeriodicAuctionStorage.layout();
-
-        l.initialPeriodStartTime = initialPeriodStartTime;
-
-        emit InitialPeriodStartTimeSet(initialPeriodStartTime);
     }
 
     /**
@@ -462,7 +448,9 @@ abstract contract EnglishPeriodicAuctionInternal is
             auctionStartTime = l.lastPeriodEndTime[tokenId] + licensePeriod;
         } else {
             // Auction starts at initial time
-            auctionStartTime = l.initialPeriodStartTime;
+            auctionStartTime =
+                l.initialPeriodStartTime +
+                (tokenId * l.initialPeriodStartTimeOffset);
         }
     }
 

@@ -8,6 +8,7 @@ library StewardLicenseStorage {
     struct Layout {
         bool isInitialized;
         address initialSteward;
+        address minter;
     }
 
     bytes32 private constant STORAGE_SLOT =

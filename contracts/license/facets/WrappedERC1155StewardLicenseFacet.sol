@@ -27,6 +27,7 @@ contract WrappedERC1155StewardLicenseFacet is
     function initializeWrappedStewardLicense(
         address tokenAddress,
         uint256 tokenId,
+        address _minter,
         address _steward,
         string memory name,
         string memory symbol,
@@ -38,7 +39,14 @@ contract WrappedERC1155StewardLicenseFacet is
         );
 
         _initializeWrappedLicense(tokenAddress, tokenId);
-        _initializeStewardLicense(_steward, name, symbol, tokenURI);
+        _initializeStewardLicense(_minter, _steward, name, symbol, tokenURI);
+    }
+
+    /**
+     * @notice Get minter
+     */
+    function minter() external view returns (address) {
+        return _minter();
     }
 
     function onERC1155Received(

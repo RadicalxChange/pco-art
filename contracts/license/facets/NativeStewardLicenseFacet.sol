@@ -17,6 +17,7 @@ contract NativeStewardLicenseFacet is
      * @notice Initialize license
      */
     function initializeStewardLicense(
+        address _minter,
         address _steward,
         string memory name,
         string memory symbol,
@@ -27,6 +28,13 @@ contract NativeStewardLicenseFacet is
             'StewardLicenseFacet: already initialized'
         );
 
-        _initializeStewardLicense(_steward, name, symbol, baseURI);
+        _initializeStewardLicense(_minter, _steward, name, symbol, baseURI);
+    }
+
+    /**
+     * @notice Get minter
+     */
+    function minter() external view returns (address) {
+        return _minter();
     }
 }

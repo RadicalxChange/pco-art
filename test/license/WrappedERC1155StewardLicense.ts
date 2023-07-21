@@ -9,11 +9,12 @@ const tokenURI = 'ERC721Metadata.tokenURI';
 describe('WrappedERC1155StewardLicense', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
+  let minter: SignerWithAddress;
   let mockTokenInstance: any;
   let mockTokenInstance1: any;
 
   before(async function () {
-    [, , , , owner, nonOwner] = await ethers.getSigners();
+    [, , , , owner, nonOwner, minter] = await ethers.getSigners();
   });
 
   async function deployFacet(initialize = true) {
@@ -68,9 +69,10 @@ describe('WrappedERC1155StewardLicense', function () {
         'onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)',
       ),
       facetFactory.interface.getSighash(
-        'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+        'initializeWrappedStewardLicense(address,uint256,address,address,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
+      facetFactory.interface.getSighash('minter()'),
     ];
 
     let instance = await factory.deploy([
@@ -91,10 +93,11 @@ describe('WrappedERC1155StewardLicense', function () {
           : ethers.constants.AddressZero,
         initData: initialize
           ? facetInstance.interface.encodeFunctionData(
-              'initializeWrappedStewardLicense(address,uint256,address,string,string,string)',
+              'initializeWrappedStewardLicense(address,uint256,address,address,string,string,string)',
               [
                 mockTokenInstance.address,
                 1,
+                await minter.getAddress(),
                 await owner.getAddress(),
                 name,
                 symbol,
@@ -131,6 +134,7 @@ describe('WrappedERC1155StewardLicense', function () {
         instance.initializeWrappedStewardLicense(
           mockTokenInstance.address,
           1,
+          await minter.getAddress(),
           await owner.getAddress(),
           name,
           symbol,
@@ -139,6 +143,12 @@ describe('WrappedERC1155StewardLicense', function () {
       ).to.be.revertedWith(
         'WrappedERC1155StewardLicenseFacet: already initialized',
       );
+    });
+
+    it('should set minter', async function () {
+      const instance = await deployFacet();
+
+      expect(await instance.minter()).to.be.equal(await minter.getAddress());
     });
   });
 

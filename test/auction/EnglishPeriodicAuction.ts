@@ -69,12 +69,18 @@ describe('EnglishPeriodicAuction', function () {
         target: licenseMock.address,
         initTarget: licenseMock.address,
         initData: licenseMock.interface.encodeFunctionData(
-          'initializeStewardLicense(address,string,string,string)',
-          [await owner.getAddress(), 'name', 'symbol', 'tokenURI'],
+          'initializeStewardLicense(address,address,string,string,string)',
+          [
+            await owner.getAddress(),
+            await owner.getAddress(),
+            'name',
+            'symbol',
+            'tokenURI',
+          ],
         ),
         selectors: [
           licenseMock.interface.getSighash(
-            'initializeStewardLicense(address,string,string,string)',
+            'initializeStewardLicense(address,address,string,string,string)',
           ),
           licenseMock.interface.getSighash(
             'triggerTransfer(address,address,uint256)',

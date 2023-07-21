@@ -24,6 +24,7 @@ abstract contract StewardLicenseInternal is
      * @notice Initialize license
      */
     function _initializeStewardLicense(
+        address minter,
         address _initialSteward,
         string memory name,
         string memory symbol,
@@ -33,6 +34,7 @@ abstract contract StewardLicenseInternal is
 
         l.isInitialized = true;
         l.initialSteward = _initialSteward;
+        l.minter = minter;
 
         // Initialize ERC721
         ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
@@ -50,6 +52,13 @@ abstract contract StewardLicenseInternal is
      */
     function _isInitialized() internal view returns (bool) {
         return StewardLicenseStorage.layout().isInitialized;
+    }
+
+    /**
+     * @notice Get minter
+     */
+    function _minter() internal view returns (address) {
+        return StewardLicenseStorage.layout().minter;
     }
 
     /**

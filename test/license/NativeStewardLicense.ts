@@ -13,10 +13,11 @@ const tokenURI = 'ERC721Metadata.tokenURI';
 describe('NativeStewardLicense', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
+  let minter: SignerWithAddress;
   let instance: any;
 
   before(async function () {
-    [, , , , owner, nonOwner] = await ethers.getSigners();
+    [, , , , owner, nonOwner, minter] = await ethers.getSigners();
   });
 
   beforeEach(async function () {
@@ -53,13 +54,14 @@ describe('NativeStewardLicense', function () {
         erc721Metadata.interface.getSighash(k),
       ),
       facetFactory.interface.getSighash(
-        'initializeStewardLicense(address,string,string,string)',
+        'initializeStewardLicense(address,address,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('burn(uint256)'),
       facetFactory.interface.getSighash(
         'triggerTransfer(address,address,uint256)',
       ),
+      facetFactory.interface.getSighash('minter()'),
       facetFactory.interface.getSighash(
         'testTriggerTransfer(address,address,uint256)',
       ),
@@ -69,8 +71,14 @@ describe('NativeStewardLicense', function () {
     ];
 
     const initData = facetInstance.interface.encodeFunctionData(
-      'initializeStewardLicense(address,string,string,string)',
-      [await owner.getAddress(), name, symbol, tokenURI],
+      'initializeStewardLicense(address,address,string,string,string)',
+      [
+        await minter.getAddress(),
+        await owner.getAddress(),
+        name,
+        symbol,
+        tokenURI,
+      ],
     );
     instance = await factory.deploy([
       {
@@ -121,13 +129,20 @@ describe('NativeStewardLicense', function () {
   describe('initializeStewardLicense', function () {
     it('should revert if already initialized', async function () {
       await expect(
-        instance['initializeStewardLicense(address,string,string,string)'](
+        instance[
+          'initializeStewardLicense(address,address,string,string,string)'
+        ](
+          await minter.getAddress(),
           await owner.getAddress(),
           name,
           symbol,
           tokenURI,
         ),
       ).to.be.revertedWith('StewardLicenseFacet: already initialized');
+    });
+
+    it('should set minter', async function () {
+      expect(await instance.minter()).to.be.equal(await minter.getAddress());
     });
   });
 

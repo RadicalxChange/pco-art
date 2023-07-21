@@ -16,14 +16,8 @@ import * as Dotenv from 'dotenv';
 
 Dotenv.config();
 
-const {
-  API_KEY_ETHERSCAN,
-  NODE_URL_MAINNET,
-  NODE_URL_TESTNET,
-  PKEY_MAINNET,
-  PKEY_TESTNET,
-  REPORT_GAS,
-} = process.env;
+const { API_KEY_ETHERSCAN, NODE_URL_MAINNET, PKEY_MAINNET, REPORT_GAS } =
+  process.env;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -37,14 +31,9 @@ const config: HardhatUserConfig = {
   },
 
   networks: {
-    mainnet: {
-      url: NODE_URL_MAINNET,
-      accounts: [PKEY_MAINNET],
-    },
-
     gnosis: {
-      url: NODE_URL_TESTNET,
-      accounts: [PKEY_TESTNET],
+      url: NODE_URL_MAINNET ?? '',
+      accounts: [PKEY_MAINNET ?? ''],
       chainId: 100,
     },
   },
@@ -59,7 +48,7 @@ const config: HardhatUserConfig = {
   },
 
   etherscan: {
-    apiKey: API_KEY_ETHERSCAN,
+    apiKey: API_KEY_ETHERSCAN ?? '',
   },
 
   gasReporter: {

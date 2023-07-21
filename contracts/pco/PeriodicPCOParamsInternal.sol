@@ -27,6 +27,19 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
     }
 
     /**
+     * @notice Set PCO parameters
+     */
+    function _setPCOParameters(
+        uint256 licensePeriod,
+        uint256 feeNumerator,
+        uint256 feeDenominator
+    ) internal {
+        _setLicensePeriod(licensePeriod);
+        _setFeeNumerator(feeNumerator);
+        _setFeeDenominator(feeDenominator);
+    }
+
+    /**
      * @notice Check if initialized
      */
     function _isInitialized() internal view returns (bool) {

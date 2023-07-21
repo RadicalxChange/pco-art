@@ -43,6 +43,25 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Set auction parameters
+     */
+    function _setAuctionParameters(
+        address repossessor,
+        uint256 initialPeriodStartTime,
+        uint256 auctionLengthSeconds,
+        uint256 minBidIncrement,
+        uint256 bidExtensionWindowLengthSeconds,
+        uint256 bidExtensionSeconds
+    ) internal {
+        _setRepossessor(repossessor);
+        _setInitialPeriodStartTime(initialPeriodStartTime);
+        _setAuctionLengthSeconds(auctionLengthSeconds);
+        _setMinBidIncrement(minBidIncrement);
+        _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
+        _setBidExtensionSeconds(bidExtensionSeconds);
+    }
+
+    /**
      * @notice Check if initialized
      */
     function _isInitialized() internal view returns (bool) {

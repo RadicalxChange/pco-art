@@ -101,6 +101,35 @@ describe('PeriodicPCOParams', function () {
     });
   });
 
+  describe('setPCOParameters', function () {
+    it('should allow owner to set', async function () {
+      const instance = await getInstance();
+      await expect(instance.connect(owner).setPCOParameters(111, 112, 113)).to
+        .not.be.reverted;
+      expect(await instance.licensePeriod()).to.be.equal(111);
+      expect(await instance.feeNumerator()).to.be.equal(112);
+      expect(await instance.feeDenominator()).to.be.equal(113);
+    });
+
+    it('should only allow owner to set', async function () {
+      const instance = await getInstance();
+
+      await expect(instance.connect(nonOwner).setPCOParameters(111, 112, 113))
+        .to.be.reverted;
+    });
+
+    it('should not allow writing if no owner', async function () {
+      const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
+      const instance = await factory.deploy();
+      await instance.deployed();
+
+      await instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 4);
+
+      await expect(instance.connect(owner).setPCOParameters(111, 112, 113)).to
+        .be.reverted;
+    });
+  });
+
   describe('licensePeriod', function () {
     it('should allow owner to set', async function () {
       const instance = await getInstance();

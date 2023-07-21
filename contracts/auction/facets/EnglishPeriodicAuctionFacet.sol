@@ -92,6 +92,27 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Set auction parameters
+     */
+    function setAuctionParameters(
+        address _repossessor,
+        uint256 _initialPeriodStartTime,
+        uint256 _auctionLengthSeconds,
+        uint256 _minBidIncrement,
+        uint256 _bidExtensionWindowLengthSeconds,
+        uint256 _bidExtensionSeconds
+    ) external onlyRole(COMPONENT_ROLE) {
+        _setAuctionParameters(
+            _repossessor,
+            _initialPeriodStartTime,
+            _auctionLengthSeconds,
+            _minBidIncrement,
+            _bidExtensionWindowLengthSeconds,
+            _bidExtensionSeconds
+        );
+    }
+
+    /**
      * @notice Get max token count
      */
     function maxTokenCount() external view returns (uint256) {

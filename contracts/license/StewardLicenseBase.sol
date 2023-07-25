@@ -49,6 +49,19 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     }
 
     /**
+     * @notice Add token to collection
+     */
+    function addTokenToCollection(address to, string memory tokenURI) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add token to collection'
+        );
+
+        _addTokenToCollection(to, tokenURI);
+    }
+
+    /**
      * @notice Get max token count
      */
     function maxTokenCount() external view returns (uint256) {

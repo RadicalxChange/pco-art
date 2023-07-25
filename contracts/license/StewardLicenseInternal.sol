@@ -88,6 +88,29 @@ abstract contract StewardLicenseInternal is
     }
 
     /**
+     * @notice Add token to collection
+     */
+    function _addTokenToCollection(
+        address to,
+        string memory tokenURI
+    ) internal {
+        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
+
+        uint256 newTokenId = l.maxTokenCount;
+
+        // Increment max token count
+        l.maxTokenCount += 1;
+
+        // Override metadata
+        ERC721MetadataStorage.layout().tokenURIs[newTokenId] = tokenURI;
+
+        if (to != address(0)) {
+            // Mint token
+            _mint(to, newTokenId);
+        }
+    }
+
+    /**
      * @notice Disable transfers if during auction period
      */
     function _beforeTokenTransfer(

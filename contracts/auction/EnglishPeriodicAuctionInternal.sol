@@ -25,14 +25,12 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
         uint256 bidExtensionWindowLengthSeconds,
-        uint256 bidExtensionSeconds,
-        uint256 maxTokenCount
+        uint256 bidExtensionSeconds
     ) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         l.isInitialized = true;
-        l.maxTokenCount = maxTokenCount;
         l.initialBidder = initialBidder;
         l.startingBid = startingBid;
         l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;
@@ -66,13 +64,6 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _isInitialized() internal view returns (bool) {
         return EnglishPeriodicAuctionStorage.layout().isInitialized;
-    }
-
-    /**
-     * @notice Get max token count
-     */
-    function _maxTokenCount() internal view returns (uint256) {
-        return EnglishPeriodicAuctionStorage.layout().maxTokenCount;
     }
 
     /**
@@ -214,7 +205,7 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Get is auction period
      */
     function _isAuctionPeriod(uint256 tokenId) internal view returns (bool) {
-        if (tokenId >= _maxTokenCount()) {
+        if (tokenId >= IStewardLicense(address(this)).maxTokenCount()) {
             return false;
         }
         return block.timestamp >= _auctionStartTime(tokenId);
@@ -224,7 +215,7 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Is token ready for transfer
      */
     function _isReadyForTransfer(uint256 tokenId) internal view returns (bool) {
-        if (tokenId >= _maxTokenCount()) {
+        if (tokenId >= IStewardLicense(address(this)).maxTokenCount()) {
             return false;
         }
         return block.timestamp >= _auctionEndTime(tokenId);

@@ -49,6 +49,13 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     }
 
     /**
+     * @notice Get max token count
+     */
+    function maxTokenCount() external view returns (uint256) {
+        return _maxTokenCount();
+    }
+
+    /**
      * @notice Check if token exists
      */
     function exists(uint256 tokenId) external view returns (bool) {

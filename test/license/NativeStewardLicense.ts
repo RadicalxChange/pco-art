@@ -55,7 +55,7 @@ describe('NativeStewardLicense', function () {
         erc721Metadata.interface.getSighash(k),
       ),
       facetFactory.interface.getSighash(
-        'initializeStewardLicense(address,address,string,string,string)',
+        'initializeStewardLicense(address,address,uint256,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('burn(uint256)'),
@@ -70,13 +70,15 @@ describe('NativeStewardLicense', function () {
         'onERC721Received(address,address,uint256,bytes)',
       ),
       facetFactory.interface.getSighash('mintToken(address,uint256)'),
+      facetFactory.interface.getSighash('maxTokenCount()'),
     ];
 
     const initData = facetInstance.interface.encodeFunctionData(
-      'initializeStewardLicense(address,address,string,string,string)',
+      'initializeStewardLicense(address,address,uint256,string,string,string)',
       [
         await minter.getAddress(),
         await owner.getAddress(),
+        2,
         name,
         symbol,
         tokenURI,
@@ -138,10 +140,11 @@ describe('NativeStewardLicense', function () {
     it('should revert if already initialized', async function () {
       await expect(
         instance[
-          'initializeStewardLicense(address,address,string,string,string)'
+          'initializeStewardLicense(address,address,uint256,string,string,string)'
         ](
           await minter.getAddress(),
           await owner.getAddress(),
+          2,
           name,
           symbol,
           tokenURI,
@@ -151,6 +154,10 @@ describe('NativeStewardLicense', function () {
 
     it('should set minter', async function () {
       expect(await instance.minter()).to.be.equal(await minter.getAddress());
+    });
+
+    it('should set max token count', async function () {
+      expect(await instance.maxTokenCount()).to.equal(2);
     });
   });
 

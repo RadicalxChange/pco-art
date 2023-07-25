@@ -16,7 +16,6 @@ library EnglishPeriodicAuctionStorage {
         uint256 minBidIncrement;
         uint256 bidExtensionWindowLengthSeconds;
         uint256 bidExtensionSeconds;
-        uint256 maxTokenCount;
         // Per token config
         mapping(uint256 => uint256) lastPeriodEndTime;
         mapping(uint256 => uint256) currentAuctionRound;

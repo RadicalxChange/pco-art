@@ -26,6 +26,7 @@ abstract contract StewardLicenseInternal is
     function _initializeStewardLicense(
         address minter,
         address _initialSteward,
+        uint256 maxTokenCount,
         string memory name,
         string memory symbol,
         string memory baseURI
@@ -35,6 +36,7 @@ abstract contract StewardLicenseInternal is
         l.isInitialized = true;
         l.initialSteward = _initialSteward;
         l.minter = minter;
+        l.maxTokenCount = maxTokenCount;
 
         // Initialize ERC721
         ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
@@ -76,6 +78,13 @@ abstract contract StewardLicenseInternal is
             // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
             _transfer(from, to, tokenId);
         }
+    }
+
+    /**
+     * @notice Get max token count
+     */
+    function _maxTokenCount() internal view returns (uint256) {
+        return StewardLicenseStorage.layout().maxTokenCount;
     }
 
     /**

@@ -34,8 +34,7 @@ contract EnglishPeriodicAuctionFacet is
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds,
-        uint256 _maxTokenCount
+        uint256 _bidExtensionSeconds
     ) external {
         require(
             _isInitialized() == false,
@@ -52,8 +51,7 @@ contract EnglishPeriodicAuctionFacet is
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds,
-            _maxTokenCount
+            _bidExtensionSeconds
         );
     }
 
@@ -70,8 +68,7 @@ contract EnglishPeriodicAuctionFacet is
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds,
-        uint256 _maxTokenCount
+        uint256 _bidExtensionSeconds
     ) external {
         require(
             _isInitialized() == false,
@@ -90,8 +87,7 @@ contract EnglishPeriodicAuctionFacet is
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds,
-            _maxTokenCount
+            _bidExtensionSeconds
         );
     }
 
@@ -112,13 +108,6 @@ contract EnglishPeriodicAuctionFacet is
             _bidExtensionWindowLengthSeconds,
             _bidExtensionSeconds
         );
-    }
-
-    /**
-     * @notice Get max token count
-     */
-    function maxTokenCount() external view returns (uint256) {
-        return _maxTokenCount();
     }
 
     /**

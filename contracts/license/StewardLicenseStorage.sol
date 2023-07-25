@@ -9,6 +9,7 @@ library StewardLicenseStorage {
         bool isInitialized;
         address initialSteward;
         address minter;
+        uint256 maxTokenCount;
     }
 
     bytes32 private constant STORAGE_SLOT =

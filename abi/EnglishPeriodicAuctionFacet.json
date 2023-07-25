@@ -517,7 +517,7 @@
       },
       {
         "internalType": "address",
-        "name": "initialBidder",
+        "name": "_initialBidder",
         "type": "address"
       },
       {
@@ -553,11 +553,6 @@
       {
         "internalType": "uint256",
         "name": "_bidExtensionSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxTokenCount",
         "type": "uint256"
       }
     ],
@@ -580,7 +575,7 @@
       },
       {
         "internalType": "address",
-        "name": "initialBidder",
+        "name": "_initialBidder",
         "type": "address"
       },
       {
@@ -616,11 +611,6 @@
       {
         "internalType": "uint256",
         "name": "_bidExtensionSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxTokenCount",
         "type": "uint256"
       }
     ],
@@ -662,19 +652,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "maxTokenCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",

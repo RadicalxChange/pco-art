@@ -68,4 +68,30 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
 
         emit Unallowlisted(_address);
     }
+
+    /**
+     * @notice Batch add to allowlist
+     */
+    function _batchAddToAllowlist(address[] memory _addresses) internal {
+        AllowlistStorage.Layout storage l = AllowlistStorage.layout();
+
+        for (uint256 i; i < _addresses.length; i++) {
+            l.allowlist.add(_addresses[i]);
+        }
+
+        emit BatchAllowlisted(_addresses);
+    }
+
+    /**
+     * @notice Batch remove from allowlist
+     */
+    function _batchRemoveFromAllowlist(address[] memory _addresses) internal {
+        AllowlistStorage.Layout storage l = AllowlistStorage.layout();
+
+        for (uint256 i; i < _addresses.length; i++) {
+            l.allowlist.remove(_addresses[i]);
+        }
+
+        emit BatchUnallowlisted(_addresses);
+    }
 }

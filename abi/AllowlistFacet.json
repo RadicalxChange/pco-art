@@ -39,6 +39,32 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "BatchAllowlisted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "BatchUnallowlisted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "bytes32",
         "name": "role",
@@ -132,6 +158,32 @@
       }
     ],
     "name": "addToAllowlist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "batchAddToAllowlist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "batchRemoveFromAllowlist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

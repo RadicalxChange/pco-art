@@ -83,7 +83,7 @@ contract AllowlistFacet is
     function addToAllowlist(
         address _address
     ) external onlyRole(COMPONENT_ROLE) {
-        return _addToAllowlist(_address);
+        _addToAllowlist(_address);
     }
 
     /**
@@ -92,6 +92,24 @@ contract AllowlistFacet is
     function removeFromAllowlist(
         address _address
     ) external onlyRole(COMPONENT_ROLE) {
-        return _removeFromAllowlist(_address);
+        _removeFromAllowlist(_address);
+    }
+
+    /**
+     * @notice Batch add to allowlist
+     */
+    function batchAddToAllowlist(
+        address[] memory _addresses
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchAddToAllowlist(_addresses);
+    }
+
+    /**
+     * @notice Batch remove from allowlist
+     */
+    function batchRemoveFromAllowlist(
+        address[] memory _addresses
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchRemoveFromAllowlist(_addresses);
     }
 }

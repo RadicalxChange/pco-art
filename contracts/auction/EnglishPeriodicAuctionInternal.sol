@@ -422,18 +422,6 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
-     * @notice Mint token if it doesn't exist
-     */
-    function _mintToken(address to, uint256 tokenId) internal {
-        require(
-            IStewardLicense(address(this)).exists(tokenId) == false,
-            'EnglishPeriodicAuction: Token already exists'
-        );
-
-        IStewardLicense(address(this)).triggerTransfer(address(0), to, tokenId);
-    }
-
-    /**
      * @notice Get auction start time
      */
     function _auctionStartTime(

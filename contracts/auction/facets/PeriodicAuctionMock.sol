@@ -7,6 +7,8 @@ contract PeriodicAuctionMock is IPeriodicAuctionReadable {
     struct Layout {
         bool isAuctionPeriod;
         bool shouldFail;
+        uint256 initialPeriodStartTime;
+        address initialBidder;
     }
 
     bytes32 private constant STORAGE_SLOT =
@@ -30,5 +32,23 @@ contract PeriodicAuctionMock is IPeriodicAuctionReadable {
 
     function setShouldFail(bool _shouldFail) external {
         layout().shouldFail = _shouldFail;
+    }
+
+    function initialPeriodStartTime() external view returns (uint256) {
+        return layout().initialPeriodStartTime;
+    }
+
+    function setInitialPeriodStartTime(
+        uint256 _initialPeriodStartTime
+    ) external {
+        layout().initialPeriodStartTime = _initialPeriodStartTime;
+    }
+
+    function initialBidder() external view returns (address) {
+        return layout().initialBidder;
+    }
+
+    function setInitialBidder(address _initialBidder) external {
+        layout().initialBidder = _initialBidder;
     }
 }

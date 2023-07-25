@@ -62,6 +62,23 @@ abstract contract StewardLicenseInternal is
     }
 
     /**
+     * @notice Trigger transfer
+     */
+    function _triggerTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal {
+        if (_exists(tokenId) == false) {
+            // Mint token
+            _mint(to, tokenId);
+        } else {
+            // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
+            _transfer(from, to, tokenId);
+        }
+    }
+
+    /**
      * @notice Disable transfers if during auction period
      */
     function _beforeTokenTransfer(

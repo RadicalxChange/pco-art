@@ -5,6 +5,7 @@ import {
 import { ethers } from 'hardhat';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
+import { time } from '@nomicfoundation/hardhat-network-helpers';
 
 const name = 'ERC721Metadata.name';
 const symbol = 'ERC721Metadata.symbol';
@@ -68,6 +69,7 @@ describe('NativeStewardLicense', function () {
       erc721Receiver.interface.getSighash(
         'onERC721Received(address,address,uint256,bytes)',
       ),
+      facetFactory.interface.getSighash('mintToken(address,uint256)'),
     ];
 
     const initData = facetInstance.interface.encodeFunctionData(
@@ -89,6 +91,12 @@ describe('NativeStewardLicense', function () {
           mockAuction.interface.getSighash('isAuctionPeriod(uint256)'),
           mockAuction.interface.getSighash('setIsAuctionPeriod(bool)'),
           mockAuction.interface.getSighash('setShouldFail(bool)'),
+          mockAuction.interface.getSighash('setInitialBidder(address)'),
+          mockAuction.interface.getSighash(
+            'setInitialPeriodStartTime(uint256)',
+          ),
+          mockAuction.interface.getSighash('initialBidder()'),
+          mockAuction.interface.getSighash('initialPeriodStartTime()'),
         ],
       },
       {
@@ -224,6 +232,74 @@ describe('NativeStewardLicense', function () {
         ),
       ).to.be.revertedWith(
         'NativeStewardLicense: Trigger transfer can only be called from another facet',
+      );
+    });
+  });
+
+  describe('mintToken', function () {
+    it('should allow mint from initial bidder if token does not exist', async function () {
+      const auctionMockFacet = await ethers.getContractAt(
+        'PeriodicAuctionMock',
+        instance.address,
+      );
+
+      await auctionMockFacet.setInitialBidder(minter.address);
+      await auctionMockFacet.setInitialPeriodStartTime(
+        (await time.latest()) + 100,
+      );
+
+      await instance.connect(minter).mintToken(nonOwner.address, 1);
+
+      expect(await instance.ownerOf(1)).to.equal(nonOwner.address);
+    });
+
+    it('should not allow mint if not initial bidder', async function () {
+      const auctionMockFacet = await ethers.getContractAt(
+        'PeriodicAuctionMock',
+        instance.address,
+      );
+
+      await auctionMockFacet.setInitialBidder(minter.address);
+      await auctionMockFacet.setInitialPeriodStartTime(
+        (await time.latest()) + 100,
+      );
+
+      await expect(
+        instance.connect(nonOwner).mintToken(nonOwner.address, 1),
+      ).to.be.revertedWith(
+        'StewardLicenseFacet: only initial bidder can mint token',
+      );
+    });
+
+    it('should not allow mint if token exists', async function () {
+      const auctionMockFacet = await ethers.getContractAt(
+        'PeriodicAuctionMock',
+        instance.address,
+      );
+
+      await auctionMockFacet.setInitialBidder(minter.address);
+      await auctionMockFacet.setInitialPeriodStartTime(
+        (await time.latest()) + 100,
+      );
+
+      await expect(
+        instance.connect(minter).mintToken(nonOwner.address, 0),
+      ).to.be.revertedWith('StewardLicenseFacet: Token already exists');
+    });
+
+    it('should not allow mint if initial period has started', async function () {
+      const auctionMockFacet = await ethers.getContractAt(
+        'PeriodicAuctionMock',
+        instance.address,
+      );
+
+      await auctionMockFacet.setInitialBidder(minter.address);
+      await auctionMockFacet.setInitialPeriodStartTime(0);
+
+      await expect(
+        instance.connect(minter).mintToken(nonOwner.address, 1),
+      ).to.be.revertedWith(
+        'StewardLicenseFacet: cannot mint after initial period start time',
       );
     });
   });

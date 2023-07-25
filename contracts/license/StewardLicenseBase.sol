@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import { StewardLicenseInternal } from './StewardLicenseInternal.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
+import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 
 /**
  * @title StewardLicenseBase
@@ -21,13 +22,30 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
             'NativeStewardLicense: Trigger transfer can only be called from another facet'
         );
 
-        if (_exists(tokenId) == false) {
-            // Mint token
-            _mint(to, tokenId);
-        } else {
-            // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
-            _transfer(from, to, tokenId);
-        }
+        _triggerTransfer(from, to, tokenId);
+    }
+
+    /**
+     * @notice Initial bidder can mint token if it doesn't exist
+     */
+    function mintToken(address to, uint256 tokenId) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can mint token'
+        );
+        require(
+            block.timestamp <
+                IPeriodicAuctionReadable(address(this))
+                    .initialPeriodStartTime(),
+            'StewardLicenseFacet: cannot mint after initial period start time'
+        );
+        require(
+            _exists(tokenId) == false,
+            'StewardLicenseFacet: Token already exists'
+        );
+
+        _triggerTransfer(address(0), to, tokenId);
     }
 
     /**

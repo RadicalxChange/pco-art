@@ -27,7 +27,7 @@ contract EnglishPeriodicAuctionFacet is
      */
     function initializeAuction(
         address _repossessor,
-        address initialBidder,
+        address _initialBidder,
         uint256 _initialPeriodStartTime,
         uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
@@ -45,7 +45,7 @@ contract EnglishPeriodicAuctionFacet is
         _setSupportsInterface(type(IPeriodicAuctionReadable).interfaceId, true);
         _initializeAuction(
             _repossessor,
-            initialBidder,
+            _initialBidder,
             _initialPeriodStartTime,
             _initialPeriodStartTimeOffset,
             startingBid,
@@ -63,7 +63,7 @@ contract EnglishPeriodicAuctionFacet is
     function initializeAuction(
         address _owner,
         address _repossessor,
-        address initialBidder,
+        address _initialBidder,
         uint256 _initialPeriodStartTime,
         uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
@@ -83,7 +83,7 @@ contract EnglishPeriodicAuctionFacet is
         _grantRole(COMPONENT_ROLE, _owner);
         _initializeAuction(
             _repossessor,
-            initialBidder,
+            _initialBidder,
             _initialPeriodStartTime,
             _initialPeriodStartTimeOffset,
             startingBid,
@@ -136,6 +136,13 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Get initial bidder
+     */
+    function initialBidder() external view returns (address) {
+        return _initialBidder();
+    }
+
+    /**
      * @notice Is token ready for transfer
      */
     function isReadyForTransfer(uint256 tokenId) external view returns (bool) {
@@ -179,22 +186,6 @@ contract EnglishPeriodicAuctionFacet is
         );
 
         _closeAuction(tokenId);
-    }
-
-    /**
-     * @notice Initial bidder can mint token if it doesn't exist
-     */
-    function mintToken(address to, uint256 tokenId) external {
-        require(
-            msg.sender == _initialBidder(),
-            'EnglishPeriodicAuction: only initial bidder can mint token'
-        );
-        require(
-            block.timestamp < _initialPeriodStartTime(),
-            'EnglishPeriodicAuction: cannot mint after initial period start time'
-        );
-
-        _mintToken(to, tokenId);
     }
 
     /**

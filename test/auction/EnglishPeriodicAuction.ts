@@ -358,6 +358,17 @@ describe('EnglishPeriodicAuction', function () {
       expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
     });
 
+    it('should return false if token ID is beyond max', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: await time.latest(),
+      });
+
+      expect(await instance.isAuctionPeriod(10)).to.be.equal(false);
+    });
+
     it('should return false if initial auction ended', async function () {
       // Auction start: Now - 200
       // Auction end: Now - 100
@@ -455,6 +466,19 @@ describe('EnglishPeriodicAuction', function () {
       });
 
       expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
+    });
+
+    it('should return false if token ID is beyond max', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now - 100
+      // Next auction start: Now + 900
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      expect(await instance.isReadyForTransfer(10)).to.be.equal(false);
     });
 
     it('should return false if initial auction transferred', async function () {

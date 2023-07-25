@@ -214,6 +214,9 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Get is auction period
      */
     function _isAuctionPeriod(uint256 tokenId) internal view returns (bool) {
+        if (tokenId >= _maxTokenCount()) {
+            return false;
+        }
         return block.timestamp >= _auctionStartTime(tokenId);
     }
 
@@ -221,6 +224,9 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Is token ready for transfer
      */
     function _isReadyForTransfer(uint256 tokenId) internal view returns (bool) {
+        if (tokenId >= _maxTokenCount()) {
+            return false;
+        }
         return block.timestamp >= _auctionEndTime(tokenId);
     }
 

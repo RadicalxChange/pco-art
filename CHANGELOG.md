@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2023-07-25
+
+### Bug Fixes
+
+- Enforce max token count
+- Allow current bidder to withdraw collateral
+- Previous steward collateral calculation
+
+### Features
+
+- Batch edit allowlist
+
 ## [0.0.2] - 2023-07-21
 
 ### Features

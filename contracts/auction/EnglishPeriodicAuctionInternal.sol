@@ -386,7 +386,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             l.highestBids[tokenId] = repossessorBid;
         } else {
             // Transfer bid to previous bidder's collateral
-            l.bids[tokenId][oldBidder].collateralAmount = l
+            l.bids[tokenId][oldBidder].collateralAmount += l
                 .highestBids[tokenId]
                 .bidAmount;
         }

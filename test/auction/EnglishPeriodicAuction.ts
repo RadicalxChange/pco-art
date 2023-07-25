@@ -1660,6 +1660,47 @@ describe('EnglishPeriodicAuction', function () {
         bidAmount,
       );
     });
+
+    it('should allow withdraw of both auction proceeds and collateral', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount;
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      await time.increase(100);
+      await instance.closeAuction(0);
+
+      const oldOwnerBalance = await ethers.provider.getBalance(owner.address);
+      const res = await instance.connect(owner).withdrawBid(0);
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newOwnerBalance = await ethers.provider.getBalance(owner.address);
+
+      // Expect owner balance to increase by bid amount + colleteral amount
+      expect(newOwnerBalance.add(gasFee).sub(oldOwnerBalance)).to.be.equal(
+        bidAmount2.add(collateralAmount),
+      );
+    });
   });
 
   describe('setAuctionParameters', function () {

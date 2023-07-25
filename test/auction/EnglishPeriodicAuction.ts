@@ -1354,28 +1354,6 @@ describe('EnglishPeriodicAuction', function () {
   });
 
   describe('withdrawBid', function () {
-    it('should revert if current bidder tries to withdraw bid', async function () {
-      // Auction start: Now - 200
-      // Auction end: Now + 100
-      const instance = await getInstance({
-        auctionLengthSeconds: 300,
-        initialPeriodStartTime: (await time.latest()) - 200,
-        licensePeriod: 1000,
-      });
-
-      const bidAmount = ethers.utils.parseEther('1.1');
-      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
-      const collateralAmount = feeAmount.add(bidAmount);
-
-      await instance
-        .connect(bidder1)
-        .placeBid(0, bidAmount, { value: collateralAmount });
-
-      await expect(instance.connect(owner).withdrawBid(0)).to.be.revertedWith(
-        'EnglishPeriodicAuction: Cannot withdraw bid if current bidder',
-      );
-    });
-
     it('should revert if highest bidder tries to withdraw bid', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100
@@ -1392,6 +1370,30 @@ describe('EnglishPeriodicAuction', function () {
       await instance
         .connect(bidder1)
         .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await expect(instance.connect(bidder1).withdrawBid(0)).to.be.revertedWith(
+        'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder',
+      );
+    });
+
+    it('should revert if highest bidder tries to withdraw bid after auction ends', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
 
       await expect(instance.connect(bidder1).withdrawBid(0)).to.be.revertedWith(
         'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder',
@@ -1494,6 +1496,44 @@ describe('EnglishPeriodicAuction', function () {
       // Expect bidder1 balance to increase by collateralAmount1
       expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
         collateralAmount1,
+      );
+    });
+
+    it('should allow withdraw after being out bid if current steward', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount;
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await instance.connect(bidder2).placeBid(0, bidAmount2, {
+        value: collateralAmount2,
+      });
+
+      const oldBidderBalance = await ethers.provider.getBalance(owner.address);
+      const res = await instance.connect(owner).withdrawBid(0);
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newBidderBalance = await ethers.provider.getBalance(owner.address);
+
+      // Expect owner balance to increase by collateralAmount1
+      expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
+        collateralAmount,
       );
     });
 

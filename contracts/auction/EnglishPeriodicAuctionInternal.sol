@@ -333,10 +333,6 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         require(
-            bidder != currentBidder,
-            'EnglishPeriodicAuction: Cannot withdraw bid if current bidder'
-        );
-        require(
             bidder != l.highestBids[tokenId].bidder,
             'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder'
         );

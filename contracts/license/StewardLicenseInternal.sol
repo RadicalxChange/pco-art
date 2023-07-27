@@ -95,7 +95,7 @@ abstract contract StewardLicenseInternal is
      */
     function _addTokenToCollection(
         address to,
-        string memory _tokenURI
+        string memory tokenURI
     ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
@@ -105,7 +105,7 @@ abstract contract StewardLicenseInternal is
         l.maxTokenCount += 1;
 
         // Override metadata
-        l.tokenURIOverrides[newTokenId] = _tokenURI;
+        ERC721MetadataStorage.layout().tokenURIs[newTokenId] = tokenURI;
 
         if (to != address(0)) {
             // Mint token
@@ -125,24 +125,34 @@ abstract contract StewardLicenseInternal is
         l.maxTokenCount += 1;
 
         // Override metadata
-        l.tokenURIOverrides[newTokenId] = string(
+        ERC721MetadataStorage.layout().tokenURIs[newTokenId] = string(
             abi.encodePacked(_baseURI, newTokenId.toString())
         );
     }
 
     /**
      * @notice Override token URI
+     * @return token URI
      */
-    function tokenURI(
+    function _tokenURI(
         uint256 tokenId
-    ) external view override returns (string memory) {
-        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
-        string storage tokenIdURI = l.tokenURIOverrides[tokenId];
+    ) internal view override returns (string memory) {
+        StewardLicenseStorage.Layout storage licenseL = StewardLicenseStorage
+            .layout();
+
+        if (tokenId >= licenseL.maxTokenCount)
+            revert ERC721Metadata__NonExistentToken();
+
+        ERC721MetadataStorage.Layout storage metadataL = ERC721MetadataStorage
+            .layout();
+
+        string memory tokenIdURI = metadataL.tokenURIs[tokenId];
+        string memory baseURI = metadataL.baseURI;
 
         if (bytes(tokenIdURI).length > 0) {
             return tokenIdURI;
         } else {
-            return _tokenURI(tokenId);
+            return string(abi.encodePacked(baseURI, tokenId.toString()));
         }
     }
 

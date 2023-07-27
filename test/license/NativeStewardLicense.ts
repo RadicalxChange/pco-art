@@ -476,14 +476,14 @@ describe('NativeStewardLicense', function () {
       expect(await instance.maxTokenCount()).to.equal(4);
       expect(await instance.exists(2)).to.equal(false);
       expect(await instance.exists(3)).to.equal(false);
+      expect(await instance.tokenURI(2)).to.equal('new-token-uri-1');
+      expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
 
       await instance.mint(nonOwner.address, 2);
       await instance.mint(owner.address, 3);
 
       expect(await instance.ownerOf(2)).to.equal(nonOwner.address);
       expect(await instance.ownerOf(3)).to.equal(owner.address);
-      expect(await instance.tokenURI(2)).to.equal('new-token-uri-1');
-      expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
@@ -524,17 +524,16 @@ describe('NativeStewardLicense', function () {
       expect(await instance.exists(2)).to.equal(false);
       expect(await instance.exists(3)).to.equal(false);
       expect(await instance.exists(4)).to.equal(false);
+      expect(await instance.tokenURI(2)).to.equal('new-base-token-uri/2');
+      expect(await instance.tokenURI(3)).to.equal('new-base-token-uri/3');
+      expect(await instance.tokenURI(1)).to.equal(tokenURI + '1');
 
-      await instance.mint(nonOwner.address, 1);
       await instance.mint(nonOwner.address, 2);
       await instance.mint(owner.address, 3);
 
       expect(await instance.ownerOf(2)).to.equal(nonOwner.address);
       expect(await instance.ownerOf(3)).to.equal(owner.address);
-      expect(await instance.tokenURI(2)).to.equal('new-base-token-uri/2');
-      expect(await instance.tokenURI(3)).to.equal('new-base-token-uri/3');
       expect(await instance.exists(4)).to.equal(false);
-      expect(await instance.tokenURI(1)).to.equal(tokenURI + '1');
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {

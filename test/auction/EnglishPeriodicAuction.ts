@@ -1354,7 +1354,7 @@ describe('EnglishPeriodicAuction', function () {
       expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(0);
     });
 
-    it.only('should close auction after manual mint', async function () {
+    it('should close auction after manual mint', async function () {
       // Auction start: Now + 100
       // Auction end: Now + 400
       const instance = await getInstance({

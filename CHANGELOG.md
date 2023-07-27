@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.4] - 2023-07-27
+
+### Features
+
+- [**breaking**] Add tokens to existing collection ([#6](https://github.com/orhun/git-cliff/issues/6))
+
 ## [0.0.3] - 2023-07-25
 
 ### Bug Fixes

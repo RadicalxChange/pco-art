@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.5] - 2023-07-27
+
+### Bug Fixes
+
+- Allow reading token URI before minting
+
+### Testing
+
+- New steward receives initial auction proceeds on manual mint
+
 ## [0.0.4] - 2023-07-27
 
 ### Features

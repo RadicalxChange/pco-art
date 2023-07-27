@@ -10,6 +10,7 @@ library StewardLicenseStorage {
         address initialSteward;
         address minter;
         uint256 maxTokenCount;
+        mapping(uint256 => string) tokenURIOverrides;
     }
 
     bytes32 private constant STORAGE_SLOT =

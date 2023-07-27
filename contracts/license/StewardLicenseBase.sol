@@ -62,6 +62,61 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     }
 
     /**
+     * @notice Add tokens to collection with to
+     */
+    function addTokensToCollection(
+        address[] memory to,
+        string[] memory tokenURIs
+    ) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+        require(
+            to.length == tokenURIs.length,
+            'StewardLicenseFacet: to and tokenURIs length mismatch'
+        );
+
+        for (uint256 i = 0; i < tokenURIs.length; i++) {
+            _addTokenToCollection(to[i], tokenURIs[i]);
+        }
+    }
+
+    /**
+     * @notice Add tokens to collection
+     */
+    function addTokensToCollection(string[] memory tokenURIs) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+
+        for (uint256 i = 0; i < tokenURIs.length; i++) {
+            _addTokenToCollection(address(0), tokenURIs[i]);
+        }
+    }
+
+    /**
+     * @notice Add tokens to collection with baseURI
+     */
+    function addTokensWithBaseURIToCollection(
+        uint32 amount,
+        string memory baseURI
+    ) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+
+        for (uint32 i = 0; i < amount; i++) {
+            _addTokenWithBaseURIToCollection(baseURI);
+        }
+    }
+
+    /**
      * @notice Get max token count
      */
     function maxTokenCount() external view returns (uint256) {

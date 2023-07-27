@@ -94,6 +94,7 @@ describe('EnglishPeriodicAuction', function () {
             'transferFrom(address,address,uint256)',
           ),
           licenseMock.interface.getSighash('maxTokenCount()'),
+          licenseMock.interface.getSighash('mintToken(address,uint256)'),
         ],
       },
       {
@@ -1351,6 +1352,77 @@ describe('EnglishPeriodicAuction', function () {
 
       // No fee is distributed to beneficiary
       expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(0);
+    });
+
+    it.only('should close auction after manual mint', async function () {
+      // Auction start: Now + 100
+      // Auction end: Now + 400
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) + 100,
+        licensePeriod: 1000,
+      });
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      // Mint token manually
+      const steward = bidder2.address;
+      await licenseMock.mintToken(steward, 0);
+
+      // Start auction
+      await time.increase(300);
+
+      const bidAmount = ethers.utils.parseEther('0.9');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      const oldBeneficiaryBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      const newBeneficiaryBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+
+      const originalStewardBid = await instance.bidOf(0, owner.address);
+      const stewardBid = await instance.bidOf(0, steward);
+      expect(originalStewardBid.collateralAmount).to.be.equal(0);
+      expect(stewardBid.collateralAmount).to.be.equal(bidAmount);
+
+      const currentBid = await instance.currentBid(0);
+      const highestBid = await instance.highestBid(0);
+      const bidder1Bid = await instance.bidOf(0, bidder1.address);
+
+      expect(currentBid.round).to.be.equal(0);
+      expect(currentBid.bidder).to.be.equal(bidder1.address);
+      expect(currentBid.bidAmount).to.be.equal(bidAmount);
+      expect(currentBid.feeAmount).to.be.equal(feeAmount);
+      expect(currentBid.collateralAmount).to.be.equal(0);
+
+      expect(bidder1Bid.collateralAmount).to.be.equal(0);
+
+      expect(highestBid.round).to.be.equal(0);
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount);
+      expect(highestBid.feeAmount).to.be.equal(feeAmount);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+
+      expect(await licenseMock.ownerOf(0)).to.be.equal(bidder1.address);
+
+      // Fee is distributed to beneficiary
+      expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(
+        feeAmount,
+      );
     });
   });
 

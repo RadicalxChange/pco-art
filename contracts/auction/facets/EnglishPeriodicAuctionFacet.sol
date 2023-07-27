@@ -27,15 +27,14 @@ contract EnglishPeriodicAuctionFacet is
      */
     function initializeAuction(
         address _repossessor,
-        address initialBidder,
+        address _initialBidder,
         uint256 _initialPeriodStartTime,
         uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds,
-        uint256 _maxTokenCount
+        uint256 _bidExtensionSeconds
     ) external {
         require(
             _isInitialized() == false,
@@ -45,15 +44,14 @@ contract EnglishPeriodicAuctionFacet is
         _setSupportsInterface(type(IPeriodicAuctionReadable).interfaceId, true);
         _initializeAuction(
             _repossessor,
-            initialBidder,
+            _initialBidder,
             _initialPeriodStartTime,
             _initialPeriodStartTimeOffset,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds,
-            _maxTokenCount
+            _bidExtensionSeconds
         );
     }
 
@@ -63,15 +61,14 @@ contract EnglishPeriodicAuctionFacet is
     function initializeAuction(
         address _owner,
         address _repossessor,
-        address initialBidder,
+        address _initialBidder,
         uint256 _initialPeriodStartTime,
         uint256 _initialPeriodStartTimeOffset,
         uint256 startingBid,
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds,
-        uint256 _maxTokenCount
+        uint256 _bidExtensionSeconds
     ) external {
         require(
             _isInitialized() == false,
@@ -83,15 +80,14 @@ contract EnglishPeriodicAuctionFacet is
         _grantRole(COMPONENT_ROLE, _owner);
         _initializeAuction(
             _repossessor,
-            initialBidder,
+            _initialBidder,
             _initialPeriodStartTime,
             _initialPeriodStartTimeOffset,
             startingBid,
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds,
-            _maxTokenCount
+            _bidExtensionSeconds
         );
     }
 
@@ -115,13 +111,6 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
-     * @notice Get max token count
-     */
-    function maxTokenCount() external view returns (uint256) {
-        return _maxTokenCount();
-    }
-
-    /**
      * @notice Get is auction period
      */
     function isAuctionPeriod(uint256 tokenId) external view returns (bool) {
@@ -133,6 +122,13 @@ contract EnglishPeriodicAuctionFacet is
      */
     function initialPeriodStartTime() external view returns (uint256) {
         return _initialPeriodStartTime();
+    }
+
+    /**
+     * @notice Get initial bidder
+     */
+    function initialBidder() external view returns (address) {
+        return _initialBidder();
     }
 
     /**
@@ -179,22 +175,6 @@ contract EnglishPeriodicAuctionFacet is
         );
 
         _closeAuction(tokenId);
-    }
-
-    /**
-     * @notice Initial bidder can mint token if it doesn't exist
-     */
-    function mintToken(address to, uint256 tokenId) external {
-        require(
-            msg.sender == _initialBidder(),
-            'EnglishPeriodicAuction: only initial bidder can mint token'
-        );
-        require(
-            block.timestamp < _initialPeriodStartTime(),
-            'EnglishPeriodicAuction: cannot mint after initial period start time'
-        );
-
-        _mintToken(to, tokenId);
     }
 
     /**

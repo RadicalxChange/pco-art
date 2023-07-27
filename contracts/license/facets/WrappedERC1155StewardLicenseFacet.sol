@@ -29,6 +29,7 @@ contract WrappedERC1155StewardLicenseFacet is
         uint256 tokenId,
         address _minter,
         address _steward,
+        uint256 _maxTokenCount,
         string memory name,
         string memory symbol,
         string memory tokenURI
@@ -39,7 +40,14 @@ contract WrappedERC1155StewardLicenseFacet is
         );
 
         _initializeWrappedLicense(tokenAddress, tokenId);
-        _initializeStewardLicense(_minter, _steward, name, symbol, tokenURI);
+        _initializeStewardLicense(
+            _minter,
+            _steward,
+            _maxTokenCount,
+            name,
+            symbol,
+            tokenURI
+        );
     }
 
     /**

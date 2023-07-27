@@ -10,6 +10,7 @@ import { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC1
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
+import { UintUtils } from '@solidstate/contracts/utils/UintUtils.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -20,12 +21,15 @@ abstract contract StewardLicenseInternal is
     ERC721Metadata,
     ERC165Base
 {
+    using UintUtils for uint256;
+
     /**
      * @notice Initialize license
      */
     function _initializeStewardLicense(
         address minter,
         address _initialSteward,
+        uint256 maxTokenCount,
         string memory name,
         string memory symbol,
         string memory baseURI
@@ -35,6 +39,7 @@ abstract contract StewardLicenseInternal is
         l.isInitialized = true;
         l.initialSteward = _initialSteward;
         l.minter = minter;
+        l.maxTokenCount = maxTokenCount;
 
         // Initialize ERC721
         ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage
@@ -59,6 +64,86 @@ abstract contract StewardLicenseInternal is
      */
     function _minter() internal view returns (address) {
         return StewardLicenseStorage.layout().minter;
+    }
+
+    /**
+     * @notice Trigger transfer
+     */
+    function _triggerTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal {
+        if (_exists(tokenId) == false) {
+            // Mint token
+            _mint(to, tokenId);
+        } else {
+            // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
+            _transfer(from, to, tokenId);
+        }
+    }
+
+    /**
+     * @notice Get max token count
+     */
+    function _maxTokenCount() internal view returns (uint256) {
+        return StewardLicenseStorage.layout().maxTokenCount;
+    }
+
+    /**
+     * @notice Add token to collection
+     */
+    function _addTokenToCollection(
+        address to,
+        string memory _tokenURI
+    ) internal {
+        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
+
+        uint256 newTokenId = l.maxTokenCount;
+
+        // Increment max token count
+        l.maxTokenCount += 1;
+
+        // Override metadata
+        l.tokenURIOverrides[newTokenId] = _tokenURI;
+
+        if (to != address(0)) {
+            // Mint token
+            _mint(to, newTokenId);
+        }
+    }
+
+    /**
+     * @notice Add token to collection
+     */
+    function _addTokenWithBaseURIToCollection(string memory _baseURI) internal {
+        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
+
+        uint256 newTokenId = l.maxTokenCount;
+
+        // Increment max token count
+        l.maxTokenCount += 1;
+
+        // Override metadata
+        l.tokenURIOverrides[newTokenId] = string(
+            abi.encodePacked(_baseURI, newTokenId.toString())
+        );
+    }
+
+    /**
+     * @notice Override token URI
+     */
+    function tokenURI(
+        uint256 tokenId
+    ) external view override returns (string memory) {
+        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
+        string storage tokenIdURI = l.tokenURIOverrides[tokenId];
+
+        if (bytes(tokenIdURI).length > 0) {
+            return tokenIdURI;
+        } else {
+            return _tokenURI(tokenId);
+        }
     }
 
     /**

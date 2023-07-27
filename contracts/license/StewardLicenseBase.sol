@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import { StewardLicenseInternal } from './StewardLicenseInternal.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
+import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 
 /**
  * @title StewardLicenseBase
@@ -21,13 +22,105 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
             'NativeStewardLicense: Trigger transfer can only be called from another facet'
         );
 
-        if (_exists(tokenId) == false) {
-            // Mint token
-            _mint(to, tokenId);
-        } else {
-            // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license
-            _transfer(from, to, tokenId);
+        _triggerTransfer(from, to, tokenId);
+    }
+
+    /**
+     * @notice Initial bidder can mint token if it doesn't exist
+     */
+    function mintToken(address to, uint256 tokenId) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can mint token'
+        );
+        require(
+            block.timestamp <
+                IPeriodicAuctionReadable(address(this))
+                    .initialPeriodStartTime(),
+            'StewardLicenseFacet: cannot mint after initial period start time'
+        );
+        require(
+            _exists(tokenId) == false,
+            'StewardLicenseFacet: Token already exists'
+        );
+
+        _triggerTransfer(address(0), to, tokenId);
+    }
+
+    /**
+     * @notice Add token to collection
+     */
+    function addTokenToCollection(address to, string memory tokenURI) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add token to collection'
+        );
+
+        _addTokenToCollection(to, tokenURI);
+    }
+
+    /**
+     * @notice Add tokens to collection with to
+     */
+    function addTokensToCollection(
+        address[] memory to,
+        string[] memory tokenURIs
+    ) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+        require(
+            to.length == tokenURIs.length,
+            'StewardLicenseFacet: to and tokenURIs length mismatch'
+        );
+
+        for (uint256 i = 0; i < tokenURIs.length; i++) {
+            _addTokenToCollection(to[i], tokenURIs[i]);
         }
+    }
+
+    /**
+     * @notice Add tokens to collection
+     */
+    function addTokensToCollection(string[] memory tokenURIs) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+
+        for (uint256 i = 0; i < tokenURIs.length; i++) {
+            _addTokenToCollection(address(0), tokenURIs[i]);
+        }
+    }
+
+    /**
+     * @notice Add tokens to collection with baseURI
+     */
+    function addTokensWithBaseURIToCollection(
+        uint32 amount,
+        string memory baseURI
+    ) external {
+        require(
+            msg.sender ==
+                IPeriodicAuctionReadable(address(this)).initialBidder(),
+            'StewardLicenseFacet: only initial bidder can add tokens to collection'
+        );
+
+        for (uint32 i = 0; i < amount; i++) {
+            _addTokenWithBaseURIToCollection(baseURI);
+        }
+    }
+
+    /**
+     * @notice Get max token count
+     */
+    function maxTokenCount() external view returns (uint256) {
+        return _maxTokenCount();
     }
 
     /**

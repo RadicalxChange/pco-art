@@ -484,6 +484,19 @@
   },
   {
     "inputs": [],
+    "name": "initialBidder",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "initialPeriodStartTime",
     "outputs": [
       {
@@ -504,7 +517,7 @@
       },
       {
         "internalType": "address",
-        "name": "initialBidder",
+        "name": "_initialBidder",
         "type": "address"
       },
       {
@@ -540,11 +553,6 @@
       {
         "internalType": "uint256",
         "name": "_bidExtensionSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxTokenCount",
         "type": "uint256"
       }
     ],
@@ -567,7 +575,7 @@
       },
       {
         "internalType": "address",
-        "name": "initialBidder",
+        "name": "_initialBidder",
         "type": "address"
       },
       {
@@ -603,11 +611,6 @@
       {
         "internalType": "uint256",
         "name": "_bidExtensionSeconds",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_maxTokenCount",
         "type": "uint256"
       }
     ],
@@ -656,19 +659,6 @@
   },
   {
     "inputs": [],
-    "name": "maxTokenCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "minBidIncrement",
     "outputs": [
       {
@@ -678,24 +668,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "mintToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

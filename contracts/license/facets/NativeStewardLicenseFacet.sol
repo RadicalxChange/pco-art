@@ -19,6 +19,7 @@ contract NativeStewardLicenseFacet is
     function initializeStewardLicense(
         address _minter,
         address _steward,
+        uint256 _maxTokenCount,
         string memory name,
         string memory symbol,
         string memory baseURI
@@ -28,7 +29,14 @@ contract NativeStewardLicenseFacet is
             'StewardLicenseFacet: already initialized'
         );
 
-        _initializeStewardLicense(_minter, _steward, name, symbol, baseURI);
+        _initializeStewardLicense(
+            _minter,
+            _steward,
+            _maxTokenCount,
+            name,
+            symbol,
+            baseURI
+        );
     }
 
     /**

@@ -66,10 +66,11 @@ describe('WrappedERC721StewardLicense', function () {
         'onERC721Received(address,address,uint256,bytes)',
       ),
       facetFactory.interface.getSighash(
-        'initializeWrappedStewardLicense(address,uint256,address,address,string,string,string)',
+        'initializeWrappedStewardLicense(address,uint256,address,address,uint256,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('minter()'),
+      facetFactory.interface.getSighash('maxTokenCount()'),
     ];
 
     let instance = await factory.deploy([
@@ -90,12 +91,13 @@ describe('WrappedERC721StewardLicense', function () {
           : ethers.constants.AddressZero,
         initData: initialize
           ? facetInstance.interface.encodeFunctionData(
-              'initializeWrappedStewardLicense(address,uint256,address,address,string,string,string)',
+              'initializeWrappedStewardLicense(address,uint256,address,address,uint256,string,string,string)',
               [
                 mockTokenInstance.address,
                 1,
                 await minter.getAddress(),
                 await owner.getAddress(),
+                2,
                 name,
                 symbol,
                 tokenURI,
@@ -133,6 +135,7 @@ describe('WrappedERC721StewardLicense', function () {
           1,
           await minter.getAddress(),
           await owner.getAddress(),
+          2,
           name,
           symbol,
           tokenURI,
@@ -146,6 +149,12 @@ describe('WrappedERC721StewardLicense', function () {
       const instance = await deployFacet();
 
       expect(await instance.minter()).to.be.equal(await minter.getAddress());
+    });
+
+    it('should set max token count', async function () {
+      const instance = await deployFacet();
+
+      expect(await instance.maxTokenCount()).to.equal(2);
     });
   });
 

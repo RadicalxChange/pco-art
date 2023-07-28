@@ -20,6 +20,7 @@ contract NativeStewardLicenseFacet is
         address _minter,
         address _steward,
         uint256 _maxTokenCount,
+        bool shouldMint,
         string memory name,
         string memory symbol,
         string memory baseURI
@@ -33,6 +34,7 @@ contract NativeStewardLicenseFacet is
             _minter,
             _steward,
             _maxTokenCount,
+            shouldMint,
             name,
             symbol,
             baseURI

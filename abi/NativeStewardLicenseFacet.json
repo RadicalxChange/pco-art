@@ -314,6 +314,11 @@
         "type": "uint256"
       },
       {
+        "internalType": "bool",
+        "name": "shouldMint",
+        "type": "bool"
+      },
+      {
         "internalType": "string",
         "name": "name",
         "type": "string"

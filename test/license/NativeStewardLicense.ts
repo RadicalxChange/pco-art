@@ -21,7 +21,7 @@ describe('NativeStewardLicense', function () {
     [, , , , owner, nonOwner, minter] = await ethers.getSigners();
   });
 
-  beforeEach(async function () {
+  async function getInstance({ shouldMint = false } = {}) {
     const erc721Base = await ethers.getContractAt(
       'ERC721Base',
       ethers.constants.AddressZero,
@@ -55,7 +55,7 @@ describe('NativeStewardLicense', function () {
         erc721Metadata.interface.getSighash(k),
       ),
       facetFactory.interface.getSighash(
-        'initializeStewardLicense(address,address,uint256,string,string,string)',
+        'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('burn(uint256)'),
@@ -83,17 +83,18 @@ describe('NativeStewardLicense', function () {
     ];
 
     const initData = facetInstance.interface.encodeFunctionData(
-      'initializeStewardLicense(address,address,uint256,string,string,string)',
+      'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
       [
         await minter.getAddress(),
         await owner.getAddress(),
         2,
+        shouldMint,
         name,
         symbol,
         tokenURI,
       ],
     );
-    instance = await factory.deploy([
+    let instance = await factory.deploy([
       {
         target: mockAuction.address,
         initTarget: ethers.constants.AddressZero,
@@ -124,13 +125,21 @@ describe('NativeStewardLicense', function () {
       instance.address,
     );
 
-    await instance.mint(await owner.getAddress(), 0);
+    if (!shouldMint) {
+      await instance.mint(await owner.getAddress(), 0);
+    }
 
     const auctionMockFacet = await ethers.getContractAt(
       'PeriodicAuctionMock',
       instance.address,
     );
     await auctionMockFacet['setIsAuctionPeriod(bool)'](false);
+
+    return instance;
+  }
+
+  beforeEach(async function () {
+    instance = await getInstance();
   });
 
   describeBehaviorOfERC721Base(async () => instance, {
@@ -149,11 +158,12 @@ describe('NativeStewardLicense', function () {
     it('should revert if already initialized', async function () {
       await expect(
         instance[
-          'initializeStewardLicense(address,address,uint256,string,string,string)'
+          'initializeStewardLicense(address,address,uint256,bool,string,string,string)'
         ](
           await minter.getAddress(),
           await owner.getAddress(),
           2,
+          false,
           name,
           symbol,
           tokenURI,
@@ -167,6 +177,13 @@ describe('NativeStewardLicense', function () {
 
     it('should set max token count', async function () {
       expect(await instance.maxTokenCount()).to.equal(2);
+    });
+
+    it('should mint tokens', async function () {
+      const mintedInstance = await getInstance({ shouldMint: true });
+
+      expect(await mintedInstance.ownerOf(0)).to.equal(owner.address);
+      expect(await mintedInstance.ownerOf(1)).to.equal(owner.address);
     });
   });
 
@@ -551,6 +568,12 @@ describe('NativeStewardLicense', function () {
       ).to.be.revertedWith(
         'StewardLicenseFacet: only initial bidder can add tokens to collection',
       );
+    });
+  });
+
+  describe('tokenURI', function () {
+    it('should revert if token ID is beyond max', async function () {
+      await expect(instance.tokenURI(3)).to.be.reverted;
     });
   });
 });

@@ -70,11 +70,12 @@ describe('EnglishPeriodicAuction', function () {
         target: licenseMock.address,
         initTarget: licenseMock.address,
         initData: licenseMock.interface.encodeFunctionData(
-          'initializeStewardLicense(address,address,uint256,string,string,string)',
+          'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
           [
             await owner.getAddress(),
             await owner.getAddress(),
             10,
+            false,
             'name',
             'symbol',
             'tokenURI',
@@ -82,7 +83,7 @@ describe('EnglishPeriodicAuction', function () {
         ),
         selectors: [
           licenseMock.interface.getSighash(
-            'initializeStewardLicense(address,address,uint256,string,string,string)',
+            'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
           ),
           licenseMock.interface.getSighash(
             'triggerTransfer(address,address,uint256)',

@@ -30,6 +30,7 @@ contract WrappedERC1155StewardLicenseFacet is
         address _minter,
         address _steward,
         uint256 _maxTokenCount,
+        bool shouldMint,
         string memory name,
         string memory symbol,
         string memory tokenURI
@@ -44,6 +45,7 @@ contract WrappedERC1155StewardLicenseFacet is
             _minter,
             _steward,
             _maxTokenCount,
+            shouldMint,
             name,
             symbol,
             tokenURI

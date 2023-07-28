@@ -30,6 +30,7 @@ abstract contract StewardLicenseInternal is
         address minter,
         address _initialSteward,
         uint256 maxTokenCount,
+        bool shouldMint,
         string memory name,
         string memory symbol,
         string memory baseURI
@@ -50,6 +51,13 @@ abstract contract StewardLicenseInternal is
 
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);
+
+        if (shouldMint) {
+            // Mint tokens
+            for (uint256 i = 0; i < maxTokenCount; i++) {
+                _mint(_initialSteward, i);
+            }
+        }
     }
 
     /**

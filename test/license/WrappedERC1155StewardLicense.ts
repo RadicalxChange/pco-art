@@ -69,7 +69,7 @@ describe('WrappedERC1155StewardLicense', function () {
         'onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)',
       ),
       facetFactory.interface.getSighash(
-        'initializeWrappedStewardLicense(address,uint256,address,address,uint256,string,string,string)',
+        'initializeWrappedStewardLicense(address,uint256,address,address,uint256,bool,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('minter()'),
@@ -94,13 +94,14 @@ describe('WrappedERC1155StewardLicense', function () {
           : ethers.constants.AddressZero,
         initData: initialize
           ? facetInstance.interface.encodeFunctionData(
-              'initializeWrappedStewardLicense(address,uint256,address,address,uint256,string,string,string)',
+              'initializeWrappedStewardLicense(address,uint256,address,address,uint256,bool,string,string,string)',
               [
                 mockTokenInstance.address,
                 1,
                 await minter.getAddress(),
                 await owner.getAddress(),
                 2,
+                false,
                 name,
                 symbol,
                 tokenURI,
@@ -139,6 +140,7 @@ describe('WrappedERC1155StewardLicense', function () {
           await minter.getAddress(),
           await owner.getAddress(),
           2,
+          false,
           name,
           symbol,
           tokenURI,

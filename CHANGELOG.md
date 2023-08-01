@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.6] - 2023-08-01
+
+### Features
+
+- [**breaking**] Add shouldMint to license initializer
+
+### Testing
+
+- Claim and approve IDA on beneficiary
+
 ## [0.0.5] - 2023-07-27
 
 ### Bug Fixes

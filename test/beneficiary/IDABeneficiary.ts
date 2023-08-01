@@ -205,6 +205,11 @@ describe('IDABeneficiary', function () {
       const { deployer, tokenDeploymentOutput } =
         await deployContractsAndToken();
       const framework = await deployer.getFramework();
+      const superToken = await ethers.getContractAt(
+        'IERC20',
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+      );
       const ida = new InstantDistributionAgreementV1(
         framework.host,
         framework.ida,
@@ -222,6 +227,18 @@ describe('IDABeneficiary', function () {
         ],
       );
 
+      // Sub 1 approves subscription ahead of time
+      const sub1ApproveOp = await ida.approveSubscription({
+        superToken:
+          tokenDeploymentOutput.nativeAssetSuperTokenData
+            .nativeAssetSuperTokenAddress,
+        indexId: '0',
+        publisher: instance.address,
+      });
+
+      const txn1Response = await sub1ApproveOp.exec(nomineeOwner);
+      await txn1Response.wait();
+
       await instance.distribute({ value: ethers.utils.parseEther('1') });
 
       const sub1 = await ida.getSubscription({
@@ -233,7 +250,7 @@ describe('IDABeneficiary', function () {
         subscriber: await nomineeOwner.getAddress(),
         providerOrSigner: owner,
       });
-      const sub2 = await ida.getSubscription({
+      let sub2 = await ida.getSubscription({
         superToken:
           tokenDeploymentOutput.nativeAssetSuperTokenData
             .nativeAssetSuperTokenAddress,
@@ -244,10 +261,42 @@ describe('IDABeneficiary', function () {
       });
 
       expect(sub1.units).to.equal('1');
-      expect(sub1.pendingDistribution).to.equal(ethers.utils.parseEther('0.5'));
+      expect(sub1.pendingDistribution).to.equal('0');
+      expect(await superToken.balanceOf(nomineeOwner.address)).to.equal(
+        ethers.utils.parseEther('0.5'),
+      );
 
       expect(sub2.units).to.equal('1');
       expect(sub2.pendingDistribution).to.equal(ethers.utils.parseEther('0.5'));
+      expect(await superToken.balanceOf(nonOwner.address)).to.equal('0');
+
+      // Sub 2 claims distribution
+      const sub2ApproveOp = await ida.claim({
+        superToken:
+          tokenDeploymentOutput.nativeAssetSuperTokenData
+            .nativeAssetSuperTokenAddress,
+        indexId: '0',
+        publisher: instance.address,
+        subscriber: nonOwner.address,
+      });
+
+      const txn2Response = await sub2ApproveOp.exec(nonOwner);
+      await txn2Response.wait();
+
+      sub2 = await ida.getSubscription({
+        superToken:
+          tokenDeploymentOutput.nativeAssetSuperTokenData
+            .nativeAssetSuperTokenAddress,
+        indexId: '0',
+        publisher: instance.address,
+        subscriber: await nonOwner.getAddress(),
+        providerOrSigner: owner,
+      });
+
+      expect(sub2.pendingDistribution).to.equal('0');
+      expect(await superToken.balanceOf(nonOwner.address)).to.equal(
+        ethers.utils.parseEther('0.5'),
+      );
     });
 
     it('should fail if value is 0', async function () {

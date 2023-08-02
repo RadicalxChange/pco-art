@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.8] - 2023-08-02
+
+### Features
+
+- Add shouldMint to add token to collection
+- Add role for adding tokens to collection
+
 ## [0.0.7] - 2023-08-02
 
 ### Features

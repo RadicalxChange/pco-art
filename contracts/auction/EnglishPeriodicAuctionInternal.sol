@@ -67,6 +67,13 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get starting bid
+     */
+    function _startingBid() internal view returns (uint256) {
+        return EnglishPeriodicAuctionStorage.layout().startingBid;
+    }
+
+    /**
      * @notice Get repossessor
      */
     function _repossessor() internal view returns (address) {

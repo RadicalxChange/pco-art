@@ -195,6 +195,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash(
             'setAuctionParameters(address,uint256,uint256,uint256,uint256)',
           ),
+          facetFactory.interface.getSighash('startingBid()'),
         ],
       },
     ]);
@@ -213,6 +214,14 @@ describe('EnglishPeriodicAuction', function () {
   });
 
   describe('initializeAuction', function () {
+    it('should set starting bid', async function () {
+      const instance = await getInstance();
+
+      expect(await instance.startingBid()).to.be.equal(
+        ethers.utils.parseEther('1'),
+      );
+    });
+
     it('should set repossessor', async function () {
       const instance = await getInstance();
 
@@ -281,6 +290,14 @@ describe('EnglishPeriodicAuction', function () {
   });
 
   describe('initializeAuction with owner', function () {
+    it('should set starting bid', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      expect(await instance.startingBid()).to.be.equal(
+        ethers.utils.parseEther('1'),
+      );
+    });
+
     it('should set repossessor', async function () {
       const instance = await getInstance({ hasOwner: true });
 

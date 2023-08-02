@@ -111,6 +111,13 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Get starting bid
+     */
+    function startingBid() external view returns (uint256) {
+        return _startingBid();
+    }
+
+    /**
      * @notice Get is auction period
      */
     function isAuctionPeriod(uint256 tokenId) external view returns (bool) {

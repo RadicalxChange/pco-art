@@ -1491,7 +1491,7 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
-    it.only('should revert if highest bidder tries to withdraw bid after auction ends when highest bidder is previous steward', async function () {
+    it('should revert if highest bidder tries to withdraw bid after auction ends when highest bidder is previous steward', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100
       const instance = await getInstance({

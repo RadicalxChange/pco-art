@@ -178,6 +178,11 @@
         "internalType": "string[]",
         "name": "tokenURIs",
         "type": "string[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "shouldMint",
+        "type": "bool"
       }
     ],
     "name": "addTokensToCollection",
@@ -214,6 +219,11 @@
         "internalType": "string",
         "name": "baseURI",
         "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "shouldMint",
+        "type": "bool"
       }
     ],
     "name": "addTokensWithBaseURIToCollection",

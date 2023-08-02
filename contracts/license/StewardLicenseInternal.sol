@@ -75,6 +75,13 @@ abstract contract StewardLicenseInternal is
     }
 
     /**
+     * @notice Get initial steward
+     */
+    function _initialSteward() internal view returns (address) {
+        return StewardLicenseStorage.layout().initialSteward;
+    }
+
+    /**
      * @notice Trigger transfer
      */
     function _triggerTransfer(
@@ -124,7 +131,10 @@ abstract contract StewardLicenseInternal is
     /**
      * @notice Add token to collection
      */
-    function _addTokenWithBaseURIToCollection(string memory _baseURI) internal {
+    function _addTokenWithBaseURIToCollection(
+        string memory _baseURI,
+        bool shouldMint
+    ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
         uint256 newTokenId = l.maxTokenCount;
@@ -136,6 +146,11 @@ abstract contract StewardLicenseInternal is
         ERC721MetadataStorage.layout().tokenURIs[newTokenId] = string(
             abi.encodePacked(_baseURI, newTokenId.toString())
         );
+
+        if (shouldMint) {
+            // Mint token
+            _mint(l.initialSteward, newTokenId);
+        }
     }
 
     /**

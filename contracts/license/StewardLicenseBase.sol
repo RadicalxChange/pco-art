@@ -86,7 +86,10 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     /**
      * @notice Add tokens to collection
      */
-    function addTokensToCollection(string[] memory tokenURIs) external {
+    function addTokensToCollection(
+        string[] memory tokenURIs,
+        bool shouldMint
+    ) external {
         require(
             msg.sender ==
                 IPeriodicAuctionReadable(address(this)).initialBidder(),
@@ -94,7 +97,13 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
         );
 
         for (uint256 i = 0; i < tokenURIs.length; i++) {
-            _addTokenToCollection(address(0), tokenURIs[i]);
+            address to;
+            if (shouldMint) {
+                to = _initialSteward();
+            } else {
+                to = address(0);
+            }
+            _addTokenToCollection(to, tokenURIs[i]);
         }
     }
 
@@ -103,7 +112,8 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
      */
     function addTokensWithBaseURIToCollection(
         uint32 amount,
-        string memory baseURI
+        string memory baseURI,
+        bool shouldMint
     ) external {
         require(
             msg.sender ==
@@ -112,7 +122,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
         );
 
         for (uint32 i = 0; i < amount; i++) {
-            _addTokenWithBaseURIToCollection(baseURI);
+            _addTokenWithBaseURIToCollection(baseURI, shouldMint);
         }
     }
 

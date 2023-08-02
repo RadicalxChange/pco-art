@@ -19,6 +19,7 @@ describe('EnglishPeriodicAuction', function () {
     startingBid = ethers.utils.parseEther('1'),
     bidExtensionWindowLengthSeconds = 10,
     bidExtensionSeconds = 20,
+    shouldMint = false,
   } = {}) {
     const pcoParamsFacetFactory = await ethers.getContractFactory(
       'PeriodicPCOParamsFacet',
@@ -75,7 +76,7 @@ describe('EnglishPeriodicAuction', function () {
             await owner.getAddress(),
             await owner.getAddress(),
             10,
-            false,
+            shouldMint,
             'name',
             'symbol',
             'tokenURI',
@@ -1498,6 +1499,31 @@ describe('EnglishPeriodicAuction', function () {
         auctionLengthSeconds: 300,
         initialPeriodStartTime: (await time.latest()) - 200,
         licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount;
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await expect(instance.connect(owner).withdrawBid(0)).to.be.revertedWith(
+        'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder',
+      );
+    });
+
+    it('should revert if highest bidder tries to withdraw bid after auction ends when highest bidder is previous steward and token is minted', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        shouldMint: true,
       });
 
       const bidAmount = ethers.utils.parseEther('1.1');

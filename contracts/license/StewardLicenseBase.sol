@@ -51,13 +51,10 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     /**
      * @notice Add token to collection
      */
-    function addTokenToCollection(address to, string memory tokenURI) external {
-        require(
-            msg.sender ==
-                IPeriodicAuctionReadable(address(this)).initialBidder(),
-            'StewardLicenseFacet: only initial bidder can add token to collection'
-        );
-
+    function addTokenToCollection(
+        address to,
+        string memory tokenURI
+    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         _addTokenToCollection(to, tokenURI);
     }
 
@@ -67,12 +64,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     function addTokensToCollection(
         address[] memory to,
         string[] memory tokenURIs
-    ) external {
-        require(
-            msg.sender ==
-                IPeriodicAuctionReadable(address(this)).initialBidder(),
-            'StewardLicenseFacet: only initial bidder can add tokens to collection'
-        );
+    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         require(
             to.length == tokenURIs.length,
             'StewardLicenseFacet: to and tokenURIs length mismatch'
@@ -89,13 +81,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
     function addTokensToCollection(
         string[] memory tokenURIs,
         bool shouldMint
-    ) external {
-        require(
-            msg.sender ==
-                IPeriodicAuctionReadable(address(this)).initialBidder(),
-            'StewardLicenseFacet: only initial bidder can add tokens to collection'
-        );
-
+    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         for (uint256 i = 0; i < tokenURIs.length; i++) {
             address to;
             if (shouldMint) {
@@ -114,13 +100,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
         uint32 amount,
         string memory baseURI,
         bool shouldMint
-    ) external {
-        require(
-            msg.sender ==
-                IPeriodicAuctionReadable(address(this)).initialBidder(),
-            'StewardLicenseFacet: only initial bidder can add tokens to collection'
-        );
-
+    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         for (uint32 i = 0; i < amount; i++) {
             _addTokenWithBaseURIToCollection(baseURI, shouldMint);
         }

@@ -340,13 +340,6 @@ describe('NativeStewardLicense', function () {
 
   describe('addTokenToCollection(address,string)', function () {
     it('should add token to collection', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         .addTokenToCollection(nonOwner.address, 'new-token-uri');
@@ -357,13 +350,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add token to collection without minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         .addTokenToCollection(ethers.constants.AddressZero, 'new-token-uri');
@@ -373,32 +359,16 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should not allow add token to collection if not initial bidder', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await expect(
         instance
           .connect(nonOwner)
           .addTokenToCollection(nonOwner.address, 'new-token-uri'),
-      ).to.be.revertedWith(
-        'StewardLicenseFacet: only initial bidder can add token to collection',
-      );
+      ).to.be.reverted;
     });
   });
 
   describe('addTokensToCollection(address[],string[])', function () {
     it('should add tokens to collection', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         ['addTokensToCollection(address[],string[])'](
@@ -414,13 +384,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add tokens to collection without minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         ['addTokensToCollection(address[],string[])'](
@@ -434,13 +397,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await expect(
         instance
           .connect(nonOwner)
@@ -448,9 +404,7 @@ describe('NativeStewardLicense', function () {
             [nonOwner.address, owner.address],
             ['new-token-uri-1', 'new-token-uri-2'],
           ),
-      ).to.be.revertedWith(
-        'StewardLicenseFacet: only initial bidder can add tokens to collection',
-      );
+      ).to.be.reverted;
     });
 
     it('should not allow add tokens to collection if input length mismatch', async function () {
@@ -476,13 +430,6 @@ describe('NativeStewardLicense', function () {
 
   describe('addTokensToCollection(string[],bool)', function () {
     it('should add tokens to collection without minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         ['addTokensToCollection(string[],bool)'](
@@ -504,13 +451,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add tokens to collection with minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         ['addTokensToCollection(string[],bool)'](
@@ -528,13 +468,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await expect(
         instance
           .connect(nonOwner)
@@ -542,21 +475,12 @@ describe('NativeStewardLicense', function () {
             ['new-token-uri-1', 'new-token-uri-2'],
             false,
           ),
-      ).to.be.revertedWith(
-        'StewardLicenseFacet: only initial bidder can add tokens to collection',
-      );
+      ).to.be.reverted;
     });
   });
 
   describe('addTokensWithBaseURIToCollection', function () {
     it('should add tokens to collection without minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', false);
@@ -578,13 +502,6 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add tokens to collection with minting', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await instance
         .connect(minter)
         .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', true);
@@ -602,20 +519,11 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
-      const auctionMockFacet = await ethers.getContractAt(
-        'PeriodicAuctionMock',
-        instance.address,
-      );
-
-      await auctionMockFacet.setInitialBidder(minter.address);
-
       await expect(
         instance
           .connect(nonOwner)
           .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', false),
-      ).to.be.revertedWith(
-        'StewardLicenseFacet: only initial bidder can add tokens to collection',
-      );
+      ).to.be.reverted;
     });
   });
 

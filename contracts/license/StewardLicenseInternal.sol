@@ -11,6 +11,7 @@ import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';
 import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 import { UintUtils } from '@solidstate/contracts/utils/UintUtils.sol';
+import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -19,16 +20,21 @@ abstract contract StewardLicenseInternal is
     ERC721Base,
     ERC721Enumerable,
     ERC721Metadata,
-    ERC165Base
+    ERC165Base,
+    AccessControlInternal
 {
     using UintUtils for uint256;
+
+    // Add token role
+    bytes32 internal constant ADD_TOKEN_TO_COLLECTION_ROLE =
+        keccak256('StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE');
 
     /**
      * @notice Initialize license
      */
     function _initializeStewardLicense(
         address minter,
-        address _initialSteward,
+        address initialSteward,
         uint256 maxTokenCount,
         bool shouldMint,
         string memory name,
@@ -38,7 +44,7 @@ abstract contract StewardLicenseInternal is
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
         l.isInitialized = true;
-        l.initialSteward = _initialSteward;
+        l.initialSteward = initialSteward;
         l.minter = minter;
         l.maxTokenCount = maxTokenCount;
 
@@ -51,11 +57,12 @@ abstract contract StewardLicenseInternal is
 
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);
+        _grantRole(ADD_TOKEN_TO_COLLECTION_ROLE, minter);
 
         if (shouldMint) {
             // Mint tokens
             for (uint256 i = 0; i < maxTokenCount; i++) {
-                _mint(_initialSteward, i);
+                _mint(initialSteward, i);
             }
         }
     }

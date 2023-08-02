@@ -532,7 +532,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "startingBid",
+        "name": "_startingBid",
         "type": "uint256"
       },
       {
@@ -590,7 +590,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "startingBid",
+        "name": "_startingBid",
         "type": "uint256"
       },
       {

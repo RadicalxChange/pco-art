@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.9] - 2023-08-03
+
+### Bug Fixes
+
+- Should close auction with no bids that has a previous highest bid
+- Starting bid values set at creation aren't being enforced in the auction
+
+### Testing
+
+- Add test case for previous steward withdrawing after winning bid
+- Remove only test
+- Add test case for previous steward withdrawing after winning bid and initial token is minted
+
 ## [0.0.8] - 2023-08-02
 
 ### Features

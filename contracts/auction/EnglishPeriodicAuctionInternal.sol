@@ -372,8 +372,11 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime[tokenId] = block.timestamp;
 
-        if (l.highestBids[tokenId].bidder == address(0)) {
-            // No bids were placed, transfer to reposssessor
+        if (
+            l.highestBids[tokenId].round < l.currentAuctionRound[tokenId] ||
+            l.highestBids[tokenId].bidder == address(0)
+        ) {
+            // No bids were placed, transfer to repossessor
             Bid storage repossessorBid = l.bids[tokenId][l.repossessor];
             repossessorBid.round = l.currentAuctionRound[tokenId];
             repossessorBid.bidAmount = 0;

@@ -1373,6 +1373,75 @@ describe('EnglishPeriodicAuction', function () {
       expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(0);
     });
 
+    it('should close auction with no bids that has a previous highest bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      const bidAmount = ethers.utils.parseEther('0.9');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      const oldBeneficiaryBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+
+      // Advance through next auction
+      await time.increase(1300);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      const newBeneficiaryBalance = await ethers.provider.getBalance(
+        nonOwner.address,
+      );
+
+      const repossessorBid = await instance.bidOf(0, nonOwner.address);
+      const previousBid = await instance.bidOf(0, bidder1.address);
+      const currentBid = await instance.currentBid(0);
+      const highestBid = await instance.highestBid(0);
+
+      expect(currentBid.round).to.be.equal(1);
+      expect(currentBid.bidder).to.be.equal(nonOwner.address);
+      expect(currentBid.bidAmount).to.be.equal(0);
+      expect(currentBid.feeAmount).to.be.equal(0);
+      expect(currentBid.collateralAmount).to.be.equal(0);
+
+      expect(repossessorBid.round).to.be.equal(1);
+      expect(repossessorBid.bidder).to.be.equal(nonOwner.address);
+      expect(repossessorBid.bidAmount).to.be.equal(0);
+      expect(repossessorBid.feeAmount).to.be.equal(0);
+      expect(repossessorBid.collateralAmount).to.be.equal(0);
+
+      expect(previousBid.collateralAmount).to.be.equal(0);
+
+      expect(highestBid.round).to.be.equal(1);
+      expect(highestBid.bidder).to.be.equal(nonOwner.address);
+      expect(highestBid.bidAmount).to.be.equal(0);
+      expect(highestBid.feeAmount).to.be.equal(0);
+      expect(highestBid.collateralAmount).to.be.equal(0);
+
+      expect(await licenseMock.ownerOf(0)).to.be.equal(nonOwner.address);
+
+      // No fee is distributed to beneficiary
+      expect(newBeneficiaryBalance.sub(oldBeneficiaryBalance)).to.be.equal(0);
+    });
+
     it('should close auction after manual mint', async function () {
       // Auction start: Now + 100
       // Auction end: Now + 400

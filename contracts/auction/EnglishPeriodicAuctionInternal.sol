@@ -242,6 +242,12 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         Bid storage bid = l.bids[tokenId][bidder];
 
+        // Check if higher than starting bid
+        require(
+            bidAmount >= l.startingBid,
+            'EnglishPeriodicAuction: Bid amount must be greater than or equal to starting bid'
+        );
+
         if (l.highestBids[tokenId].round == l.currentAuctionRound[tokenId]) {
             // Check if highest bid
             require(

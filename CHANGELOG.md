@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.10] - 2023-08-04
+
+### Bug Fixes
+
+- Store minter separate than add to token role
+
+### Features
+
+- Allow the startingBid to be updated in the Auction Pitch batch config update
+- Add AccessControl facet
+
 ## [0.0.9] - 2023-08-03
 
 ### Bug Fixes

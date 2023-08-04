@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.12] - 2023-08-04
+
+### Features
+
+- Add setter for starting bid
+
 ## [0.0.10] - 2023-08-04
 
 ### Bug Fixes

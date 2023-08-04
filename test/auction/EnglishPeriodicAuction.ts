@@ -194,7 +194,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('withdrawBid(uint256)'),
           facetFactory.interface.getSighash(
-            'setAuctionParameters(address,uint256,uint256,uint256,uint256)',
+            'setAuctionParameters(address,uint256,uint256,uint256,uint256,uint256)',
           ),
           facetFactory.interface.getSighash('startingBid()'),
         ],
@@ -1946,12 +1946,13 @@ describe('EnglishPeriodicAuction', function () {
     it('should allow owner to set', async function () {
       const instance = await getInstance({ hasOwner: true });
 
-      instance.setAuctionParameters(bidder1.address, 101, 201, 11, 21);
+      instance.setAuctionParameters(bidder1.address, 101, 201, 11, 21, 31);
       expect(await instance.repossessor()).to.equal(bidder1.address);
       expect(await instance.auctionLengthSeconds()).to.equal(101);
       expect(await instance.minBidIncrement()).to.equal(201);
       expect(await instance.bidExtensionWindowLengthSeconds()).to.equal(11);
       expect(await instance.bidExtensionSeconds()).to.equal(21);
+      expect(await instance.startingBid()).to.equal(31);
     });
 
     it('should not allow non-owner to set', async function () {
@@ -1960,7 +1961,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(nonOwner)
-          .setAuctionParameters(bidder1.address, 101, 201, 11, 21),
+          .setAuctionParameters(bidder1.address, 101, 201, 11, 21, 31),
       ).to.be.reverted;
     });
 
@@ -1970,7 +1971,7 @@ describe('EnglishPeriodicAuction', function () {
       await expect(
         instance
           .connect(owner)
-          .setAuctionParameters(bidder1.address, 101, 201, 11, 21),
+          .setAuctionParameters(bidder1.address, 101, 201, 11, 21, 31),
       ).to.be.reverted;
     });
   });

@@ -19,6 +19,7 @@ interface IEnglishPeriodicAuctionInternal {
     event MinBidIncrementSet(uint256 minBidIncrement);
     event BidExtensionWindowLengthSet(uint256 bidExtensionWindowLengthSeconds);
     event BidExtensionSet(uint256 bidExtensionSeconds);
+    event StartingBidSet(uint256 startingBid);
 
     event BidPlaced(
         uint256 indexed tokenId,

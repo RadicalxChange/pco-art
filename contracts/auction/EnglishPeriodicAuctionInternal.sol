@@ -32,9 +32,9 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         l.isInitialized = true;
         l.initialBidder = initialBidder;
-        l.startingBid = startingBid;
         l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;
         l.initialPeriodStartTime = initialPeriodStartTime;
+        _setStartingBid(startingBid);
         _setRepossessor(repossessor);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
@@ -50,13 +50,15 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 auctionLengthSeconds,
         uint256 minBidIncrement,
         uint256 bidExtensionWindowLengthSeconds,
-        uint256 bidExtensionSeconds
+        uint256 bidExtensionSeconds,
+        uint256 startingBid
     ) internal {
         _setRepossessor(repossessor);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
         _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds);
         _setBidExtensionSeconds(bidExtensionSeconds);
+        _setStartingBid(startingBid);
     }
 
     /**
@@ -101,6 +103,15 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _auctionLengthSeconds() internal view returns (uint256) {
         return EnglishPeriodicAuctionStorage.layout().auctionLengthSeconds;
+    }
+
+    /**
+     * @notice Set starting bid
+     */
+    function _setStartingBid(uint256 startingBid) internal {
+        EnglishPeriodicAuctionStorage.layout().startingBid = startingBid;
+
+        emit StartingBidSet(startingBid);
     }
 
     /**

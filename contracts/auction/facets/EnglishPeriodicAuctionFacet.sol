@@ -99,14 +99,16 @@ contract EnglishPeriodicAuctionFacet is
         uint256 _auctionLengthSeconds,
         uint256 _minBidIncrement,
         uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds
+        uint256 _bidExtensionSeconds,
+        uint256 _startingBid
     ) external onlyRole(COMPONENT_ROLE) {
         _setAuctionParameters(
             _repossessor,
             _auctionLengthSeconds,
             _minBidIncrement,
             _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds
+            _bidExtensionSeconds,
+            _startingBid
         );
     }
 

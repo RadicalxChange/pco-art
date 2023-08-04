@@ -40,6 +40,12 @@ describe('NativeStewardLicense', function () {
     const mockAuction = await mockAuctionFactory.deploy();
     await mockAuction.deployed();
 
+    const accessControlFactory = await ethers.getContractFactory(
+      'AccessControlFacet',
+    );
+    const accessControl = await accessControlFactory.deploy();
+    await accessControl.deployed();
+
     const facetFactory = await ethers.getContractFactory(
       'NativeStewardLicenseMock',
     );
@@ -116,6 +122,16 @@ describe('NativeStewardLicense', function () {
         initTarget: facetInstance.address,
         initData,
         selectors: selectors,
+      },
+      {
+        target: accessControl.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+          accessControl.interface.getSighash('grantRole(bytes32,address)'),
+          accessControl.interface.getSighash('renounceRole(bytes32)'),
+        ],
       },
     ]);
     await instance.deployed();
@@ -530,6 +546,137 @@ describe('NativeStewardLicense', function () {
   describe('tokenURI', function () {
     it('should revert if token ID is beyond max', async function () {
       await expect(instance.tokenURI(3)).to.be.reverted;
+    });
+  });
+
+  describe('hasRole', function () {
+    it('should return true if address has add token role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+            ),
+          ),
+          minter.address,
+        ),
+      ).to.be.true;
+    });
+
+    it('should return false if address does not have role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+            ),
+          ),
+          nonOwner.address,
+        ),
+      ).to.be.false;
+    });
+  });
+
+  describe('grantRole', function () {
+    it('should allow owner to grant role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(minter)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+              ),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow owner to grant role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(nonOwner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+              ),
+            ),
+            nonOwner.address,
+          ),
+      ).to.be.reverted;
+    });
+
+    it('should only allow current owner to grant role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await accessControl
+        .connect(minter)
+        .grantRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+            ),
+          ),
+          nonOwner.address,
+        );
+
+      await accessControl
+        .connect(minter)
+        .renounceRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+            ),
+          ),
+        );
+
+      await expect(
+        accessControl
+          .connect(minter)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
+              ),
+            ),
+            minter.address,
+          ),
+      ).to.be.reverted;
     });
   });
 });

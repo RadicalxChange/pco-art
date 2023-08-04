@@ -43,6 +43,12 @@ describe('EnglishPeriodicAuction', function () {
     const allowlistMock = await allowlistFactory.deploy();
     await allowlistMock.deployed();
 
+    const accessControlFactory = await ethers.getContractFactory(
+      'AccessControlFacet',
+    );
+    const accessControl = await accessControlFactory.deploy();
+    await accessControl.deployed();
+
     const facetFactory = await ethers.getContractFactory(
       'EnglishPeriodicAuctionFacet',
     );
@@ -197,6 +203,16 @@ describe('EnglishPeriodicAuction', function () {
             'setAuctionParameters(address,uint256,uint256,uint256,uint256,uint256)',
           ),
           facetFactory.interface.getSighash('startingBid()'),
+        ],
+      },
+      {
+        target: accessControl.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          accessControl.interface.getSighash('grantRole(bytes32,address)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+          accessControl.interface.getSighash('renounceRole(bytes32)'),
         ],
       },
     ]);
@@ -2094,6 +2110,137 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         instance.connect(owner).setBidExtensionWindowLengthSeconds(123),
+      ).to.be.reverted;
+    });
+  });
+
+  describe('hasRole', function () {
+    it('should return true if address has component role', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+            ),
+          ),
+          owner.address,
+        ),
+      ).to.be.true;
+    });
+
+    it('should return false if address does not have role', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+            ),
+          ),
+          nonOwner.address,
+        ),
+      ).to.be.false;
+    });
+  });
+
+  describe('grantRole', function () {
+    it('should allow owner to grant component role', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+              ),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow owner to grant component role', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(nonOwner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+              ),
+            ),
+            nonOwner.address,
+          ),
+      ).to.be.reverted;
+    });
+
+    it('should only allow current owner to grant component role', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await accessControl
+        .connect(owner)
+        .grantRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+            ),
+          ),
+          nonOwner.address,
+        );
+
+      await accessControl
+        .connect(owner)
+        .renounceRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes(
+              'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+            ),
+          ),
+        );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes(
+                'EnglishPeriodicAuctionFacet.COMPONENT_ROLE',
+              ),
+            ),
+            owner.address,
+          ),
       ).to.be.reverted;
     });
   });

@@ -59,6 +59,10 @@ abstract contract StewardLicenseInternal is
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);
         _grantRole(ADD_TOKEN_TO_COLLECTION_ROLE, addToCollectionMinter);
+        _setRoleAdmin(
+            ADD_TOKEN_TO_COLLECTION_ROLE,
+            ADD_TOKEN_TO_COLLECTION_ROLE
+        );
 
         if (shouldMint) {
             // Mint tokens

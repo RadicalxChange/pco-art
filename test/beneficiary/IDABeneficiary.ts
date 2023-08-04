@@ -10,9 +10,52 @@ describe('IDABeneficiary', function () {
   let nonOwner: SignerWithAddress;
 
   async function getInstance() {
-    const factory = await ethers.getContractFactory('IDABeneficiaryFacet');
-    const instance = await factory.deploy();
+    const accessControlFactory = await ethers.getContractFactory(
+      'AccessControlFacet',
+    );
+    const accessControl = await accessControlFactory.deploy();
+    await accessControl.deployed();
+
+    const facetFactory = await ethers.getContractFactory('IDABeneficiaryFacet');
+    const facetInstance = await facetFactory.deploy();
+    await facetInstance.deployed();
+
+    const factory = await ethers.getContractFactory('SingleCutDiamond');
+    let instance = await factory.deploy([
+      {
+        target: facetInstance.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          facetInstance.interface.getSighash(
+            'initializeIDABeneficiary(address,(address,uint128)[])',
+          ),
+          facetInstance.interface.getSighash(
+            'initializeIDABeneficiary(address,address,(address,uint128)[])',
+          ),
+          facetInstance.interface.getSighash(
+            'updateBeneficiaryUnits((address,uint128)[])',
+          ),
+          facetInstance.interface.getSighash('distribute()'),
+        ],
+      },
+      {
+        target: accessControl.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          accessControl.interface.getSighash('grantRole(bytes32,address)'),
+          accessControl.interface.getSighash('renounceRole(bytes32)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+        ],
+      },
+    ]);
     await instance.deployed();
+
+    instance = await ethers.getContractAt(
+      'IDABeneficiaryFacet',
+      instance.address,
+    );
 
     return instance;
   }
@@ -320,6 +363,168 @@ describe('IDABeneficiary', function () {
       ).to.be.revertedWith(
         'IDABeneficiaryFacet: msg.value should be greater than 0',
       );
+    });
+  });
+
+  describe('hasRole', function () {
+    it('should return true if address has component role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+          ),
+          owner.address,
+        ),
+      ).to.be.true;
+    });
+
+    it('should return false if address does not have role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+          ),
+          nonOwner.address,
+        ),
+      ).to.be.false;
+    });
+  });
+
+  describe('grantRole', function () {
+    it('should allow owner to grant component role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow owner to grant component role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(nonOwner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.be.reverted;
+    });
+
+    it('should only allow current owner to grant component role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await accessControl
+        .connect(owner)
+        .grantRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+          ),
+          nonOwner.address,
+        );
+
+      await accessControl
+        .connect(owner)
+        .renounceRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+          ),
+        );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+            ),
+            owner.address,
+          ),
+      ).to.be.reverted;
     });
   });
 });

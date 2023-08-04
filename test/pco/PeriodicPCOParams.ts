@@ -8,9 +8,59 @@ describe('PeriodicPCOParams', function () {
   let nonOwner: SignerWithAddress;
 
   async function getInstance() {
-    const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
-    const instance = await factory.deploy();
+    const accessControlFactory = await ethers.getContractFactory(
+      'AccessControlFacet',
+    );
+    const accessControl = await accessControlFactory.deploy();
+    await accessControl.deployed();
+
+    const facetFactory = await ethers.getContractFactory(
+      'PeriodicPCOParamsFacet',
+    );
+    const facetInstance = await facetFactory.deploy();
+    await facetInstance.deployed();
+
+    const factory = await ethers.getContractFactory('SingleCutDiamond');
+    let instance = await factory.deploy([
+      {
+        target: facetInstance.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          facetInstance.interface.getSighash(
+            'initializePCOParams(uint256,uint256,uint256)',
+          ),
+          facetInstance.interface.getSighash(
+            'initializePCOParams(address,uint256,uint256,uint256)',
+          ),
+          facetInstance.interface.getSighash(
+            'setPCOParameters(uint256,uint256,uint256)',
+          ),
+          facetInstance.interface.getSighash('licensePeriod()'),
+          facetInstance.interface.getSighash('feeNumerator()'),
+          facetInstance.interface.getSighash('feeDenominator()'),
+          facetInstance.interface.getSighash('setLicensePeriod(uint256)'),
+          facetInstance.interface.getSighash('setFeeNumerator(uint256)'),
+          facetInstance.interface.getSighash('setFeeDenominator(uint256)'),
+        ],
+      },
+      {
+        target: accessControl.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          accessControl.interface.getSighash('grantRole(bytes32,address)'),
+          accessControl.interface.getSighash('renounceRole(bytes32)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+        ],
+      },
+    ]);
     await instance.deployed();
+
+    instance = await ethers.getContractAt(
+      'PeriodicPCOParamsFacet',
+      instance.address,
+    );
 
     await instance['initializePCOParams(address,uint256,uint256,uint256)'](
       await owner.getAddress(),
@@ -187,6 +237,123 @@ describe('PeriodicPCOParams', function () {
 
       await expect(instance.connect(nonOwner).setFeeDenominator(13)).to.be
         .reverted;
+    });
+  });
+
+  describe('hasRole', function () {
+    it('should return true if address has component role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+          ),
+          owner.address,
+        ),
+      ).to.be.true;
+    });
+
+    it('should return false if address does not have role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      expect(
+        await accessControl.hasRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+          ),
+          nonOwner.address,
+        ),
+      ).to.be.false;
+    });
+  });
+
+  describe('grantRole', function () {
+    it('should allow owner to grant component role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow owner to grant component role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(nonOwner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.be.reverted;
+    });
+
+    it('should only allow current owner to grant component role', async function () {
+      const instance = await getInstance();
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await accessControl
+        .connect(owner)
+        .grantRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+          ),
+          nonOwner.address,
+        );
+
+      await accessControl
+        .connect(owner)
+        .renounceRole(
+          ethers.utils.keccak256(
+            ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+          ),
+        );
+
+      await expect(
+        accessControl
+          .connect(owner)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('PeriodicPCOParamsFacet.COMPONENT_ROLE'),
+            ),
+            owner.address,
+          ),
+      ).to.be.reverted;
     });
   });
 });

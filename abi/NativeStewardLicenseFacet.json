@@ -390,7 +390,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_minter",
+        "name": "_addToCollectionMinter",
         "type": "address"
       },
       {

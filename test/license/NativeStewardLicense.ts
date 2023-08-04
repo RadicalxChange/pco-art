@@ -94,7 +94,7 @@ describe('NativeStewardLicense', function () {
         tokenURI,
       ],
     );
-    let instance = await factory.deploy([
+    let instance = await factory.connect(owner).deploy([
       {
         target: mockAuction.address,
         initTarget: ethers.constants.AddressZero,
@@ -172,7 +172,7 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should set minter', async function () {
-      expect(await instance.minter()).to.be.equal(await minter.getAddress());
+      expect(await instance.minter()).to.be.equal(await owner.getAddress());
     });
 
     it('should set max token count', async function () {

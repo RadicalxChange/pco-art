@@ -34,6 +34,7 @@ abstract contract StewardLicenseInternal is
      */
     function _initializeStewardLicense(
         address minter,
+        address addToCollectionMinter,
         address initialSteward,
         uint256 maxTokenCount,
         bool shouldMint,
@@ -57,7 +58,7 @@ abstract contract StewardLicenseInternal is
 
         _setSupportsInterface(type(IERC165).interfaceId, true);
         _setSupportsInterface(type(IERC721).interfaceId, true);
-        _grantRole(ADD_TOKEN_TO_COLLECTION_ROLE, minter);
+        _grantRole(ADD_TOKEN_TO_COLLECTION_ROLE, addToCollectionMinter);
 
         if (shouldMint) {
             // Mint tokens

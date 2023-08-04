@@ -76,7 +76,7 @@ describe('WrappedERC1155StewardLicense', function () {
       facetFactory.interface.getSighash('maxTokenCount()'),
     ];
 
-    let instance = await factory.deploy([
+    let instance = await factory.connect(owner).deploy([
       {
         target: mockAuction.address,
         initTarget: ethers.constants.AddressZero,
@@ -153,7 +153,7 @@ describe('WrappedERC1155StewardLicense', function () {
     it('should set minter', async function () {
       const instance = await deployFacet();
 
-      expect(await instance.minter()).to.be.equal(await minter.getAddress());
+      expect(await instance.minter()).to.be.equal(await owner.getAddress());
     });
 
     it('should set max token count', async function () {

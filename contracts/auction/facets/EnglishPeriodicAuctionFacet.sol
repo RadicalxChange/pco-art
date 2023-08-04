@@ -218,6 +218,15 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Set starting bid
+     */
+    function setStartingBid(
+        uint256 _startingBid
+    ) external onlyRole(COMPONENT_ROLE) {
+        _setStartingBid(_startingBid);
+    }
+
+    /**
      * @notice Set repossessor
      */
     function setRepossessor(

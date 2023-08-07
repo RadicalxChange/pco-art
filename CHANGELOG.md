@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.13] - 2023-08-07
+
+### Bug Fixes
+
+- Manually set minter address
+
+### Features
+
+- Create getter for current round
+
 ## [0.0.12] - 2023-08-04
 
 ### Features

@@ -31,6 +31,7 @@ contract WrappedERC721StewardLicenseFacet is
     function initializeWrappedStewardLicense(
         address tokenAddress,
         uint256 tokenId,
+        address _minter,
         address _addToCollectionMinter,
         address _steward,
         uint256 _maxTokenCount,
@@ -46,7 +47,7 @@ contract WrappedERC721StewardLicenseFacet is
 
         _initializeWrappedLicense(tokenAddress, tokenId);
         _initializeStewardLicense(
-            msg.sender,
+            _minter,
             _addToCollectionMinter,
             _steward,
             _maxTokenCount,

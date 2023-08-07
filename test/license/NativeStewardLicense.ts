@@ -14,11 +14,13 @@ const tokenURI = 'ERC721Metadata.tokenURI';
 describe('NativeStewardLicense', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
+  let initialSteward: SignerWithAddress;
   let minter: SignerWithAddress;
   let instance: any;
 
   before(async function () {
-    [, , , , owner, nonOwner, minter] = await ethers.getSigners();
+    [, , , , owner, nonOwner, minter, initialSteward] =
+      await ethers.getSigners();
   });
 
   async function getInstance({ shouldMint = false } = {}) {
@@ -61,7 +63,7 @@ describe('NativeStewardLicense', function () {
         erc721Metadata.interface.getSighash(k),
       ),
       facetFactory.interface.getSighash(
-        'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
+        'initializeStewardLicense(address,address,address,uint256,bool,string,string,string)',
       ),
       facetFactory.interface.getSighash('mint(address,uint256)'),
       facetFactory.interface.getSighash('burn(uint256)'),
@@ -89,10 +91,11 @@ describe('NativeStewardLicense', function () {
     ];
 
     const initData = facetInstance.interface.encodeFunctionData(
-      'initializeStewardLicense(address,address,uint256,bool,string,string,string)',
+      'initializeStewardLicense(address,address,address,uint256,bool,string,string,string)',
       [
-        await minter.getAddress(),
         await owner.getAddress(),
+        await minter.getAddress(),
+        await initialSteward.getAddress(),
         2,
         shouldMint,
         name,
@@ -174,10 +177,11 @@ describe('NativeStewardLicense', function () {
     it('should revert if already initialized', async function () {
       await expect(
         instance[
-          'initializeStewardLicense(address,address,uint256,bool,string,string,string)'
+          'initializeStewardLicense(address,address,address,uint256,bool,string,string,string)'
         ](
-          await minter.getAddress(),
           await owner.getAddress(),
+          await minter.getAddress(),
+          await initialSteward.getAddress(),
           2,
           false,
           name,
@@ -198,8 +202,8 @@ describe('NativeStewardLicense', function () {
     it('should mint tokens', async function () {
       const mintedInstance = await getInstance({ shouldMint: true });
 
-      expect(await mintedInstance.ownerOf(0)).to.equal(owner.address);
-      expect(await mintedInstance.ownerOf(1)).to.equal(owner.address);
+      expect(await mintedInstance.ownerOf(0)).to.equal(initialSteward.address);
+      expect(await mintedInstance.ownerOf(1)).to.equal(initialSteward.address);
     });
   });
 
@@ -479,8 +483,8 @@ describe('NativeStewardLicense', function () {
       expect(await instance.exists(3)).to.equal(true);
       expect(await instance.tokenURI(2)).to.equal('new-token-uri-1');
       expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
-      expect(await instance.ownerOf(2)).to.equal(owner.address);
-      expect(await instance.ownerOf(3)).to.equal(owner.address);
+      expect(await instance.ownerOf(2)).to.equal(initialSteward.address);
+      expect(await instance.ownerOf(3)).to.equal(initialSteward.address);
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
@@ -529,8 +533,8 @@ describe('NativeStewardLicense', function () {
       expect(await instance.tokenURI(2)).to.equal('new-base-token-uri/2');
       expect(await instance.tokenURI(3)).to.equal('new-base-token-uri/3');
       expect(await instance.tokenURI(1)).to.equal(tokenURI + '1');
-      expect(await instance.ownerOf(2)).to.equal(owner.address);
-      expect(await instance.ownerOf(3)).to.equal(owner.address);
+      expect(await instance.ownerOf(2)).to.equal(initialSteward.address);
+      expect(await instance.ownerOf(3)).to.equal(initialSteward.address);
       expect(await instance.exists(4)).to.equal(false);
     });
 

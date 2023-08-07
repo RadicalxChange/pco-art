@@ -17,6 +17,7 @@ contract NativeStewardLicenseFacet is
      * @notice Initialize license
      */
     function initializeStewardLicense(
+        address _minter,
         address _addToCollectionMinter,
         address _steward,
         uint256 _maxTokenCount,
@@ -31,7 +32,7 @@ contract NativeStewardLicenseFacet is
         );
 
         _initializeStewardLicense(
-            msg.sender,
+            _minter,
             _addToCollectionMinter,
             _steward,
             _maxTokenCount,

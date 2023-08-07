@@ -240,6 +240,16 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get current auction round
+     */
+    function _currentAuctionRound(
+        uint256 tokenId
+    ) internal view returns (uint256) {
+        return
+            EnglishPeriodicAuctionStorage.layout().currentAuctionRound[tokenId];
+    }
+
+    /**
      * @notice Place a bid
      */
     function _placeBid(

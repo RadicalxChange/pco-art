@@ -322,4 +322,13 @@ contract EnglishPeriodicAuctionFacet is
     ) external view returns (Bid memory) {
         return _bidOf(tokenId, bidder);
     }
+
+    /**
+     * @notice Get current auction round
+     */
+    function currentAuctionRound(
+        uint256 tokenId
+    ) external view returns (uint256) {
+        return _currentAuctionRound(tokenId);
+    }
 }

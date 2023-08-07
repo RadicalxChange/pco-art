@@ -197,6 +197,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('bidOf(uint256,address)'),
           facetFactory.interface.getSighash('highestBid(uint256)'),
           facetFactory.interface.getSighash('currentBid(uint256)'),
+          facetFactory.interface.getSighash('currentAuctionRound(uint256)'),
           facetFactory.interface.getSighash('auctionStartTime(uint256)'),
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('withdrawBid(uint256)'),
@@ -2266,6 +2267,28 @@ describe('EnglishPeriodicAuction', function () {
             owner.address,
           ),
       ).to.be.reverted;
+    });
+  });
+
+  describe('currentAuctionRound', function () {
+    it('should return current auction round', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      expect(await instance.currentAuctionRound(0)).to.equal(0);
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1100);
+
+      expect(await instance.currentAuctionRound(0)).to.equal(1);
     });
   });
 });

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.14] - 2023-08-08
+
+### Bug Fixes
+
+- Require collateral from previous round to be withdrawn
+
 ## [0.0.13] - 2023-08-07
 
 ### Bug Fixes

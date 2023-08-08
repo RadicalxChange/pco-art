@@ -844,6 +844,74 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should revert if collateral from previous round bid exists', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance.connect(bidder2).placeBid(0, bidAmount2, {
+        value: collateralAmount2,
+      });
+
+      await time.increase(100);
+      await instance.closeAuction(0);
+      await time.increase(1100);
+
+      await expect(
+        instance
+          .connect(bidder1)
+          .placeBid(0, bidAmount1, { value: collateralAmount1 }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Collateral from previous round must be withdrawn',
+      );
+    });
+
+    it('should revert if collateral from previous round winnings exists', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await time.increase(100);
+      await instance.closeAuction(0);
+      await time.increase(1100);
+
+      await expect(
+        instance
+          .connect(owner)
+          .placeBid(0, bidAmount1, { value: collateralAmount1 }),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Collateral from previous round must be withdrawn',
+      );
+    });
+
     it('should place new bid', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100
@@ -1031,6 +1099,8 @@ describe('EnglishPeriodicAuction', function () {
       await time.increase(100);
 
       await instance.connect(bidder1).closeAuction(0);
+
+      await instance.connect(bidder1).withdrawBid(0);
 
       await time.increase(1100);
 

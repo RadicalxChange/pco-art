@@ -263,6 +263,14 @@ abstract contract EnglishPeriodicAuctionInternal is
 
         Bid storage bid = l.bids[tokenId][bidder];
 
+        // Check if collateral from previous round exists
+        if (bid.round < l.currentAuctionRound[tokenId]) {
+            require(
+                bid.collateralAmount == 0,
+                'EnglishPeriodicAuction: Collateral from previous round must be withdrawn'
+            );
+        }
+
         // Check if higher than starting bid
         require(
             bidAmount >= l.startingBid,

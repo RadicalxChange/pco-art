@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2023-08-09
+
+### Features
+
+- [**breaking**] New accounting of collateral
+
 ## [0.0.14] - 2023-08-08
 
 ### Bug Fixes

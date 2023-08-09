@@ -10,9 +10,9 @@ contract MockBidder {
         auction = _auction;
     }
 
-    // Withdraw bid
-    function withdrawBid(uint256 tokenId) external {
-        auction.withdrawBid(tokenId);
+    // Cancel bid
+    function withdrawCollateral() external {
+        auction.withdrawCollateral();
     }
 
     // Fail on receive

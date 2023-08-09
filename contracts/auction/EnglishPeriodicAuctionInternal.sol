@@ -198,15 +198,12 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Get highest outstanding bid
      */
-    function _highestBid(uint256 tokenId) internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().highestBids[tokenId];
-    }
-
-    /**
-     * @notice Get current bid
-     */
-    function _currentBid(uint256 tokenId) internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().currentBids[tokenId];
+    function _highestBid(
+        uint256 tokenId,
+        uint256 round
+    ) internal view returns (Bid storage) {
+        return
+            EnglishPeriodicAuctionStorage.layout().highestBids[tokenId][round];
     }
 
     /**
@@ -214,9 +211,11 @@ abstract contract EnglishPeriodicAuctionInternal is
      */
     function _bidOf(
         uint256 tokenId,
+        uint256 round,
         address bidder
     ) internal view returns (Bid storage) {
-        return EnglishPeriodicAuctionStorage.layout().bids[tokenId][bidder];
+        return
+            EnglishPeriodicAuctionStorage.layout().bids[tokenId][round][bidder];
     }
 
     /**
@@ -250,6 +249,16 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get available collateral
+     */
+    function _availableCollateral(
+        address bidder
+    ) internal view returns (uint256) {
+        return
+            EnglishPeriodicAuctionStorage.layout().availableCollateral[bidder];
+    }
+
+    /**
      * @notice Place a bid
      */
     function _placeBid(
@@ -261,15 +270,9 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        Bid storage bid = l.bids[tokenId][bidder];
+        uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
 
-        // Check if collateral from previous round exists
-        if (bid.round < l.currentAuctionRound[tokenId]) {
-            require(
-                bid.collateralAmount == 0,
-                'EnglishPeriodicAuction: Collateral from previous round must be withdrawn'
-            );
-        }
+        Bid storage bid = l.bids[tokenId][currentAuctionRound][bidder];
 
         // Check if higher than starting bid
         require(
@@ -277,22 +280,15 @@ abstract contract EnglishPeriodicAuctionInternal is
             'EnglishPeriodicAuction: Bid amount must be greater than or equal to starting bid'
         );
 
-        if (l.highestBids[tokenId].round == l.currentAuctionRound[tokenId]) {
-            // Check if highest bid
-            require(
-                bidAmount >=
-                    l.highestBids[tokenId].bidAmount + l.minBidIncrement,
-                'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
-            );
-        }
+        // Check if highest bid
+        require(
+            bidAmount >=
+                l.highestBids[tokenId][currentAuctionRound].bidAmount +
+                    l.minBidIncrement,
+            'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
+        );
 
-        uint256 totalCollateralAmount;
-        if (bid.round == l.currentAuctionRound[tokenId]) {
-            // If bidder has bid for round, add to existing bid
-            totalCollateralAmount = bid.collateralAmount + collateralAmount;
-        } else {
-            totalCollateralAmount = collateralAmount;
-        }
+        uint256 totalCollateralAmount = bid.collateralAmount + collateralAmount;
 
         uint256 feeAmount;
         address currentBidder;
@@ -322,13 +318,12 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Save bid
         bid.bidder = bidder;
         bid.bidAmount = bidAmount;
-        bid.round = l.currentAuctionRound[tokenId];
         bid.feeAmount = feeAmount;
         bid.collateralAmount = totalCollateralAmount;
 
-        l.highestBids[tokenId] = bid;
+        l.highestBids[tokenId][currentAuctionRound] = bid;
 
-        emit BidPlaced(tokenId, bid.round, bid.bidder, bid.bidAmount);
+        emit BidPlaced(tokenId, currentAuctionRound, bid.bidder, bid.bidAmount);
 
         // Check if auction should extend
         uint256 auctionEndTime = _auctionEndTime(tokenId);
@@ -352,9 +347,13 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
-     * @notice Withdraw bid collateral if not highest bidder
+     * @notice Cancel bid for current round if not highest bidder
      */
-    function _withdrawBid(uint256 tokenId, address bidder) internal {
+    function _cancelBid(
+        uint256 tokenId,
+        uint256 round,
+        address bidder
+    ) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
@@ -366,21 +365,41 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         require(
-            bidder != l.highestBids[tokenId].bidder,
-            'EnglishPeriodicAuction: Cannot withdraw bid if highest bidder'
+            bidder != l.highestBids[tokenId][round].bidder,
+            'EnglishPeriodicAuction: Cannot cancel bid if highest bidder'
         );
 
-        Bid storage bid = l.bids[tokenId][bidder];
+        Bid storage bid = l.bids[tokenId][round][bidder];
 
         require(
             bid.collateralAmount > 0,
+            'EnglishPeriodicAuction: No bid to cancel'
+        );
+
+        // Make collateral available to withdraw
+        l.availableCollateral[bidder] += bid.collateralAmount;
+
+        // Reset collateral and bid
+        bid.collateralAmount = 0;
+        bid.bidAmount = 0;
+    }
+
+    /**
+     * @notice Withdraw collateral
+     */
+    function _withdrawCollateral(address bidder) internal {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        uint256 collateralAmount = l.availableCollateral[bidder];
+
+        require(
+            collateralAmount > 0,
             'EnglishPeriodicAuction: No collateral to withdraw'
         );
 
-        // Reset collateral and bid
-        uint256 collateralAmount = bid.collateralAmount;
-        bid.collateralAmount = 0;
-        bid.bidAmount = 0;
+        // Make collateral unavailable to withdraw
+        l.availableCollateral[bidder] = 0;
 
         // Transfer collateral back to bidder
         (bool success, ) = bidder.call{ value: collateralAmount }('');
@@ -397,6 +416,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
+        uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+
         address oldBidder;
         if (IStewardLicense(address(this)).exists(tokenId)) {
             oldBidder = IStewardLicense(address(this)).ownerOf(tokenId);
@@ -407,52 +428,48 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Set lastPeriodEndTime to the end of the current auction period
         l.lastPeriodEndTime[tokenId] = block.timestamp;
 
-        if (
-            l.highestBids[tokenId].round < l.currentAuctionRound[tokenId] ||
-            l.highestBids[tokenId].bidder == address(0)
-        ) {
+        if (l.highestBids[tokenId][currentAuctionRound].bidder == address(0)) {
             // No bids were placed, transfer to repossessor
-            Bid storage repossessorBid = l.bids[tokenId][l.repossessor];
-            repossessorBid.round = l.currentAuctionRound[tokenId];
+            Bid storage repossessorBid = l.bids[tokenId][currentAuctionRound][
+                l.repossessor
+            ];
             repossessorBid.bidAmount = 0;
-            repossessorBid.collateralAmount = 0;
             repossessorBid.feeAmount = 0;
+            repossessorBid.collateralAmount = 0;
             repossessorBid.bidder = l.repossessor;
 
-            l.highestBids[tokenId] = repossessorBid;
-        } else {
+            l.highestBids[tokenId][currentAuctionRound] = repossessorBid;
+        } else if (
+            l.highestBids[tokenId][currentAuctionRound].bidder != oldBidder
+        ) {
             // Transfer bid to previous bidder's collateral
-            l.bids[tokenId][oldBidder].collateralAmount += l
-                .highestBids[tokenId]
-                .bidAmount;
+            l.availableCollateral[oldBidder] += l
+            .highestBids[tokenId][currentAuctionRound].bidAmount;
         }
 
         emit AuctionClosed(
             tokenId,
-            l.currentAuctionRound[tokenId],
-            l.highestBids[tokenId].bidder,
+            currentAuctionRound,
+            l.highestBids[tokenId][currentAuctionRound].bidder,
             oldBidder,
-            l.highestBids[tokenId].bidAmount
+            l.highestBids[tokenId][currentAuctionRound].bidAmount
         );
 
         // Reset auction
-        l.currentBids[tokenId] = l.highestBids[tokenId];
-        l.bids[tokenId][l.highestBids[tokenId].bidder].collateralAmount = 0;
-        l.currentBids[tokenId].collateralAmount = 0;
         l.currentAuctionLength[tokenId] = l.auctionLengthSeconds;
         l.currentAuctionRound[tokenId] = l.currentAuctionRound[tokenId] + 1;
 
         // Transfer to highest bidder
         IStewardLicense(address(this)).triggerTransfer(
             oldBidder,
-            l.highestBids[tokenId].bidder,
+            l.highestBids[tokenId][currentAuctionRound].bidder,
             tokenId
         );
 
         // Distribute fee to beneficiary
-        if (l.highestBids[tokenId].feeAmount > 0) {
+        if (l.highestBids[tokenId][currentAuctionRound].feeAmount > 0) {
             IBeneficiary(address(this)).distribute{
-                value: l.highestBids[tokenId].feeAmount
+                value: l.highestBids[tokenId][currentAuctionRound].feeAmount
             }();
         }
     }

@@ -20,9 +20,9 @@ library EnglishPeriodicAuctionStorage {
         mapping(uint256 => uint256) lastPeriodEndTime;
         mapping(uint256 => uint256) currentAuctionRound;
         mapping(uint256 => uint256) currentAuctionLength;
-        mapping(uint256 => mapping(address => IEnglishPeriodicAuctionInternal.Bid)) bids;
-        mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid) currentBids;
-        mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid) highestBids;
+        mapping(uint256 => mapping(uint256 => mapping(address => IEnglishPeriodicAuctionInternal.Bid))) bids;
+        mapping(uint256 => mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid)) highestBids;
+        mapping(address => uint256) availableCollateral;
     }
 
     bytes32 private constant STORAGE_SLOT =

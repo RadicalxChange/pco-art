@@ -295,6 +295,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
+      }
+    ],
+    "name": "availableCollateral",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "bidExtensionSeconds",
     "outputs": [
@@ -338,10 +357,56 @@
       {
         "components": [
           {
+            "internalType": "address",
+            "name": "bidder",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
-            "name": "round",
+            "name": "bidAmount",
             "type": "uint256"
           },
+          {
+            "internalType": "uint256",
+            "name": "feeAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "collateralAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct IEnglishPeriodicAuctionInternal.Bid",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "round",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
+      }
+    ],
+    "name": "bidOf",
+    "outputs": [
+      {
+        "components": [
           {
             "internalType": "address",
             "name": "bidder",
@@ -396,6 +461,42 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "round",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelBid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "round",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelBidAndWithdrawCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
     "name": "closeAuction",
@@ -428,17 +529,17 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "round",
+        "type": "uint256"
       }
     ],
-    "name": "currentBid",
+    "name": "highestBid",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "round",
-            "type": "uint256"
-          },
           {
             "internalType": "address",
             "name": "bidder",
@@ -480,11 +581,6 @@
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "round",
-            "type": "uint256"
-          },
           {
             "internalType": "address",
             "name": "bidder",
@@ -863,14 +959,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawBid",
+    "inputs": [],
+    "name": "withdrawCollateral",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

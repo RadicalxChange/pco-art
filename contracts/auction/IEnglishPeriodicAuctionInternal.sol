@@ -6,7 +6,6 @@ pragma solidity ^0.8.17;
  */
 interface IEnglishPeriodicAuctionInternal {
     struct Bid {
-        uint256 round;
         address bidder;
         uint256 bidAmount;
         uint256 feeAmount;

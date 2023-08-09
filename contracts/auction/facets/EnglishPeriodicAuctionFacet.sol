@@ -169,10 +169,37 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
-     * @notice Withdraw bid collateral
+     * @notice Cancel bid for current round
      */
-    function withdrawBid(uint256 tokenId) external {
-        _withdrawBid(tokenId, msg.sender);
+    function cancelBid(uint256 tokenId, uint256 round) external {
+        _cancelBid(tokenId, round, msg.sender);
+    }
+
+    /**
+     * @notice Withdraw collateral
+     */
+    function withdrawCollateral() external {
+        _withdrawCollateral(msg.sender);
+    }
+
+    /**
+     * @notice Cancel bid for current round and withdraw collateral
+     */
+    function cancelBidAndWithdrawCollateral(
+        uint256 tokenId,
+        uint256 round
+    ) external {
+        _cancelBid(tokenId, round, msg.sender);
+        _withdrawCollateral(msg.sender);
+    }
+
+    /**
+     * @notice Get available collateral
+     */
+    function availableCollateral(
+        address bidder
+    ) external view returns (uint256) {
+        return _availableCollateral(bidder);
     }
 
     /**
@@ -303,14 +330,17 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Get highest outstanding bid
      */
     function highestBid(uint256 tokenId) external view returns (Bid memory) {
-        return _highestBid(tokenId);
+        return _highestBid(tokenId, _currentAuctionRound(tokenId));
     }
 
     /**
-     * @notice Get current bid
+     * @notice Get highest outstanding bid for a particular round
      */
-    function currentBid(uint256 tokenId) external view returns (Bid memory) {
-        return _currentBid(tokenId);
+    function highestBid(
+        uint256 tokenId,
+        uint256 round
+    ) external view returns (Bid memory) {
+        return _highestBid(tokenId, round);
     }
 
     /**
@@ -320,7 +350,18 @@ contract EnglishPeriodicAuctionFacet is
         uint256 tokenId,
         address bidder
     ) external view returns (Bid memory) {
-        return _bidOf(tokenId, bidder);
+        return _bidOf(tokenId, _currentAuctionRound(tokenId), bidder);
+    }
+
+    /**
+     * @notice Get bid for address for particular round
+     */
+    function bidOf(
+        uint256 tokenId,
+        uint256 round,
+        address bidder
+    ) external view returns (Bid memory) {
+        return _bidOf(tokenId, round, bidder);
     }
 
     /**

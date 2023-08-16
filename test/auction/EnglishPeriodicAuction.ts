@@ -205,6 +205,9 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('cancelBid(uint256,uint256)'),
           facetFactory.interface.getSighash(
+            'cancelAllBidsAndWithdrawCollateral(uint256)',
+          ),
+          facetFactory.interface.getSighash(
             'cancelBidAndWithdrawCollateral(uint256,uint256)',
           ),
           facetFactory.interface.getSighash('withdrawCollateral()'),
@@ -215,7 +218,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('setStartingBid(uint256)'),
           facetFactory.interface.getSighash('availableCollateral(address)'),
           facetFactory.interface.getSighash(
-            'lockedCollateral(address,uint256)',
+            'lockedCollateral(uint256,address)',
           ),
         ],
       },
@@ -1741,6 +1744,122 @@ describe('EnglishPeriodicAuction', function () {
 
       expect(await instance.connect(owner).cancelBid(0, 0)).to.not.be.reverted;
     });
+
+    it('should allow cancel of all bids', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1100);
+
+      const bidAmount3 = ethers.utils.parseEther('1.1');
+      const feeAmount3 = await instance.calculateFeeFromBid(bidAmount3);
+      const collateralAmount3 = feeAmount3.add(bidAmount3);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount3, { value: collateralAmount3 });
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      const oldBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+      const res = await instance
+        .connect(bidder1)
+        .cancelAllBidsAndWithdrawCollateral(0);
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newBidderBalance = await ethers.provider.getBalance(
+        bidder1.address,
+      );
+
+      // Expect bidder1 balance to increase by collateralAmount1
+      expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
+        collateralAmount1.add(collateralAmount3),
+      );
+    });
+
+    it('should allow cancel of all bids when past bid is 0', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1100);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(owner)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      const oldBidderBalance = await ethers.provider.getBalance(
+        bidder2.address,
+      );
+      const res = await instance
+        .connect(bidder2)
+        .cancelAllBidsAndWithdrawCollateral(0);
+      const receipt = await res.wait();
+      const gasFee = receipt.gasUsed.mul(res.gasPrice);
+
+      const newBidderBalance = await ethers.provider.getBalance(
+        bidder2.address,
+      );
+
+      // Expect bidder1 balance to increase by collateralAmount1
+      expect(newBidderBalance.add(gasFee).sub(oldBidderBalance)).to.be.equal(
+        collateralAmount1,
+      );
+    });
   });
 
   describe('withdrawCollateral', function () {
@@ -2112,7 +2231,7 @@ describe('EnglishPeriodicAuction', function () {
         .connect(bidder1)
         .placeBid(0, bidAmount3, { value: collateralAmount3 });
 
-      expect(await instance.lockedCollateral(bidder1.address, 0)).to.be.equal(
+      expect(await instance.lockedCollateral(0, bidder1.address)).to.be.equal(
         collateralAmount1.add(collateralAmount3),
       );
     });

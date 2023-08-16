@@ -183,6 +183,14 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Cancel all bids and withdraw collateral
+     */
+    function cancelAllBidsAndWithdrawCollateral(uint256 tokenId) external {
+        _cancelAllBids(tokenId, msg.sender);
+        _withdrawCollateral(msg.sender);
+    }
+
+    /**
      * @notice Cancel bid for current round and withdraw collateral
      */
     function cancelBidAndWithdrawCollateral(
@@ -197,10 +205,10 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Get locked collateral from all bids
      */
     function lockedCollateral(
-        address bidder,
-        uint256 tokenId
+        uint256 tokenId,
+        address bidder
     ) external view returns (uint256) {
-        return _lockedCollateral(bidder, tokenId);
+        return _lockedCollateral(tokenId, bidder);
     }
 
     /**

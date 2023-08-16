@@ -252,8 +252,8 @@ abstract contract EnglishPeriodicAuctionInternal is
      * @notice Get locked collateral from all bids
      */
     function _lockedCollateral(
-        address bidder,
-        uint256 tokenId
+        uint256 tokenId,
+        address bidder
     ) internal view returns (uint256) {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
@@ -404,6 +404,29 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Reset collateral and bid
         bid.collateralAmount = 0;
         bid.bidAmount = 0;
+    }
+
+    /**
+     * @notice Cancel bids for all rounds
+     */
+    function _cancelAllBids(uint256 tokenId, address bidder) internal {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+
+        for (uint256 i = 0; i <= currentAuctionRound; i++) {
+            Bid storage bid = l.bids[tokenId][i][bidder];
+
+            if (bid.collateralAmount > 0) {
+                // Make collateral available to withdraw
+                l.availableCollateral[bidder] += bid.collateralAmount;
+
+                // Reset collateral and bid
+                bid.collateralAmount = 0;
+                bid.bidAmount = 0;
+            }
+        }
     }
 
     /**

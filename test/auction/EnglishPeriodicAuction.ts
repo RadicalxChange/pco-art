@@ -214,6 +214,9 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('startingBid()'),
           facetFactory.interface.getSighash('setStartingBid(uint256)'),
           facetFactory.interface.getSighash('availableCollateral(address)'),
+          facetFactory.interface.getSighash(
+            'lockedCollateral(address,uint256)',
+          ),
         ],
       },
       {
@@ -2066,6 +2069,52 @@ describe('EnglishPeriodicAuction', function () {
       expect(
         await instance.availableCollateral(repossessor.address),
       ).to.be.equal(bidAmount.add(bidAmount2));
+    });
+  });
+
+  describe('lockedCollateral', function () {
+    it('should return locked collateral from multiple rounds', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount1 = ethers.utils.parseEther('1.1');
+      const feeAmount1 = await instance.calculateFeeFromBid(bidAmount1);
+      const collateralAmount1 = feeAmount1.add(bidAmount1);
+
+      const bidAmount2 = ethers.utils.parseEther('1.2');
+      const feeAmount2 = await instance.calculateFeeFromBid(bidAmount2);
+      const collateralAmount2 = feeAmount2.add(bidAmount2);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount1, { value: collateralAmount1 });
+
+      await instance
+        .connect(bidder2)
+        .placeBid(0, bidAmount2, { value: collateralAmount2 });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1100);
+
+      const bidAmount3 = ethers.utils.parseEther('1.1');
+      const feeAmount3 = await instance.calculateFeeFromBid(bidAmount3);
+      const collateralAmount3 = feeAmount3.add(bidAmount3);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount3, { value: collateralAmount3 });
+
+      expect(await instance.lockedCollateral(bidder1.address, 0)).to.be.equal(
+        collateralAmount1.add(collateralAmount3),
+      );
     });
   });
 

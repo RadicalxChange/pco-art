@@ -194,6 +194,16 @@ contract EnglishPeriodicAuctionFacet is
     }
 
     /**
+     * @notice Get locked collateral from all bids
+     */
+    function lockedCollateral(
+        address bidder,
+        uint256 tokenId
+    ) external view returns (uint256) {
+        return _lockedCollateral(bidder, tokenId);
+    }
+
+    /**
      * @notice Get available collateral
      */
     function availableCollateral(

@@ -249,6 +249,26 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+     * @notice Get locked collateral from all bids
+     */
+    function _lockedCollateral(
+        address bidder,
+        uint256 tokenId
+    ) internal view returns (uint256) {
+        EnglishPeriodicAuctionStorage.Layout
+            storage l = EnglishPeriodicAuctionStorage.layout();
+
+        uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+        uint256 lockedCollateral = 0;
+        for (uint256 i = 0; i <= currentAuctionRound; i++) {
+            Bid storage bid = l.bids[tokenId][i][bidder];
+            lockedCollateral += bid.collateralAmount;
+        }
+
+        return lockedCollateral;
+    }
+
+    /**
      * @notice Get available collateral
      */
     function _availableCollateral(

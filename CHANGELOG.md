@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2023-08-16
+
+### Bug Fixes
+
+- Place bid when min increment is higher than starting bid
+
+### Features
+
+- Add view function for locked collateral
+- Provide a way for users to cancel & withdraw bids from multiple past rounds at the same time
+
 ## [0.1.0] - 2023-08-09
 
 ### Features

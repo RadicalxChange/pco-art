@@ -883,6 +883,38 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
     });
 
+    it('should place bid when min increment is higher than starting bid', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        startingBid: 100,
+      });
+
+      const bidAmount = 100;
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      const bid = await instance['bidOf(uint256,address)'](0, bidder1.address);
+      const highestBid = await instance['highestBid(uint256)'](0);
+
+      expect(bid.bidder).to.be.equal(bidder1.address);
+      expect(bid.bidAmount).to.be.equal(bidAmount);
+      expect(bid.feeAmount).to.be.equal(feeAmount);
+      expect(bid.collateralAmount).to.be.equal(collateralAmount);
+
+      expect(highestBid.bidder).to.be.equal(bidder1.address);
+      expect(highestBid.bidAmount).to.be.equal(bidAmount);
+      expect(highestBid.feeAmount).to.be.equal(feeAmount);
+      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+    });
+
     it('should place new highest bid', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100

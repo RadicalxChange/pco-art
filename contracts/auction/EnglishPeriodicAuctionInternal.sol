@@ -281,12 +281,14 @@ abstract contract EnglishPeriodicAuctionInternal is
         );
 
         // Check if highest bid
-        require(
-            bidAmount >=
-                l.highestBids[tokenId][currentAuctionRound].bidAmount +
-                    l.minBidIncrement,
-            'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
-        );
+        if (l.highestBids[tokenId][currentAuctionRound].bidAmount > 0) {
+            require(
+                bidAmount >=
+                    l.highestBids[tokenId][currentAuctionRound].bidAmount +
+                        l.minBidIncrement,
+                'EnglishPeriodicAuction: Bid amount must be greater than highest outstanding bid'
+            );
+        }
 
         uint256 totalCollateralAmount = bid.collateralAmount + collateralAmount;
 

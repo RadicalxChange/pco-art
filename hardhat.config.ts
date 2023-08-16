@@ -32,9 +32,14 @@ const config: HardhatUserConfig = {
 
   networks: {
     gnosis: {
-      url: NODE_URL_TESTNET ?? '',
+      url: 'https://rpc.gnosis.gateway.fm',
       accounts: PKEY_TESTNET ? [PKEY_TESTNET] : [],
       chainId: 100,
+    },
+    'op-goerli': {
+      url: 'https://optimism-goerli.publicnode.com',
+      accounts: PKEY_TESTNET ? [PKEY_TESTNET] : [],
+      chainId: 420,
     },
   },
 

@@ -21,4 +21,13 @@ abstract contract AllowlistReadableInternal {
         }
         return l.allowlist.contains(_address);
     }
+
+    /**
+     * @notice Get allowlist as array
+     */
+    function _getAllowlist() internal view returns (address[] memory) {
+        AllowlistStorage.Layout storage l = AllowlistStorage.layout();
+
+        return l.allowlist.toArray();
+    }
 }

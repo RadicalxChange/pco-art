@@ -79,6 +79,13 @@ contract AllowlistFacet is
     }
 
     /**
+     * @notice Get allowlist as array
+     */
+    function getAllowlist() external view returns (address[] memory) {
+        return _getAllowlist();
+    }
+
+    /**
      * @notice Add to allowlist
      */
     function addToAllowlist(

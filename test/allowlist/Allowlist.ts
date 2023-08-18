@@ -39,6 +39,7 @@ describe('Allowlist', function () {
           facetInstance.interface.getSighash(
             'batchRemoveFromAllowlist(address[])',
           ),
+          facetInstance.interface.getSighash('getAllowlist()'),
         ],
       },
       {
@@ -153,6 +154,21 @@ describe('Allowlist', function () {
 
       await expect(instance.connect(nonOwner).setAllowAny(false)).to.be
         .reverted;
+    });
+  });
+
+  describe('getAllowlist', function () {
+    it('should return allowlist', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(bool,address[])'](false, [
+        nonOwner.address,
+        owner.address,
+      ]);
+
+      expect(await instance.getAllowlist()).to.be.eql([
+        nonOwner.address,
+        owner.address,
+      ]);
     });
   });
 

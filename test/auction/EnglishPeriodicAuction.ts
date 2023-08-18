@@ -1326,12 +1326,12 @@ describe('EnglishPeriodicAuction', function () {
         0,
       );
 
-      expect(bidder1Bid.collateralAmount).to.be.equal(collateralAmount);
+      expect(bidder1Bid.collateralAmount).to.be.equal(0);
 
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
-      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+      expect(highestBid.collateralAmount).to.be.equal(0);
 
       expect(await licenseMock.ownerOf(0)).to.be.equal(bidder1.address);
 
@@ -1381,7 +1381,7 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.bidder).to.be.equal(owner.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
-      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+      expect(highestBid.collateralAmount).to.be.equal(0);
 
       expect(await licenseMock.ownerOf(0)).to.be.equal(owner.address);
 
@@ -1559,7 +1559,7 @@ describe('EnglishPeriodicAuction', function () {
       expect(highestBid.bidder).to.be.equal(bidder1.address);
       expect(highestBid.bidAmount).to.be.equal(bidAmount);
       expect(highestBid.feeAmount).to.be.equal(feeAmount);
-      expect(highestBid.collateralAmount).to.be.equal(collateralAmount);
+      expect(highestBid.collateralAmount).to.be.equal(0);
 
       expect(await licenseMock.ownerOf(0)).to.be.equal(bidder1.address);
 

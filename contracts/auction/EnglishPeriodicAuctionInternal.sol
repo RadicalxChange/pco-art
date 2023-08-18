@@ -490,6 +490,15 @@ abstract contract EnglishPeriodicAuctionInternal is
             // Transfer bid to previous bidder's collateral
             l.availableCollateral[oldBidder] += l
             .highestBids[tokenId][currentAuctionRound].bidAmount;
+            l.highestBids[tokenId][currentAuctionRound].collateralAmount = 0;
+            l
+            .bids[tokenId][currentAuctionRound][
+                l.highestBids[tokenId][currentAuctionRound].bidder
+            ].collateralAmount = 0;
+        } else {
+            l.highestBids[tokenId][currentAuctionRound].collateralAmount = 0;
+            l
+            .bids[tokenId][currentAuctionRound][oldBidder].collateralAmount = 0;
         }
 
         emit AuctionClosed(

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2023-08-18
+
+### Bug Fixes
+
+- Remove collateral from winning bid on close auction
+
+### Features
+
+- Add getter for allowlist
+
 ## [0.2.0] - 2023-08-16
 
 ### Bug Fixes

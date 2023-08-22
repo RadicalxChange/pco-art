@@ -510,7 +510,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         );
 
         // Reset auction
-        l.currentAuctionLength[tokenId] = l.auctionLengthSeconds;
+        l.currentAuctionLength[tokenId] = 0;
         l.currentAuctionRound[tokenId] = l.currentAuctionRound[tokenId] + 1;
 
         // Transfer to highest bidder

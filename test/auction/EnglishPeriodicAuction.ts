@@ -2339,6 +2339,60 @@ describe('EnglishPeriodicAuction', function () {
       await expect(instance.connect(owner).setAuctionLengthSeconds(123)).to.be
         .reverted;
     });
+
+    it('should change length of current auction', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        hasOwner: true,
+      });
+
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
+
+      await instance.connect(owner).setAuctionLengthSeconds(100);
+
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
+    });
+
+    it('should change length of future auctions', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+        hasOwner: true,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.0');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      await time.increase(1000);
+
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
+
+      await instance.connect(owner).setAuctionLengthSeconds(100);
+
+      await time.increase(200);
+
+      expect(await instance.isAuctionPeriod(0)).to.be.equal(true);
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(true);
+    });
   });
 
   describe('setMinBidIncrement', function () {

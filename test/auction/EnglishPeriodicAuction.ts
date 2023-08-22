@@ -71,6 +71,9 @@ describe('EnglishPeriodicAuction', function () {
             'initializePCOParams(address,uint256,uint256,uint256)',
           ),
           pcoParamsFacetInstance.interface.getSighash('licensePeriod()'),
+          pcoParamsFacetInstance.interface.getSighash(
+            'setLicensePeriod(uint256)',
+          ),
           pcoParamsFacetInstance.interface.getSighash('feeNumerator()'),
           pcoParamsFacetInstance.interface.getSighash('feeDenominator()'),
         ],
@@ -2619,6 +2622,47 @@ describe('EnglishPeriodicAuction', function () {
       await time.increase(1100);
 
       expect(await instance.currentAuctionRound(0)).to.equal(1);
+    });
+  });
+
+  describe('auctionStartTime', function () {
+    it('should not update license period until next auction', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const initialPeriodStartTime = await time.latest();
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: await time.latest(),
+        licensePeriod: 1000,
+      });
+
+      const pcoParams = await ethers.getContractAt(
+        'PeriodicPCOParamsFacet',
+        instance.address,
+      );
+
+      expect(await instance.auctionStartTime(0)).to.equal(
+        initialPeriodStartTime,
+      );
+
+      const bidAmount = ethers.utils.parseEther('1.0');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await time.increase(100);
+
+      await instance.connect(bidder1).closeAuction(0);
+
+      const expectedStartTime = (await time.latest()) + 1000;
+      expect(await instance.auctionStartTime(0)).to.equal(expectedStartTime);
+
+      await pcoParams.setLicensePeriod(2000);
+
+      expect(await instance.auctionStartTime(0)).to.equal(expectedStartTime);
     });
   });
 });

@@ -18,6 +18,7 @@ library EnglishPeriodicAuctionStorage {
         uint256 bidExtensionSeconds;
         // Per token config
         mapping(uint256 => uint256) lastPeriodEndTime;
+        mapping(uint256 => uint256) currentLicensePeriod;
         mapping(uint256 => uint256) currentAuctionRound;
         mapping(uint256 => uint256) currentAuctionLength;
         mapping(uint256 => mapping(uint256 => mapping(address => IEnglishPeriodicAuctionInternal.Bid))) bids;

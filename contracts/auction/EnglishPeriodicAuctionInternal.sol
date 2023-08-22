@@ -471,7 +471,11 @@ abstract contract EnglishPeriodicAuctionInternal is
         }
 
         // Set lastPeriodEndTime to the end of the current auction period
+        uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
+            .licensePeriod();
+
         l.lastPeriodEndTime[tokenId] = block.timestamp;
+        l.currentLicensePeriod[tokenId] = licensePeriod;
 
         if (l.highestBids[tokenId][currentAuctionRound].bidder == address(0)) {
             // No bids were placed, transfer to repossessor
@@ -537,12 +541,11 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        uint256 licensePeriod = IPeriodicPCOParamsReadable(address(this))
-            .licensePeriod();
-
         if (l.lastPeriodEndTime[tokenId] > l.initialPeriodStartTime) {
             // Auction starts after licensePeriod has elapsed
-            auctionStartTime = l.lastPeriodEndTime[tokenId] + licensePeriod;
+            auctionStartTime =
+                l.lastPeriodEndTime[tokenId] +
+                l.currentLicensePeriod[tokenId];
         } else {
             // Auction starts at initial time
             auctionStartTime =

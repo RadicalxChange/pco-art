@@ -40,6 +40,16 @@ describe('Allowlist', function () {
             'batchRemoveFromAllowlist(address[])',
           ),
           facetInstance.interface.getSighash('getAllowlist()'),
+          facetInstance.interface.getSighash('addToAllowlist(address,bool)'),
+          facetInstance.interface.getSighash(
+            'removeFromAllowlist(address,bool)',
+          ),
+          facetInstance.interface.getSighash(
+            'batchAddToAllowlist(address[],bool)',
+          ),
+          facetInstance.interface.getSighash(
+            'batchRemoveFromAllowlist(address[],bool)',
+          ),
         ],
       },
       {
@@ -182,7 +192,9 @@ describe('Allowlist', function () {
       );
 
       await expect(
-        instance.connect(owner).addToAllowlist(await nonOwner.getAddress()),
+        instance
+          .connect(owner)
+          ['addToAllowlist(address)'](await nonOwner.getAddress()),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(await nonOwner.getAddress())).to.be.equal(
         true,
@@ -198,7 +210,43 @@ describe('Allowlist', function () {
       );
 
       await expect(
-        instance.connect(nonOwner).addToAllowlist(await nonOwner.getAddress()),
+        instance
+          .connect(nonOwner)
+          ['addToAllowlist(address)'](await nonOwner.getAddress()),
+      ).to.be.reverted;
+    });
+
+    it('should allow owner to add with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['addToAllowlist(address,bool)'](nonOwner.address, false),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(nonOwner.address)).to.be.equal(true);
+      expect(
+        await instance.isAllowed(ethers.constants.AddressZero),
+      ).to.be.equal(false);
+    });
+
+    it('should only allow owner to add with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['addToAllowlist(address,bool)'](nonOwner.address, false),
       ).to.be.reverted;
     });
   });
@@ -215,7 +263,7 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(owner)
-          .removeFromAllowlist(await nonOwner.getAddress()),
+          ['removeFromAllowlist(address)'](await nonOwner.getAddress()),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(await nonOwner.getAddress())).to.be.equal(
         false,
@@ -233,7 +281,41 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(nonOwner)
-          .removeFromAllowlist(await nonOwner.getAddress()),
+          ['removeFromAllowlist(address)'](await nonOwner.getAddress()),
+      ).to.be.reverted;
+    });
+
+    it('should allow owner to remove with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['removeFromAllowlist(address,bool)'](nonOwner.address, false),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(nonOwner.address)).to.be.equal(false);
+      expect(
+        await instance.isAllowed(ethers.constants.AddressZero),
+      ).to.be.equal(false);
+    });
+
+    it('should only allow owner to remove with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['removeFromAllowlist(address,bool)'](nonOwner.address, false),
       ).to.be.reverted;
     });
   });
@@ -250,7 +332,7 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(owner)
-          .batchAddToAllowlist([
+          ['batchAddToAllowlist(address[])']([
             await nonOwner.getAddress(),
             await nonOwner1.getAddress(),
           ]),
@@ -274,10 +356,50 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(nonOwner)
-          .batchAddToAllowlist([
+          ['batchAddToAllowlist(address[])']([
             await nonOwner.getAddress(),
             await nonOwner1.getAddress(),
           ]),
+      ).to.be.reverted;
+    });
+
+    it('should allow owner to add with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['batchAddToAllowlist(address[],bool)'](
+            [nonOwner.address, nonOwner1.address],
+            false,
+          ),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(nonOwner.address)).to.be.equal(true);
+      expect(
+        await instance.isAllowed(ethers.constants.AddressZero),
+      ).to.be.equal(false);
+    });
+
+    it('should only allow owner to add with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['batchAddToAllowlist(address[],bool)'](
+            [nonOwner.address, nonOwner1.address],
+            false,
+          ),
       ).to.be.reverted;
     });
   });
@@ -294,7 +416,7 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(owner)
-          .batchRemoveFromAllowlist([
+          ['batchRemoveFromAllowlist(address[])']([
             await nonOwner.getAddress(),
             await nonOwner1.getAddress(),
           ]),
@@ -318,10 +440,50 @@ describe('Allowlist', function () {
       await expect(
         instance
           .connect(nonOwner)
-          .batchRemoveFromAllowlist([
+          ['batchRemoveFromAllowlist(address[])']([
             await nonOwner.getAddress(),
             await nonOwner1.getAddress(),
           ]),
+      ).to.be.reverted;
+    });
+
+    it('should allow owner to remove with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['batchRemoveFromAllowlist(address[],bool)'](
+            [nonOwner.address, nonOwner1.address],
+            false,
+          ),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(nonOwner.address)).to.be.equal(false);
+      expect(
+        await instance.isAllowed(ethers.constants.AddressZero),
+      ).to.be.equal(false);
+    });
+
+    it('should only allow owner to remove with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['batchRemoveFromAllowlist(address[],bool)'](
+            [nonOwner.address, nonOwner1.address],
+            false,
+          ),
       ).to.be.reverted;
     });
   });

@@ -95,12 +95,34 @@ contract AllowlistFacet is
     }
 
     /**
+     * @notice Add to allowlist with allow any
+     */
+    function addToAllowlist(
+        address _address,
+        bool _allowAny
+    ) external onlyRole(COMPONENT_ROLE) {
+        _addToAllowlist(_address);
+        _setAllowAny(_allowAny);
+    }
+
+    /**
      * @notice Remove from allowlist
      */
     function removeFromAllowlist(
         address _address
     ) external onlyRole(COMPONENT_ROLE) {
         _removeFromAllowlist(_address);
+    }
+
+    /**
+     * @notice Remove from allowlist with allow any
+     */
+    function removeFromAllowlist(
+        address _address,
+        bool _allowAny
+    ) external onlyRole(COMPONENT_ROLE) {
+        _removeFromAllowlist(_address);
+        _setAllowAny(_allowAny);
     }
 
     /**
@@ -113,11 +135,33 @@ contract AllowlistFacet is
     }
 
     /**
+     * @notice Batch add to allowlist with allow any
+     */
+    function batchAddToAllowlist(
+        address[] memory _addresses,
+        bool _allowAny
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchAddToAllowlist(_addresses);
+        _setAllowAny(_allowAny);
+    }
+
+    /**
      * @notice Batch remove from allowlist
      */
     function batchRemoveFromAllowlist(
         address[] memory _addresses
     ) external onlyRole(COMPONENT_ROLE) {
         _batchRemoveFromAllowlist(_addresses);
+    }
+
+    /**
+     * @notice Batch remove from allowlist with allow any
+     */
+    function batchRemoveFromAllowlist(
+        address[] memory _addresses,
+        bool _allowAny
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchRemoveFromAllowlist(_addresses);
+        _setAllowAny(_allowAny);
     }
 }

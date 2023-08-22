@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2023-08-22
+
+### Bug Fixes
+
+- Changes to the Auction Pitch duration should take immediate effect for any current or future scheduled auction
+- Changes to the Stewardship Cycle Duration should take effect in each token's NEXT Stewardship Period, not the current
+
+### Features
+
+- Add an option to toggle in the same transaction as modifying an allowlist
+- Add an isAllowAny getter
+- Add the ability to add and remove addresses from an allowlist in batch
+
 ## [0.3.0] - 2023-08-18
 
 ### Bug Fixes

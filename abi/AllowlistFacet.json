@@ -243,6 +243,47 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_removeAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_addAddresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "batchUpdateAllowlist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_removeAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_addAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "_allowAny",
+        "type": "bool"
+      }
+    ],
+    "name": "batchUpdateAllowlist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getAllowAny",
     "outputs": [

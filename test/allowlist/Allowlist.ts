@@ -51,6 +51,12 @@ describe('Allowlist', function () {
           facetInstance.interface.getSighash(
             'batchRemoveFromAllowlist(address[],bool)',
           ),
+          facetInstance.interface.getSighash(
+            'batchUpdateAllowlist(address[],address[])',
+          ),
+          facetInstance.interface.getSighash(
+            'batchUpdateAllowlist(address[],address[],bool)',
+          ),
         ],
       },
       {
@@ -478,6 +484,114 @@ describe('Allowlist', function () {
           .connect(nonOwner)
           ['batchRemoveFromAllowlist(address[],bool)'](
             [nonOwner.address, nonOwner1.address],
+            false,
+          ),
+      ).to.be.reverted;
+    });
+  });
+
+  describe('batchUpdateAllowlist', function () {
+    it('should allow owner to update', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        false,
+        [await nonOwner.getAddress()],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['batchUpdateAllowlist(address[],address[])'](
+            [await nonOwner.getAddress()],
+            [await nonOwner1.getAddress()],
+          ),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(await nonOwner.getAddress())).to.be.equal(
+        false,
+      );
+      expect(
+        await instance.isAllowed(await nonOwner1.getAddress()),
+      ).to.be.equal(true);
+    });
+
+    it('should add if update contains address twice', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        false,
+        [await nonOwner.getAddress()],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['batchUpdateAllowlist(address[],address[])'](
+            [nonOwner.address],
+            [nonOwner.address, nonOwner1.address],
+          ),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(await nonOwner.getAddress())).to.be.equal(
+        true,
+      );
+      expect(
+        await instance.isAllowed(await nonOwner1.getAddress()),
+      ).to.be.equal(true);
+    });
+
+    it('should only allow owner to update', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        false,
+        [await nonOwner.getAddress()],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['batchUpdateAllowlist(address[],address[])'](
+            [await nonOwner.getAddress()],
+            [await nonOwner1.getAddress()],
+          ),
+      ).to.be.reverted;
+    });
+
+    it('should allow owner to update with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [await nonOwner.getAddress()],
+      );
+
+      await expect(
+        instance
+          .connect(owner)
+          ['batchUpdateAllowlist(address[],address[],bool)'](
+            [nonOwner.address],
+            [nonOwner1.address],
+            false,
+          ),
+      ).to.not.be.reverted;
+      expect(await instance.isAllowed(nonOwner.address)).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
+    });
+
+    it('should only allow owner to update with allow any', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        await owner.getAddress(),
+        true,
+        [await nonOwner.getAddress()],
+      );
+
+      await expect(
+        instance
+          .connect(nonOwner)
+          ['batchUpdateAllowlist(address[],address[],bool)'](
+            [nonOwner.address],
+            [nonOwner1.address],
             false,
           ),
       ).to.be.reverted;

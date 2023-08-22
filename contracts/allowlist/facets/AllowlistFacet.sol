@@ -171,4 +171,28 @@ contract AllowlistFacet is
         _batchRemoveFromAllowlist(_addresses);
         _setAllowAny(_allowAny);
     }
+
+    /**
+     * @notice Batch update allowlist
+     */
+    function batchUpdateAllowlist(
+        address[] memory _removeAddresses,
+        address[] memory _addAddresses
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchRemoveFromAllowlist(_removeAddresses);
+        _batchAddToAllowlist(_addAddresses);
+    }
+
+    /**
+     * @notice Batch update allowlist with allow any
+     */
+    function batchUpdateAllowlist(
+        address[] memory _removeAddresses,
+        address[] memory _addAddresses,
+        bool _allowAny
+    ) external onlyRole(COMPONENT_ROLE) {
+        _batchRemoveFromAllowlist(_removeAddresses);
+        _batchAddToAllowlist(_addAddresses);
+        _setAllowAny(_allowAny);
+    }
 }

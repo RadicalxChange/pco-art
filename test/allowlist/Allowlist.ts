@@ -33,6 +33,7 @@ describe('Allowlist', function () {
           ),
           facetInstance.interface.getSighash('isAllowed(address)'),
           facetInstance.interface.getSighash('setAllowAny(bool)'),
+          facetInstance.interface.getSighash('getAllowAny()'),
           facetInstance.interface.getSighash('addToAllowlist(address)'),
           facetInstance.interface.getSighash('removeFromAllowlist(address)'),
           facetInstance.interface.getSighash('batchAddToAllowlist(address[])'),
@@ -85,6 +86,7 @@ describe('Allowlist', function () {
       expect(
         await instance.isAllowed(ethers.constants.AddressZero),
       ).to.be.equal(true);
+      expect(await instance.getAllowAny()).to.be.equal(true);
     });
 
     it('should revert if already initialized', async function () {
@@ -110,6 +112,7 @@ describe('Allowlist', function () {
       expect(
         await instance.isAllowed(ethers.constants.AddressZero),
       ).to.be.equal(true);
+      expect(await instance.getAllowAny()).to.be.equal(true);
     });
 
     it('should revert if already initialized', async function () {
@@ -144,6 +147,7 @@ describe('Allowlist', function () {
       expect(
         await instance.isAllowed(ethers.constants.AddressZero),
       ).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
     });
 
     it('should only allow owner to set', async function () {
@@ -230,9 +234,7 @@ describe('Allowlist', function () {
           ['addToAllowlist(address,bool)'](nonOwner.address, false),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(nonOwner.address)).to.be.equal(true);
-      expect(
-        await instance.isAllowed(ethers.constants.AddressZero),
-      ).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
     });
 
     it('should only allow owner to add with allow any', async function () {
@@ -299,9 +301,7 @@ describe('Allowlist', function () {
           ['removeFromAllowlist(address,bool)'](nonOwner.address, false),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(nonOwner.address)).to.be.equal(false);
-      expect(
-        await instance.isAllowed(ethers.constants.AddressZero),
-      ).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
     });
 
     it('should only allow owner to remove with allow any', async function () {
@@ -380,9 +380,7 @@ describe('Allowlist', function () {
           ),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(nonOwner.address)).to.be.equal(true);
-      expect(
-        await instance.isAllowed(ethers.constants.AddressZero),
-      ).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
     });
 
     it('should only allow owner to add with allow any', async function () {
@@ -464,9 +462,7 @@ describe('Allowlist', function () {
           ),
       ).to.not.be.reverted;
       expect(await instance.isAllowed(nonOwner.address)).to.be.equal(false);
-      expect(
-        await instance.isAllowed(ethers.constants.AddressZero),
-      ).to.be.equal(false);
+      expect(await instance.getAllowAny()).to.be.equal(false);
     });
 
     it('should only allow owner to remove with allow any', async function () {

@@ -30,4 +30,13 @@ abstract contract AllowlistReadableInternal {
 
         return l.allowlist.toArray();
     }
+
+    /**
+     * @notice Get allow any
+     */
+    function _getAllowAny() internal view returns (bool) {
+        AllowlistStorage.Layout storage l = AllowlistStorage.layout();
+
+        return l.allowAny;
+    }
 }

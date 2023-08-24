@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity 0.8.16;
 
 /******************************************************************************\
 * EIP-2535 Diamonds implementation that uses an external IDiamondReadable to store facet addresses.

@@ -21,7 +21,7 @@ const { API_KEY_ETHERSCAN, NODE_URL_TESTNET, PKEY_TESTNET, REPORT_GAS } =
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: '0.8.17',
+    version: '0.8.16',
     settings: {
       optimizer: {
         enabled: true,

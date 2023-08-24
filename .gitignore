@@ -14,3 +14,4 @@ typechain-types/
 .env
 .direnv
 .envrc
+.vscode/

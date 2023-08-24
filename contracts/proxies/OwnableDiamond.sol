@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity 0.8.16;
 
 import { ISolidStateDiamond } from '@solidstate/contracts/proxy/diamond/ISolidStateDiamond.sol';
 import { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';

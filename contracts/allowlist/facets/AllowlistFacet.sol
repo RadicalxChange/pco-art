@@ -35,10 +35,7 @@ contract AllowlistFacet is
         bool allowAny,
         address[] memory _addresses
     ) external {
-        require(
-            _isInitialized() == false,
-            'AllowlistFacet: already initialized'
-        );
+        require(!_isInitialized(), 'AllowlistFacet: already initialized');
 
         _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);
         _initializeAllowlist(allowAny, _addresses);
@@ -52,10 +49,7 @@ contract AllowlistFacet is
         bool allowAny,
         address[] memory _addresses
     ) external {
-        require(
-            _isInitialized() == false,
-            'AllowlistFacet: already initialized'
-        );
+        require(!_isInitialized(), 'AllowlistFacet: already initialized');
 
         _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);
         _setSupportsInterface(type(IAllowlistWritable).interfaceId, true);

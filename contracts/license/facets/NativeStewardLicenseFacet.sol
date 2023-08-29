@@ -26,10 +26,7 @@ contract NativeStewardLicenseFacet is
         string memory symbol,
         string memory baseURI
     ) external {
-        require(
-            _isInitialized() == false,
-            'StewardLicenseFacet: already initialized'
-        );
+        require(!_isInitialized(), 'StewardLicenseFacet: already initialized');
 
         _initializeStewardLicense(
             minter_,

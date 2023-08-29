@@ -31,7 +31,7 @@ contract PeriodicPCOParamsFacet is
         uint256 feeDenominator_
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'PeriodicPCOParamsFacet: already initialized'
         );
 
@@ -52,7 +52,7 @@ contract PeriodicPCOParamsFacet is
         uint256 feeDenominator_
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'PeriodicPCOParamsFacet: already initialized'
         );
 

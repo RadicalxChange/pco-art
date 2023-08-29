@@ -41,7 +41,7 @@ contract WrappedERC721StewardLicenseFacet is
         string memory tokenURI
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'WrappedERC721StewardLicenseFacet: already initialized'
         );
 
@@ -72,7 +72,7 @@ contract WrappedERC721StewardLicenseFacet is
         bytes calldata
     ) external view override returns (bytes4) {
         require(
-            _isInitialized() == true,
+            _isInitialized(),
             'WrappedERC721StewardLicenseFacet: must be initialized'
         );
 

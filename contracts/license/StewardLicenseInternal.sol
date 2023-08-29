@@ -101,7 +101,7 @@ abstract contract StewardLicenseInternal is
         address to,
         uint256 tokenId
     ) internal {
-        if (_exists(tokenId) == false) {
+        if (!_exists(tokenId)) {
             // Mint token
             _mint(to, tokenId);
         } else {
@@ -204,7 +204,7 @@ abstract contract StewardLicenseInternal is
             bool isAuctionPeriod = IPeriodicAuctionReadable(address(this))
                 .isAuctionPeriod(tokenId);
             require(
-                isAuctionPeriod == false,
+                !isAuctionPeriod,
                 'StewardLicenseFacet: Cannot transfer during auction period'
             );
         }

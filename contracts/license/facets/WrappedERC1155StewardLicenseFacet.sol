@@ -37,7 +37,7 @@ contract WrappedERC1155StewardLicenseFacet is
         string memory tokenURI
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'WrappedERC1155StewardLicenseFacet: already initialized'
         );
 
@@ -74,7 +74,7 @@ contract WrappedERC1155StewardLicenseFacet is
         );
 
         require(
-            _isInitialized() == true,
+            _isInitialized(),
             'WrappedERC1155StewardLicenseFacet: must be initialized'
         );
 
@@ -104,7 +104,7 @@ contract WrappedERC1155StewardLicenseFacet is
         );
 
         require(
-            _isInitialized() == true,
+            _isInitialized(),
             'WrappedERC1155StewardLicenseFacet: must be initialized'
         );
 

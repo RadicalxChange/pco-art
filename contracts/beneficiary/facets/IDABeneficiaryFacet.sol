@@ -32,10 +32,7 @@ contract IDABeneficiaryFacet is
         ISETH _token,
         Beneficiary[] memory _beneficiaries
     ) external {
-        require(
-            _isInitialized() == false,
-            'IDABeneficiaryFacet: already initialized'
-        );
+        require(!_isInitialized(), 'IDABeneficiaryFacet: already initialized');
 
         _setSupportsInterface(type(IBeneficiary).interfaceId, true);
         _initializeIDABeneficiary(_token, _beneficiaries);
@@ -49,10 +46,7 @@ contract IDABeneficiaryFacet is
         ISETH _token,
         Beneficiary[] memory _beneficiaries
     ) external {
-        require(
-            _isInitialized() == false,
-            'IDABeneficiaryFacet: already initialized'
-        );
+        require(!_isInitialized(), 'IDABeneficiaryFacet: already initialized');
 
         _setSupportsInterface(type(IBeneficiary).interfaceId, true);
         _setSupportsInterface(type(IIDABeneficiary).interfaceId, true);

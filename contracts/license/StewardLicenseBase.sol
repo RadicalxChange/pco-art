@@ -40,10 +40,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
                     .initialPeriodStartTime(),
             'StewardLicenseFacet: cannot mint after initial period start time'
         );
-        require(
-            _exists(tokenId) == false,
-            'StewardLicenseFacet: Token already exists'
-        );
+        require(!_exists(tokenId), 'StewardLicenseFacet: Token already exists');
 
         _triggerTransfer(address(0), to, tokenId);
     }

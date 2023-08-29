@@ -181,17 +181,17 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_licensePeriod",
+        "name": "licensePeriod_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_feeNumerator",
+        "name": "feeNumerator_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_feeDenominator",
+        "name": "feeDenominator_",
         "type": "uint256"
       }
     ],

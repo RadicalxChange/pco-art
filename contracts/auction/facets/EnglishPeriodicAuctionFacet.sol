@@ -37,7 +37,7 @@ contract EnglishPeriodicAuctionFacet is
         uint256 bidExtensionSeconds_
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'EnglishPeriodicAuctionFacet: already initialized'
         );
 
@@ -71,7 +71,7 @@ contract EnglishPeriodicAuctionFacet is
         uint256 bidExtensionSeconds_
     ) external {
         require(
-            _isInitialized() == false,
+            !_isInitialized(),
             'EnglishPeriodicAuctionFacet: already initialized'
         );
 

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2023-08-29
+
+### Bug Fixes
+
+- Properly grant admin role
+
+### Miscellaneous Tasks
+
+- Add initial Slither analysis
+- Remove slither workflow, which requires a public repo
+- Hard solidity version
+- Upgrade solidstate to 0.0.58
+
 ## [0.4.0] - 2023-08-22
 
 ### Bug Fixes
@@ -125,7 +138,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- [**breaking**] Add tokens to existing collection ([#6](https://github.com/orhun/git-cliff/issues/6))
+- [**breaking**] Add tokens to existing collection (#6)
 
 ## [0.0.3] - 2023-07-25
 
@@ -143,12 +156,12 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
-- Initial Support for Multiple Tokens in a Collection ([#1](https://github.com/orhun/git-cliff/issues/1))
-- Use absolute instead of per second fee ([#2](https://github.com/orhun/git-cliff/issues/2))
-- Allow initial bidder to mint token before initial auction ([#3](https://github.com/orhun/git-cliff/issues/3))
+- Initial Support for Multiple Tokens in a Collection (#1)
+- Use absolute instead of per second fee (#2)
+- Allow initial bidder to mint token before initial auction (#3)
 - Save original minter of license
-- Add methods for setting multiple parameters in one transaction ([#4](https://github.com/orhun/git-cliff/issues/4))
-- Programatic offsets for tokens in a collection ([#5](https://github.com/orhun/git-cliff/issues/5))
+- Add methods for setting multiple parameters in one transaction (#4)
+- Programatic offsets for tokens in a collection (#5)
 
 ### Testing
 

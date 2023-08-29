@@ -451,6 +451,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         l.availableCollateral[bidder] = 0;
 
         // Transfer collateral back to bidder
+        //slither-disable-next-line low-level-calls
         (bool success, ) = bidder.call{ value: collateralAmount }('');
         require(
             success,

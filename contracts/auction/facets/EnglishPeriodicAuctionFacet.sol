@@ -157,7 +157,7 @@ contract EnglishPeriodicAuctionFacet is
             'EnglishPeriodicAuction: can only place bid in auction period'
         );
         require(
-            _isReadyForTransfer(tokenId) == false,
+            !_isReadyForTransfer(tokenId),
             'EnglishPeriodicAuction: auction is over and awaiting transfer'
         );
         require(

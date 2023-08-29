@@ -249,6 +249,7 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+<<<<<<< Updated upstream
      * @notice Get locked collateral from all bids
      */
     function _lockedCollateral(
@@ -279,6 +280,8 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * @notice Place a bid
      */
     function _placeBid(

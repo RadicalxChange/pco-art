@@ -400,22 +400,22 @@
       },
       {
         "internalType": "address",
-        "name": "_minter",
+        "name": "minter_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_addToCollectionMinter",
+        "name": "addToCollectionMinter_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_steward",
+        "name": "steward_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_maxTokenCount",
+        "name": "maxTokenCount_",
         "type": "uint256"
       },
       {

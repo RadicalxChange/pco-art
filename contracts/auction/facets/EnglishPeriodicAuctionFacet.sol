@@ -26,15 +26,15 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Initialize auction parameters
      */
     function initializeAuction(
-        address _repossessor,
-        address _initialBidder,
-        uint256 _initialPeriodStartTime,
-        uint256 _initialPeriodStartTimeOffset,
-        uint256 _startingBid,
-        uint256 _auctionLengthSeconds,
-        uint256 _minBidIncrement,
-        uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds
+        address repossessor_,
+        address initialBidder_,
+        uint256 initialPeriodStartTime_,
+        uint256 initialPeriodStartTimeOffset_,
+        uint256 startingBid_,
+        uint256 auctionLengthSeconds_,
+        uint256 minBidIncrement_,
+        uint256 bidExtensionWindowLengthSeconds_,
+        uint256 bidExtensionSeconds_
     ) external {
         require(
             _isInitialized() == false,
@@ -43,15 +43,15 @@ contract EnglishPeriodicAuctionFacet is
 
         _setSupportsInterface(type(IPeriodicAuctionReadable).interfaceId, true);
         _initializeAuction(
-            _repossessor,
-            _initialBidder,
-            _initialPeriodStartTime,
-            _initialPeriodStartTimeOffset,
-            _startingBid,
-            _auctionLengthSeconds,
-            _minBidIncrement,
-            _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds
+            repossessor_,
+            initialBidder_,
+            initialPeriodStartTime_,
+            initialPeriodStartTimeOffset_,
+            startingBid_,
+            auctionLengthSeconds_,
+            minBidIncrement_,
+            bidExtensionWindowLengthSeconds_,
+            bidExtensionSeconds_
         );
     }
 
@@ -59,16 +59,16 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Initialize auction parameters with owner
      */
     function initializeAuction(
-        address _owner,
-        address _repossessor,
-        address _initialBidder,
-        uint256 _initialPeriodStartTime,
-        uint256 _initialPeriodStartTimeOffset,
-        uint256 _startingBid,
-        uint256 _auctionLengthSeconds,
-        uint256 _minBidIncrement,
-        uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds
+        address owner_,
+        address repossessor_,
+        address initialBidder_,
+        uint256 initialPeriodStartTime_,
+        uint256 initialPeriodStartTimeOffset_,
+        uint256 startingBid_,
+        uint256 auctionLengthSeconds_,
+        uint256 minBidIncrement_,
+        uint256 bidExtensionWindowLengthSeconds_,
+        uint256 bidExtensionSeconds_
     ) external {
         require(
             _isInitialized() == false,
@@ -77,18 +77,18 @@ contract EnglishPeriodicAuctionFacet is
 
         _setSupportsInterface(type(IPeriodicAuctionReadable).interfaceId, true);
         _setSupportsInterface(type(IPeriodicAuctionWritable).interfaceId, true);
-        _grantRole(COMPONENT_ROLE, _owner);
-        _grantRole(_getRoleAdmin(COMPONENT_ROLE), _owner);
+        _grantRole(COMPONENT_ROLE, owner_);
+        _grantRole(_getRoleAdmin(COMPONENT_ROLE), owner_);
         _initializeAuction(
-            _repossessor,
-            _initialBidder,
-            _initialPeriodStartTime,
-            _initialPeriodStartTimeOffset,
-            _startingBid,
-            _auctionLengthSeconds,
-            _minBidIncrement,
-            _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds
+            repossessor_,
+            initialBidder_,
+            initialPeriodStartTime_,
+            initialPeriodStartTimeOffset_,
+            startingBid_,
+            auctionLengthSeconds_,
+            minBidIncrement_,
+            bidExtensionWindowLengthSeconds_,
+            bidExtensionSeconds_
         );
     }
 
@@ -96,20 +96,20 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Set auction parameters
      */
     function setAuctionParameters(
-        address _repossessor,
-        uint256 _auctionLengthSeconds,
-        uint256 _minBidIncrement,
-        uint256 _bidExtensionWindowLengthSeconds,
-        uint256 _bidExtensionSeconds,
-        uint256 _startingBid
+        address repossessor_,
+        uint256 auctionLengthSeconds_,
+        uint256 minBidIncrement_,
+        uint256 bidExtensionWindowLengthSeconds_,
+        uint256 bidExtensionSeconds_,
+        uint256 startingBid_
     ) external onlyRole(COMPONENT_ROLE) {
         _setAuctionParameters(
-            _repossessor,
-            _auctionLengthSeconds,
-            _minBidIncrement,
-            _bidExtensionWindowLengthSeconds,
-            _bidExtensionSeconds,
-            _startingBid
+            repossessor_,
+            auctionLengthSeconds_,
+            minBidIncrement_,
+            bidExtensionWindowLengthSeconds_,
+            bidExtensionSeconds_,
+            startingBid_
         );
     }
 
@@ -266,18 +266,18 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Set starting bid
      */
     function setStartingBid(
-        uint256 _startingBid
+        uint256 startingBid_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setStartingBid(_startingBid);
+        _setStartingBid(startingBid_);
     }
 
     /**
      * @notice Set repossessor
      */
     function setRepossessor(
-        address _repossessor
+        address repossessor_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setRepossessor(_repossessor);
+        _setRepossessor(repossessor_);
     }
 
     /**
@@ -291,9 +291,9 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Set auction length
      */
     function setAuctionLengthSeconds(
-        uint256 _auctionLengthSeconds
+        uint256 auctionLengthSeconds_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setAuctionLengthSeconds(_auctionLengthSeconds);
+        _setAuctionLengthSeconds(auctionLengthSeconds_);
     }
 
     /**
@@ -307,9 +307,9 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Set minimum bid increment
      */
     function setMinBidIncrement(
-        uint256 _minBidIncrement
+        uint256 minBidIncrement_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setMinBidIncrement(_minBidIncrement);
+        _setMinBidIncrement(minBidIncrement_);
     }
 
     /**
@@ -323,9 +323,9 @@ contract EnglishPeriodicAuctionFacet is
      * @notice Set bid extension window length
      */
     function setBidExtensionWindowLengthSeconds(
-        uint256 _bidExtensionWindowLengthSeconds
+        uint256 bidExtensionWindowLengthSeconds_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setBidExtensionWindowLengthSeconds(_bidExtensionWindowLengthSeconds);
+        _setBidExtensionWindowLengthSeconds(bidExtensionWindowLengthSeconds_);
     }
 
     /**
@@ -339,9 +339,9 @@ contract EnglishPeriodicAuctionFacet is
      *  @notice Set bid extension seconds
      */
     function setBidExtensionSeconds(
-        uint256 _bidExtensionSeconds
+        uint256 bidExtensionSeconds_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setBidExtensionSeconds(_bidExtensionSeconds);
+        _setBidExtensionSeconds(bidExtensionSeconds_);
     }
 
     /**

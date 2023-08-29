@@ -26,9 +26,9 @@ contract PeriodicPCOParamsFacet is
      * @notice Initialize params
      */
     function initializePCOParams(
-        uint256 _licensePeriod,
-        uint256 _feeNumerator,
-        uint256 _feeDenominator
+        uint256 licensePeriod_,
+        uint256 feeNumerator_,
+        uint256 feeDenominator_
     ) external {
         require(
             _isInitialized() == false,
@@ -39,17 +39,17 @@ contract PeriodicPCOParamsFacet is
             type(IPeriodicPCOParamsReadable).interfaceId,
             true
         );
-        _initializeParams(_licensePeriod, _feeNumerator, _feeDenominator);
+        _initializeParams(licensePeriod_, feeNumerator_, feeDenominator_);
     }
 
     /**
      * @notice Initialize params with owner
      */
     function initializePCOParams(
-        address _owner,
-        uint256 _licensePeriod,
-        uint256 _feeNumerator,
-        uint256 _feeDenominator
+        address owner_,
+        uint256 licensePeriod_,
+        uint256 feeNumerator_,
+        uint256 feeDenominator_
     ) external {
         require(
             _isInitialized() == false,
@@ -64,20 +64,20 @@ contract PeriodicPCOParamsFacet is
             type(IPeriodicPCOParamsWritable).interfaceId,
             true
         );
-        _grantRole(COMPONENT_ROLE, _owner);
-        _grantRole(_getRoleAdmin(COMPONENT_ROLE), _owner);
-        _initializeParams(_licensePeriod, _feeNumerator, _feeDenominator);
+        _grantRole(COMPONENT_ROLE, owner_);
+        _grantRole(_getRoleAdmin(COMPONENT_ROLE), owner_);
+        _initializeParams(licensePeriod_, feeNumerator_, feeDenominator_);
     }
 
     /**
      * @notice Set PCO parameters
      */
     function setPCOParameters(
-        uint256 _licensePeriod,
-        uint256 _feeNumerator,
-        uint256 _feeDenominator
+        uint256 licensePeriod_,
+        uint256 feeNumerator_,
+        uint256 feeDenominator_
     ) external onlyRole(COMPONENT_ROLE) {
-        _setPCOParameters(_licensePeriod, _feeNumerator, _feeDenominator);
+        _setPCOParameters(licensePeriod_, feeNumerator_, feeDenominator_);
     }
 
     /**
@@ -91,9 +91,9 @@ contract PeriodicPCOParamsFacet is
      * @notice Set license period
      */
     function setLicensePeriod(
-        uint256 _licensePeriod
+        uint256 licensePeriod_
     ) external onlyRole(COMPONENT_ROLE) {
-        return _setLicensePeriod(_licensePeriod);
+        return _setLicensePeriod(licensePeriod_);
     }
 
     /**
@@ -107,9 +107,9 @@ contract PeriodicPCOParamsFacet is
      * @notice Set fee numerator
      */
     function setFeeNumerator(
-        uint256 _feeNumerator
+        uint256 feeNumerator_
     ) external onlyRole(COMPONENT_ROLE) {
-        return _setFeeNumerator(_feeNumerator);
+        return _setFeeNumerator(feeNumerator_);
     }
 
     /**
@@ -123,8 +123,8 @@ contract PeriodicPCOParamsFacet is
      * @notice Set fee denominator
      */
     function setFeeDenominator(
-        uint256 _feeDenominator
+        uint256 feeDenominator_
     ) external onlyRole(COMPONENT_ROLE) {
-        return _setFeeDenominator(_feeDenominator);
+        return _setFeeDenominator(feeDenominator_);
     }
 }

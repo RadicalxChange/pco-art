@@ -653,47 +653,47 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_repossessor",
+        "name": "repossessor_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_initialBidder",
+        "name": "initialBidder_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_initialPeriodStartTime",
+        "name": "initialPeriodStartTime_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_initialPeriodStartTimeOffset",
+        "name": "initialPeriodStartTimeOffset_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_startingBid",
+        "name": "startingBid_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_auctionLengthSeconds",
+        "name": "auctionLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_minBidIncrement",
+        "name": "minBidIncrement_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionWindowLengthSeconds",
+        "name": "bidExtensionWindowLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionSeconds",
+        "name": "bidExtensionSeconds_",
         "type": "uint256"
       }
     ],
@@ -706,52 +706,52 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_owner",
+        "name": "owner_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_repossessor",
+        "name": "repossessor_",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_initialBidder",
+        "name": "initialBidder_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_initialPeriodStartTime",
+        "name": "initialPeriodStartTime_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_initialPeriodStartTimeOffset",
+        "name": "initialPeriodStartTimeOffset_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_startingBid",
+        "name": "startingBid_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_auctionLengthSeconds",
+        "name": "auctionLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_minBidIncrement",
+        "name": "minBidIncrement_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionWindowLengthSeconds",
+        "name": "bidExtensionWindowLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionSeconds",
+        "name": "bidExtensionSeconds_",
         "type": "uint256"
       }
     ],
@@ -870,7 +870,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_auctionLengthSeconds",
+        "name": "auctionLengthSeconds_",
         "type": "uint256"
       }
     ],
@@ -883,32 +883,32 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_repossessor",
+        "name": "repossessor_",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_auctionLengthSeconds",
+        "name": "auctionLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_minBidIncrement",
+        "name": "minBidIncrement_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionWindowLengthSeconds",
+        "name": "bidExtensionWindowLengthSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_bidExtensionSeconds",
+        "name": "bidExtensionSeconds_",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_startingBid",
+        "name": "startingBid_",
         "type": "uint256"
       }
     ],
@@ -921,7 +921,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_bidExtensionSeconds",
+        "name": "bidExtensionSeconds_",
         "type": "uint256"
       }
     ],
@@ -934,7 +934,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_bidExtensionWindowLengthSeconds",
+        "name": "bidExtensionWindowLengthSeconds_",
         "type": "uint256"
       }
     ],
@@ -947,7 +947,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_minBidIncrement",
+        "name": "minBidIncrement_",
         "type": "uint256"
       }
     ],
@@ -960,7 +960,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_repossessor",
+        "name": "repossessor_",
         "type": "address"
       }
     ],
@@ -973,7 +973,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_startingBid",
+        "name": "startingBid_",
         "type": "uint256"
       }
     ],

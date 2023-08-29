@@ -201,6 +201,8 @@ abstract contract StewardLicenseInternal is
     ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {
         // Disable transfers if not mint
         if (from != address(0x0)) {
+            // External call is to known contract
+            //slither-disable-next-line calls-loop
             bool isAuctionPeriod = IPeriodicAuctionReadable(address(this))
                 .isAuctionPeriod(tokenId);
             require(

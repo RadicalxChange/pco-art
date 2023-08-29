@@ -41,6 +41,7 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
         l.token = _token;
+        //slither-disable-next-line unused-return
         l.token.createIndex(0);
 
         emit TokenSet(address(_token));
@@ -55,6 +56,7 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
+            //slither-disable-next-line unused-return
             l.token.updateSubscriptionUnits(
                 0,
                 _beneficiaries[i].subscriber,
@@ -78,6 +80,7 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
         l.token.upgradeByETH{ value: value }();
 
         // Distribute to beneficiaries
+        //slither-disable-next-line unused-return
         l.token.distribute(0, value);
 
         emit Distributed(value);

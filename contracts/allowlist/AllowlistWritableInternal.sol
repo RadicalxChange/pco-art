@@ -25,6 +25,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
         _setAllowAny(_allowAny);
 
         for (uint256 i = 0; i < _addresses.length; i++) {
+            //slither-disable-next-line unused-return
             l.allowlist.add(_addresses[i]);
         }
     }
@@ -53,6 +54,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
     function _addToAllowlist(address _address) internal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
+        //slither-disable-next-line unused-return
         l.allowlist.add(_address);
 
         emit Allowlisted(_address);
@@ -64,6 +66,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
     function _removeFromAllowlist(address _address) internal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
+        //slither-disable-next-line unused-return
         l.allowlist.remove(_address);
 
         emit Unallowlisted(_address);
@@ -76,6 +79,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
         for (uint256 i = 0; i < _addresses.length; i++) {
+            //slither-disable-next-line unused-return
             l.allowlist.add(_addresses[i]);
         }
 
@@ -89,6 +93,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
         for (uint256 i = 0; i < _addresses.length; i++) {
+            //slither-disable-next-line unused-return
             l.allowlist.remove(_addresses[i]);
         }
 

@@ -60,7 +60,7 @@ contract AllowlistFacet is
         _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);
         _setSupportsInterface(type(IAllowlistWritable).interfaceId, true);
         _grantRole(COMPONENT_ROLE, _owner);
-        _setRoleAdmin(COMPONENT_ROLE, COMPONENT_ROLE);
+        _grantRole(_getRoleAdmin(COMPONENT_ROLE), _owner);
         _initializeAllowlist(allowAny, _addresses);
     }
 

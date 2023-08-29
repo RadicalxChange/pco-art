@@ -57,7 +57,7 @@ contract IDABeneficiaryFacet is
         _setSupportsInterface(type(IBeneficiary).interfaceId, true);
         _setSupportsInterface(type(IIDABeneficiary).interfaceId, true);
         _grantRole(COMPONENT_ROLE, _owner);
-        _setRoleAdmin(COMPONENT_ROLE, COMPONENT_ROLE);
+        _grantRole(_getRoleAdmin(COMPONENT_ROLE), _owner);
         _initializeIDABeneficiary(_token, _beneficiaries);
     }
 

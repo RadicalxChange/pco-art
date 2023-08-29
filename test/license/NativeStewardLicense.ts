@@ -639,48 +639,5 @@ describe('NativeStewardLicense', function () {
           ),
       ).to.be.reverted;
     });
-
-    it('should only allow current owner to grant role', async function () {
-      const instance = await getInstance();
-
-      const accessControl = await ethers.getContractAt(
-        'AccessControlFacet',
-        instance.address,
-      );
-
-      await accessControl
-        .connect(minter)
-        .grantRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes(
-              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
-            ),
-          ),
-          nonOwner.address,
-        );
-
-      await accessControl
-        .connect(minter)
-        .renounceRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes(
-              'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
-            ),
-          ),
-        );
-
-      await expect(
-        accessControl
-          .connect(minter)
-          .grantRole(
-            ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes(
-                'StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE',
-              ),
-            ),
-            minter.address,
-          ),
-      ).to.be.reverted;
-    });
   });
 });

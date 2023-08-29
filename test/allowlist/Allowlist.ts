@@ -696,47 +696,5 @@ describe('Allowlist', function () {
           ),
       ).to.be.reverted;
     });
-
-    it('should only allow current owner to grant component role', async function () {
-      const instance = await getInstance();
-      await instance['initializeAllowlist(address,bool,address[])'](
-        await owner.getAddress(),
-        true,
-        [],
-      );
-
-      const accessControl = await ethers.getContractAt(
-        'AccessControlFacet',
-        instance.address,
-      );
-
-      await accessControl
-        .connect(owner)
-        .grantRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),
-          ),
-          nonOwner.address,
-        );
-
-      await accessControl
-        .connect(owner)
-        .renounceRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),
-          ),
-        );
-
-      await expect(
-        accessControl
-          .connect(owner)
-          .grantRole(
-            ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),
-            ),
-            owner.address,
-          ),
-      ).to.be.reverted;
-    });
   });
 });

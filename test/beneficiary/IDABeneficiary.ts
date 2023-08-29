@@ -480,51 +480,5 @@ describe('IDABeneficiary', function () {
           ),
       ).to.be.reverted;
     });
-
-    it('should only allow current owner to grant component role', async function () {
-      const instance = await getInstance();
-      const { tokenDeploymentOutput } = await deployContractsAndToken();
-      await instance[
-        'initializeIDABeneficiary(address,address,(address,uint128)[])'
-      ](
-        await owner.getAddress(),
-        tokenDeploymentOutput.nativeAssetSuperTokenData
-          .nativeAssetSuperTokenAddress,
-        [],
-      );
-
-      const accessControl = await ethers.getContractAt(
-        'AccessControlFacet',
-        instance.address,
-      );
-
-      await accessControl
-        .connect(owner)
-        .grantRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
-          ),
-          nonOwner.address,
-        );
-
-      await accessControl
-        .connect(owner)
-        .renounceRole(
-          ethers.utils.keccak256(
-            ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
-          ),
-        );
-
-      await expect(
-        accessControl
-          .connect(owner)
-          .grantRole(
-            ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
-            ),
-            owner.address,
-          ),
-      ).to.be.reverted;
-    });
   });
 });

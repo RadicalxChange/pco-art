@@ -34,6 +34,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
                 IPeriodicAuctionReadable(address(this)).initialBidder(),
             'StewardLicenseFacet: only initial bidder can mint token'
         );
+        //slither-disable-next-line timestamp
         require(
             block.timestamp <
                 IPeriodicAuctionReadable(address(this))

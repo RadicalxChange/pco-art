@@ -225,6 +225,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         if (tokenId >= IStewardLicense(address(this)).maxTokenCount()) {
             return false;
         }
+        //slither-disable-next-line timestamp
         return block.timestamp >= _auctionStartTime(tokenId);
     }
 
@@ -235,6 +236,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         if (tokenId >= IStewardLicense(address(this)).maxTokenCount()) {
             return false;
         }
+        //slither-disable-next-line timestamp
         return block.timestamp >= _auctionEndTime(tokenId);
     }
 
@@ -249,7 +251,6 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
-<<<<<<< Updated upstream
      * @notice Get locked collateral from all bids
      */
     function _lockedCollateral(
@@ -280,8 +281,6 @@ abstract contract EnglishPeriodicAuctionInternal is
     }
 
     /**
-=======
->>>>>>> Stashed changes
      * @notice Place a bid
      */
     function _placeBid(
@@ -353,6 +352,7 @@ abstract contract EnglishPeriodicAuctionInternal is
         // Check if auction should extend
         uint256 auctionEndTime = _auctionEndTime(tokenId);
 
+        // slither-disable-start timestamp
         if (
             auctionEndTime >= block.timestamp &&
             auctionEndTime - block.timestamp <
@@ -369,6 +369,7 @@ abstract contract EnglishPeriodicAuctionInternal is
                 auctionLengthSeconds +
                 _bidExtensionSeconds();
         }
+        // slither-disable-end timestamp
     }
 
     /**

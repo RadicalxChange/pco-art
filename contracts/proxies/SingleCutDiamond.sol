@@ -21,7 +21,7 @@ contract SingleCutDiamond is
 {
     constructor(FacetInit[] memory facetInits) {
         bytes4[] memory selectors = new bytes4[](5);
-        uint256 selectorIndex;
+        uint256 selectorIndex = 0;
 
         // register DiamondReadable
 
@@ -52,7 +52,11 @@ contract SingleCutDiamond is
 
         _diamondCut(builtInFacetCuts, address(0), '');
 
-        for (uint256 facetIndex; facetIndex < facetInits.length; facetIndex++) {
+        for (
+            uint256 facetIndex = 0;
+            facetIndex < facetInits.length;
+            facetIndex++
+        ) {
             FacetInit memory facetInit = facetInits[facetIndex];
             FacetCut[] memory facetCuts = new FacetCut[](1);
             facetCuts[0] = FacetCut({

@@ -24,7 +24,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
 
         _setAllowAny(_allowAny);
 
-        for (uint256 i; i < _addresses.length; i++) {
+        for (uint256 i = 0; i < _addresses.length; i++) {
             l.allowlist.add(_addresses[i]);
         }
     }
@@ -75,7 +75,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
     function _batchAddToAllowlist(address[] memory _addresses) internal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
-        for (uint256 i; i < _addresses.length; i++) {
+        for (uint256 i = 0; i < _addresses.length; i++) {
             l.allowlist.add(_addresses[i]);
         }
 
@@ -88,7 +88,7 @@ abstract contract AllowlistWritableInternal is IAllowlistWritableInternal {
     function _batchRemoveFromAllowlist(address[] memory _addresses) internal {
         AllowlistStorage.Layout storage l = AllowlistStorage.layout();
 
-        for (uint256 i; i < _addresses.length; i++) {
+        for (uint256 i = 0; i < _addresses.length; i++) {
             l.allowlist.remove(_addresses[i]);
         }
 

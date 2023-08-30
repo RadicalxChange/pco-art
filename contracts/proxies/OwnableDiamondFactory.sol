@@ -18,6 +18,7 @@ contract OwnableDiamondFactory is IDiamondFactory {
             facetInits
         );
 
+        //slither-disable-next-line reentrancy-events
         emit DiamondCreated(address(ownableDiamond));
 
         return address(ownableDiamond);

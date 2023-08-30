@@ -40,11 +40,11 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
     function _setToken(ISETH _token) internal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
+        emit TokenSet(address(_token));
+
         l.token = _token;
         //slither-disable-next-line unused-return
         l.token.createIndex(0);
-
-        emit TokenSet(address(_token));
     }
 
     /**
@@ -55,19 +55,21 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
     ) internal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
+        //slither-disable-start reentrancy-events
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
+            emit BeneficiaryUnitsUpdated(
+                _beneficiaries[i].subscriber,
+                _beneficiaries[i].units
+            );
+
             //slither-disable-next-line unused-return
             l.token.updateSubscriptionUnits(
                 0,
                 _beneficiaries[i].subscriber,
                 _beneficiaries[i].units
             );
-
-            emit BeneficiaryUnitsUpdated(
-                _beneficiaries[i].subscriber,
-                _beneficiaries[i].units
-            );
         }
+        //slither-disable-end reentrancy-events
     }
 
     /**
@@ -76,13 +78,13 @@ abstract contract IDABeneficiaryInternal is IIDABeneficiaryInternal {
     function _distribute(uint256 value) internal {
         IDABeneficiaryStorage.Layout storage l = IDABeneficiaryStorage.layout();
 
+        emit Distributed(value);
+
         // Wrap ETH
         l.token.upgradeByETH{ value: value }();
 
         // Distribute to beneficiaries
         //slither-disable-next-line unused-return
         l.token.distribute(0, value);
-
-        emit Distributed(value);
     }
 }

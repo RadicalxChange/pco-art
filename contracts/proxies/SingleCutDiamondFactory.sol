@@ -15,6 +15,7 @@ contract SingleCutDiamondFactory is IDiamondFactory {
     ) external returns (address) {
         SingleCutDiamond singleCutDiamond = new SingleCutDiamond(facetInits);
 
+        //slither-disable-next-line reentrancy-events
         emit DiamondCreated(address(singleCutDiamond));
 
         return address(singleCutDiamond);

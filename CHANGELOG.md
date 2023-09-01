@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2023-09-01
+
+### Features
+
+- Add initializer for admin role
+
+## [0.4.3] - 2023-08-31
+
+### Bug Fixes
+
+- Proper role grant of ADD_TOKEN_TO_COLLECTION_ROLE
+
+## [0.4.2] - 2023-08-30
+
+### Miscellaneous Tasks
+
+- Fix slither #uninitialized-local
+- Fix slither #incorrect-equality
+- Fix slither #unused-return
+- Fix slither #local-variable-shadowing
+- Fix slither #boolean-equality
+- Fix slither #assembly
+- Fix slither #timestamp
+- Fix slither #calls-loop
+- Fix slither #low-level-calls
+- Fix slither #reentrancy-events
+
+### Testing
+
+- Add .solcover.js
+
 ## [0.4.1] - 2023-08-29
 
 ### Bug Fixes

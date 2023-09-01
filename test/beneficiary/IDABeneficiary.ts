@@ -8,6 +8,7 @@ describe('IDABeneficiary', function () {
   let owner: SignerWithAddress;
   let nomineeOwner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
+  let admin: SignerWithAddress;
 
   async function getInstance() {
     const accessControlFactory = await ethers.getContractFactory(
@@ -41,9 +42,15 @@ describe('IDABeneficiary', function () {
       },
       {
         target: accessControl.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: accessControl.address,
+        initData: accessControl.interface.encodeFunctionData(
+          'initializeAccessControl(address)',
+          [admin.address],
+        ),
         selectors: [
+          accessControl.interface.getSighash(
+            'initializeAccessControl(address)',
+          ),
           accessControl.interface.getSighash('grantRole(bytes32,address)'),
           accessControl.interface.getSighash('renounceRole(bytes32)'),
           accessControl.interface.getSighash('hasRole(bytes32,address)'),
@@ -61,7 +68,7 @@ describe('IDABeneficiary', function () {
   }
 
   before(async function () {
-    [owner, nomineeOwner, nonOwner] = await ethers.getSigners();
+    [owner, nomineeOwner, nonOwner, admin] = await ethers.getSigners();
   });
 
   describe('initializeIDABeneficiary', function () {
@@ -423,7 +430,36 @@ describe('IDABeneficiary', function () {
   });
 
   describe('grantRole', function () {
-    it('should allow owner to grant component role', async function () {
+    it('should allow admin to grant component role', async function () {
+      const instance = await getInstance();
+      const { tokenDeploymentOutput } = await deployContractsAndToken();
+      await instance[
+        'initializeIDABeneficiary(address,address,(address,uint128)[])'
+      ](
+        await owner.getAddress(),
+        tokenDeploymentOutput.nativeAssetSuperTokenData
+          .nativeAssetSuperTokenAddress,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(admin)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow admin to grant component role', async function () {
       const instance = await getInstance();
       const { tokenDeploymentOutput } = await deployContractsAndToken();
       await instance[
@@ -443,35 +479,6 @@ describe('IDABeneficiary', function () {
       await expect(
         accessControl
           .connect(owner)
-          .grantRole(
-            ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),
-            ),
-            nonOwner.address,
-          ),
-      ).to.not.be.reverted;
-    });
-
-    it('should only allow owner to grant component role', async function () {
-      const instance = await getInstance();
-      const { tokenDeploymentOutput } = await deployContractsAndToken();
-      await instance[
-        'initializeIDABeneficiary(address,address,(address,uint128)[])'
-      ](
-        await owner.getAddress(),
-        tokenDeploymentOutput.nativeAssetSuperTokenData
-          .nativeAssetSuperTokenAddress,
-        [],
-      );
-
-      const accessControl = await ethers.getContractAt(
-        'AccessControlFacet',
-        instance.address,
-      );
-
-      await expect(
-        accessControl
-          .connect(nonOwner)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes('IDABeneficiaryFacet.COMPONENT_ROLE'),

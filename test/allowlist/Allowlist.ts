@@ -6,6 +6,7 @@ describe('Allowlist', function () {
   let owner: SignerWithAddress;
   let nonOwner: SignerWithAddress;
   let nonOwner1: SignerWithAddress;
+  let admin: SignerWithAddress;
 
   async function getInstance() {
     const accessControlFactory = await ethers.getContractFactory(
@@ -61,9 +62,15 @@ describe('Allowlist', function () {
       },
       {
         target: accessControl.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: accessControl.address,
+        initData: accessControl.interface.encodeFunctionData(
+          'initializeAccessControl(address)',
+          [admin.address],
+        ),
         selectors: [
+          accessControl.interface.getSighash(
+            'initializeAccessControl(address)',
+          ),
           accessControl.interface.getSighash('grantRole(bytes32,address)'),
           accessControl.interface.getSighash('renounceRole(bytes32)'),
           accessControl.interface.getSighash('hasRole(bytes32,address)'),
@@ -78,7 +85,7 @@ describe('Allowlist', function () {
   }
 
   before(async function () {
-    [owner, nonOwner, nonOwner1] = await ethers.getSigners();
+    [owner, nonOwner, nonOwner1, admin] = await ethers.getSigners();
   });
 
   beforeEach(async function () {});
@@ -647,10 +654,35 @@ describe('Allowlist', function () {
   });
 
   describe('grantRole', function () {
-    it('should allow owner to grant component role', async function () {
+    it('should allow admin to grant component role', async function () {
       const instance = await getInstance();
       await instance['initializeAllowlist(address,bool,address[])'](
-        await owner.getAddress(),
+        owner.address,
+        true,
+        [],
+      );
+
+      const accessControl = await ethers.getContractAt(
+        'AccessControlFacet',
+        instance.address,
+      );
+
+      await expect(
+        accessControl
+          .connect(admin)
+          .grantRole(
+            ethers.utils.keccak256(
+              ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),
+            ),
+            nonOwner.address,
+          ),
+      ).to.not.be.reverted;
+    });
+
+    it('should only allow admin to grant component role', async function () {
+      const instance = await getInstance();
+      await instance['initializeAllowlist(address,bool,address[])'](
+        owner.address,
         true,
         [],
       );
@@ -663,31 +695,6 @@ describe('Allowlist', function () {
       await expect(
         accessControl
           .connect(owner)
-          .grantRole(
-            ethers.utils.keccak256(
-              ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),
-            ),
-            nonOwner.address,
-          ),
-      ).to.not.be.reverted;
-    });
-
-    it('should only allow owner to grant component role', async function () {
-      const instance = await getInstance();
-      await instance['initializeAllowlist(address,bool,address[])'](
-        await owner.getAddress(),
-        true,
-        [],
-      );
-
-      const accessControl = await ethers.getContractAt(
-        'AccessControlFacet',
-        instance.address,
-      );
-
-      await expect(
-        accessControl
-          .connect(nonOwner)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes('AllowlistFacet.COMPONENT_ROLE'),

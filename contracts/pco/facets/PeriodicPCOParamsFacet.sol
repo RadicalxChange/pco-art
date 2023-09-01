@@ -65,7 +65,6 @@ contract PeriodicPCOParamsFacet is
             true
         );
         _grantRole(COMPONENT_ROLE, owner_);
-        _grantRole(_getRoleAdmin(COMPONENT_ROLE), owner_);
         _initializeParams(licensePeriod_, feeNumerator_, feeDenominator_);
     }
 

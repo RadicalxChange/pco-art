@@ -78,7 +78,6 @@ contract EnglishPeriodicAuctionFacet is
         _setSupportsInterface(type(IPeriodicAuctionReadable).interfaceId, true);
         _setSupportsInterface(type(IPeriodicAuctionWritable).interfaceId, true);
         _grantRole(COMPONENT_ROLE, owner_);
-        _grantRole(_getRoleAdmin(COMPONENT_ROLE), owner_);
         _initializeAuction(
             repossessor_,
             initialBidder_,

@@ -8,6 +8,7 @@ describe('EnglishPeriodicAuction', function () {
   let nonOwner: SignerWithAddress;
   let bidder1: SignerWithAddress;
   let bidder2: SignerWithAddress;
+  let admin: SignerWithAddress;
   let instance: any;
 
   async function getInstance({
@@ -227,12 +228,18 @@ describe('EnglishPeriodicAuction', function () {
       },
       {
         target: accessControl.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: accessControl.address,
+        initData: accessControl.interface.encodeFunctionData(
+          'initializeAccessControl(address)',
+          [admin.address],
+        ),
         selectors: [
+          accessControl.interface.getSighash(
+            'initializeAccessControl(address)',
+          ),
           accessControl.interface.getSighash('grantRole(bytes32,address)'),
-          accessControl.interface.getSighash('hasRole(bytes32,address)'),
           accessControl.interface.getSighash('renounceRole(bytes32)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
         ],
       },
     ]);
@@ -247,7 +254,7 @@ describe('EnglishPeriodicAuction', function () {
   }
 
   before(async function () {
-    [owner, nonOwner, bidder1, bidder2] = await ethers.getSigners();
+    [owner, nonOwner, bidder1, bidder2, admin] = await ethers.getSigners();
   });
 
   describe('initializeAuction', function () {
@@ -2515,7 +2522,7 @@ describe('EnglishPeriodicAuction', function () {
   });
 
   describe('grantRole', function () {
-    it('should allow owner to grant component role', async function () {
+    it('should allow admin to grant component role', async function () {
       const instance = await getInstance({ hasOwner: true });
 
       const accessControl = await ethers.getContractAt(
@@ -2525,7 +2532,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         accessControl
-          .connect(owner)
+          .connect(admin)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes(
@@ -2537,7 +2544,7 @@ describe('EnglishPeriodicAuction', function () {
       ).to.not.be.reverted;
     });
 
-    it('should only allow owner to grant component role', async function () {
+    it('should only allow admin to grant component role', async function () {
       const instance = await getInstance({ hasOwner: true });
 
       const accessControl = await ethers.getContractAt(
@@ -2547,7 +2554,7 @@ describe('EnglishPeriodicAuction', function () {
 
       await expect(
         accessControl
-          .connect(nonOwner)
+          .connect(owner)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes(

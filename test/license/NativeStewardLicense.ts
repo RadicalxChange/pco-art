@@ -16,10 +16,11 @@ describe('NativeStewardLicense', function () {
   let nonOwner: SignerWithAddress;
   let initialSteward: SignerWithAddress;
   let minter: SignerWithAddress;
+  let admin: SignerWithAddress;
   let instance: any;
 
   before(async function () {
-    [, , , , owner, nonOwner, minter, initialSteward] =
+    [, , , , owner, nonOwner, minter, initialSteward, admin] =
       await ethers.getSigners();
   });
 
@@ -128,12 +129,18 @@ describe('NativeStewardLicense', function () {
       },
       {
         target: accessControl.address,
-        initTarget: ethers.constants.AddressZero,
-        initData: '0x',
+        initTarget: accessControl.address,
+        initData: accessControl.interface.encodeFunctionData(
+          'initializeAccessControl(address)',
+          [admin.address],
+        ),
         selectors: [
-          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+          accessControl.interface.getSighash(
+            'initializeAccessControl(address)',
+          ),
           accessControl.interface.getSighash('grantRole(bytes32,address)'),
           accessControl.interface.getSighash('renounceRole(bytes32)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
         ],
       },
     ]);
@@ -596,7 +603,7 @@ describe('NativeStewardLicense', function () {
   });
 
   describe('grantRole', function () {
-    it('should allow owner to grant role', async function () {
+    it('should allow admin to grant role', async function () {
       const instance = await getInstance();
 
       const accessControl = await ethers.getContractAt(
@@ -606,7 +613,7 @@ describe('NativeStewardLicense', function () {
 
       await expect(
         accessControl
-          .connect(minter)
+          .connect(admin)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes(
@@ -618,7 +625,7 @@ describe('NativeStewardLicense', function () {
       ).to.not.be.reverted;
     });
 
-    it('should only allow owner to grant role', async function () {
+    it('should only allow admin to grant role', async function () {
       const instance = await getInstance();
 
       const accessControl = await ethers.getContractAt(
@@ -628,7 +635,7 @@ describe('NativeStewardLicense', function () {
 
       await expect(
         accessControl
-          .connect(nonOwner)
+          .connect(owner)
           .grantRole(
             ethers.utils.keccak256(
               ethers.utils.toUtf8Bytes(

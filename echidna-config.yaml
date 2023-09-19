@@ -1,1 +1,2 @@
 cryticArgs: ['--solc-remaps', '@=node_modules/@']
+sender: ['0x10000', '0x20000']

@@ -55,6 +55,12 @@ describe('NativeStewardLicense', function () {
     const facetInstance = await facetFactory.deploy();
     await facetInstance.deployed();
 
+    const auctionFactory = await ethers.getContractFactory(
+      'EnglishPeriodicAuctionFacet',
+    );
+    const auctionInstance = await auctionFactory.deploy();
+    await auctionInstance.deployed();
+
     const factory = await ethers.getContractFactory('SingleCutDiamond');
     const selectors = [
       ...Object.keys(erc721Base.interface.functions)
@@ -81,13 +87,17 @@ describe('NativeStewardLicense', function () {
       ),
       facetFactory.interface.getSighash('mintToken(address,uint256)'),
       facetFactory.interface.getSighash('maxTokenCount()'),
-      facetFactory.interface.getSighash('addTokenToCollection(address,string)'),
       facetFactory.interface.getSighash(
-        'addTokensToCollection(address[],string[])',
+        'addTokenToCollection(address,string,uint256)',
       ),
-      facetFactory.interface.getSighash('addTokensToCollection(string[],bool)'),
       facetFactory.interface.getSighash(
-        'addTokensWithBaseURIToCollection(uint32,string,bool)',
+        'addTokensToCollection(address[],string[],uint256[])',
+      ),
+      facetFactory.interface.getSighash(
+        'addTokensToCollection(string[],uint256[],bool)',
+      ),
+      facetFactory.interface.getSighash(
+        'addTokensWithBaseURIToCollection(uint32,uint256,uint256,string,bool)',
       ),
     ];
 
@@ -141,6 +151,14 @@ describe('NativeStewardLicense', function () {
           accessControl.interface.getSighash('grantRole(bytes32,address)'),
           accessControl.interface.getSighash('renounceRole(bytes32)'),
           accessControl.interface.getSighash('hasRole(bytes32,address)'),
+        ],
+      },
+      {
+        target: auctionInstance.address,
+        initTarget: ethers.constants.AddressZero,
+        initData: '0x',
+        selectors: [
+          auctionFactory.interface.getSighash('auctionStartTime(uint256)'),
         ],
       },
     ]);
@@ -365,42 +383,64 @@ describe('NativeStewardLicense', function () {
     });
   });
 
-  describe('addTokenToCollection(address,string)', function () {
+  describe('addTokenToCollection(address,string,uint256)', function () {
     it('should add token to collection', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        .addTokenToCollection(nonOwner.address, 'new-token-uri');
+        .addTokenToCollection(nonOwner.address, 'new-token-uri', 10);
 
       expect(await instance.maxTokenCount()).to.equal(3);
       expect(await instance.ownerOf(2)).to.equal(nonOwner.address);
       expect(await instance.tokenURI(2)).to.equal('new-token-uri');
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
     });
 
     it('should add token to collection without minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        .addTokenToCollection(ethers.constants.AddressZero, 'new-token-uri');
+        .addTokenToCollection(
+          ethers.constants.AddressZero,
+          'new-token-uri',
+          10,
+        );
 
       expect(await instance.maxTokenCount()).to.equal(3);
       expect(await instance.exists(2)).to.equal(false);
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
     });
 
     it('should not allow add token to collection if not initial bidder', async function () {
       await expect(
         instance
           .connect(nonOwner)
-          .addTokenToCollection(nonOwner.address, 'new-token-uri'),
+          .addTokenToCollection(nonOwner.address, 'new-token-uri', 10),
       ).to.be.reverted;
     });
   });
 
-  describe('addTokensToCollection(address[],string[])', function () {
+  describe('addTokensToCollection(address[],string[],uint256[])', function () {
     it('should add tokens to collection', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        ['addTokensToCollection(address[],string[])'](
+        ['addTokensToCollection(address[],string[],uint256[])'](
           [nonOwner.address, owner.address],
           ['new-token-uri-1', 'new-token-uri-2'],
+          [10, 11],
         );
 
       expect(await instance.maxTokenCount()).to.equal(4);
@@ -408,28 +448,39 @@ describe('NativeStewardLicense', function () {
       expect(await instance.ownerOf(3)).to.equal(owner.address);
       expect(await instance.tokenURI(2)).to.equal('new-token-uri-1');
       expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(11);
     });
 
     it('should add tokens to collection without minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        ['addTokensToCollection(address[],string[])'](
+        ['addTokensToCollection(address[],string[],uint256[])'](
           [ethers.constants.AddressZero, ethers.constants.AddressZero],
           ['new-token-uri-1', 'new-token-uri-2'],
+          [10, 11],
         );
 
       expect(await instance.maxTokenCount()).to.equal(4);
       expect(await instance.exists(2)).to.equal(false);
       expect(await instance.exists(3)).to.equal(false);
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(11);
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
       await expect(
         instance
           .connect(nonOwner)
-          ['addTokensToCollection(address[],string[])'](
+          ['addTokensToCollection(address[],string[],uint256[])'](
             [nonOwner.address, owner.address],
             ['new-token-uri-1', 'new-token-uri-2'],
+            [10, 11],
           ),
       ).to.be.reverted;
     });
@@ -445,22 +496,46 @@ describe('NativeStewardLicense', function () {
       await expect(
         instance
           .connect(minter)
-          ['addTokensToCollection(address[],string[])'](
+          ['addTokensToCollection(address[],string[],uint256[])'](
             [nonOwner.address, owner.address],
             ['new-token-uri-1'],
+            [10, 11],
           ),
-      ).to.be.revertedWith(
-        'StewardLicenseFacet: to and tokenURIs length mismatch',
+      ).to.be.revertedWith('StewardLicenseFacet: input array length mismatch');
+    });
+
+    it('should not allow add tokens to collection if input length mismatch', async function () {
+      const auctionMockFacet = await ethers.getContractAt(
+        'PeriodicAuctionMock',
+        instance.address,
       );
+
+      await auctionMockFacet.setInitialBidder(minter.address);
+
+      await expect(
+        instance
+          .connect(minter)
+          ['addTokensToCollection(address[],string[],uint256[])'](
+            [nonOwner.address, owner.address],
+            ['new-token-uri-1', 'new-token-uri-2'],
+            [10],
+          ),
+      ).to.be.revertedWith('StewardLicenseFacet: input array length mismatch');
     });
   });
 
-  describe('addTokensToCollection(string[],bool)', function () {
+  describe('addTokensToCollection(string[],uint256[],bool)', function () {
     it('should add tokens to collection without minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        ['addTokensToCollection(string[],bool)'](
+        ['addTokensToCollection(string[],uint256[],bool)'](
           ['new-token-uri-1', 'new-token-uri-2'],
+          [10, 11],
           false,
         );
 
@@ -469,6 +544,8 @@ describe('NativeStewardLicense', function () {
       expect(await instance.exists(3)).to.equal(false);
       expect(await instance.tokenURI(2)).to.equal('new-token-uri-1');
       expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(11);
 
       await instance.mint(nonOwner.address, 2);
       await instance.mint(owner.address, 3);
@@ -478,10 +555,16 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add tokens to collection with minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        ['addTokensToCollection(string[],bool)'](
+        ['addTokensToCollection(string[],uint256[],bool)'](
           ['new-token-uri-1', 'new-token-uri-2'],
+          [10, 11],
           true,
         );
 
@@ -492,14 +575,17 @@ describe('NativeStewardLicense', function () {
       expect(await instance.tokenURI(3)).to.equal('new-token-uri-2');
       expect(await instance.ownerOf(2)).to.equal(initialSteward.address);
       expect(await instance.ownerOf(3)).to.equal(initialSteward.address);
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(11);
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
       await expect(
         instance
           .connect(nonOwner)
-          ['addTokensToCollection(string[],bool)'](
+          ['addTokensToCollection(string[],uint256[],bool)'](
             ['new-token-uri-1', 'new-token-uri-2'],
+            [10, 11],
             false,
           ),
       ).to.be.reverted;
@@ -508,9 +594,20 @@ describe('NativeStewardLicense', function () {
 
   describe('addTokensWithBaseURIToCollection', function () {
     it('should add tokens to collection without minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', false);
+        .addTokensWithBaseURIToCollection(
+          2,
+          10,
+          2,
+          'new-base-token-uri/',
+          false,
+        );
 
       expect(await instance.maxTokenCount()).to.equal(4);
       expect(await instance.exists(2)).to.equal(false);
@@ -519,6 +616,8 @@ describe('NativeStewardLicense', function () {
       expect(await instance.tokenURI(2)).to.equal('new-base-token-uri/2');
       expect(await instance.tokenURI(3)).to.equal('new-base-token-uri/3');
       expect(await instance.tokenURI(1)).to.equal(tokenURI + '1');
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(12);
 
       await instance.mint(nonOwner.address, 2);
       await instance.mint(owner.address, 3);
@@ -529,9 +628,20 @@ describe('NativeStewardLicense', function () {
     });
 
     it('should add tokens to collection with minting', async function () {
+      const auctionFacet = await ethers.getContractAt(
+        'EnglishPeriodicAuctionFacet',
+        instance.address,
+      );
+
       await instance
         .connect(minter)
-        .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', true);
+        .addTokensWithBaseURIToCollection(
+          2,
+          10,
+          2,
+          'new-base-token-uri/',
+          true,
+        );
 
       expect(await instance.maxTokenCount()).to.equal(4);
       expect(await instance.exists(2)).to.equal(true);
@@ -543,13 +653,21 @@ describe('NativeStewardLicense', function () {
       expect(await instance.ownerOf(2)).to.equal(initialSteward.address);
       expect(await instance.ownerOf(3)).to.equal(initialSteward.address);
       expect(await instance.exists(4)).to.equal(false);
+      expect(await auctionFacet.auctionStartTime(2)).to.equal(10);
+      expect(await auctionFacet.auctionStartTime(3)).to.equal(12);
     });
 
     it('should not allow add tokens to collection if not initial bidder', async function () {
       await expect(
         instance
           .connect(nonOwner)
-          .addTokensWithBaseURIToCollection(2, 'new-base-token-uri/', false),
+          .addTokensWithBaseURIToCollection(
+            2,
+            10,
+            2,
+            'new-base-token-uri/',
+            false,
+          ),
       ).to.be.reverted;
     });
   });

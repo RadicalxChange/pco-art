@@ -51,9 +51,10 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
      */
     function addTokenToCollection(
         address to,
-        string memory tokenURI
+        string memory tokenURI,
+        uint256 tokenInitialPeriodStartTime
     ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
-        _addTokenToCollection(to, tokenURI);
+        _addTokenToCollection(to, tokenURI, tokenInitialPeriodStartTime);
     }
 
     /**
@@ -61,15 +62,21 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
      */
     function addTokensToCollection(
         address[] memory to,
-        string[] memory tokenURIs
+        string[] memory tokenURIs,
+        uint256[] memory tokenInitialPeriodStartTimes
     ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         require(
-            to.length == tokenURIs.length,
-            'StewardLicenseFacet: to and tokenURIs length mismatch'
+            to.length == tokenURIs.length &&
+                to.length == tokenInitialPeriodStartTimes.length,
+            'StewardLicenseFacet: input array length mismatch'
         );
 
         for (uint256 i = 0; i < tokenURIs.length; i++) {
-            _addTokenToCollection(to[i], tokenURIs[i]);
+            _addTokenToCollection(
+                to[i],
+                tokenURIs[i],
+                tokenInitialPeriodStartTimes[i]
+            );
         }
     }
 
@@ -78,6 +85,7 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
      */
     function addTokensToCollection(
         string[] memory tokenURIs,
+        uint256[] memory tokenInitialPeriodStartTimes,
         bool shouldMint
     ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         for (uint256 i = 0; i < tokenURIs.length; i++) {
@@ -87,7 +95,11 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
             } else {
                 to = address(0);
             }
-            _addTokenToCollection(to, tokenURIs[i]);
+            _addTokenToCollection(
+                to,
+                tokenURIs[i],
+                tokenInitialPeriodStartTimes[i]
+            );
         }
     }
 
@@ -96,11 +108,17 @@ abstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {
      */
     function addTokensWithBaseURIToCollection(
         uint32 amount,
+        uint256 initialPeriodStartTime,
+        uint256 initialPeriodStartTimeOffset,
         string memory baseURI,
         bool shouldMint
     ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {
         for (uint32 i = 0; i < amount; i++) {
-            _addTokenWithBaseURIToCollection(baseURI, shouldMint);
+            _addTokenWithBaseURIToCollection(
+                baseURI,
+                shouldMint,
+                initialPeriodStartTime + (initialPeriodStartTimeOffset * i)
+            );
         }
     }
 

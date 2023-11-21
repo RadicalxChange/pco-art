@@ -546,7 +546,17 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
-        if (l.lastPeriodEndTime[tokenId] > l.initialPeriodStartTime) {
+        uint256 initialPeriodStartTime;
+        uint256 initialPeriodStartTimeOffset;
+        if (l.tokenInitialPeriodStartTime[tokenId] > 0) {
+            initialPeriodStartTime = l.tokenInitialPeriodStartTime[tokenId];
+            initialPeriodStartTimeOffset = 0;
+        } else {
+            initialPeriodStartTime = l.initialPeriodStartTime;
+            initialPeriodStartTimeOffset = l.initialPeriodStartTimeOffset;
+        }
+
+        if (l.lastPeriodEndTime[tokenId] > initialPeriodStartTime) {
             // Auction starts after licensePeriod has elapsed
             auctionStartTime =
                 l.lastPeriodEndTime[tokenId] +
@@ -554,8 +564,8 @@ abstract contract EnglishPeriodicAuctionInternal is
         } else {
             // Auction starts at initial time
             auctionStartTime =
-                l.initialPeriodStartTime +
-                (tokenId * l.initialPeriodStartTimeOffset);
+                initialPeriodStartTime +
+                (tokenId * initialPeriodStartTimeOffset);
         }
     }
 

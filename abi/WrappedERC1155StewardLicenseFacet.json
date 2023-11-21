@@ -245,6 +245,11 @@
         "internalType": "string",
         "name": "tokenURI",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenInitialPeriodStartTime",
+        "type": "uint256"
       }
     ],
     "name": "addTokenToCollection",
@@ -258,6 +263,11 @@
         "internalType": "string[]",
         "name": "tokenURIs",
         "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenInitialPeriodStartTimes",
+        "type": "uint256[]"
       },
       {
         "internalType": "bool",
@@ -281,6 +291,11 @@
         "internalType": "string[]",
         "name": "tokenURIs",
         "type": "string[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "tokenInitialPeriodStartTimes",
+        "type": "uint256[]"
       }
     ],
     "name": "addTokensToCollection",
@@ -294,6 +309,16 @@
         "internalType": "uint32",
         "name": "amount",
         "type": "uint32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "initialPeriodStartTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "initialPeriodStartTimeOffset",
+        "type": "uint256"
       },
       {
         "internalType": "string",

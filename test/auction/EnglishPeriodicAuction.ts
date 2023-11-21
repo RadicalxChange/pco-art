@@ -110,6 +110,9 @@ describe('EnglishPeriodicAuction', function () {
           ),
           licenseMock.interface.getSighash('maxTokenCount()'),
           licenseMock.interface.getSighash('mintToken(address,uint256)'),
+          licenseMock.interface.getSighash(
+            'addTokenToCollection(address,string,uint256)',
+          ),
         ],
       },
       {
@@ -2627,6 +2630,34 @@ describe('EnglishPeriodicAuction', function () {
       await pcoParams.setLicensePeriod(2000);
 
       expect(await instance.auctionStartTime(0)).to.equal(expectedStartTime);
+    });
+
+    it('should use token specific start time', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const initialPeriodStartTime = await time.latest();
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime,
+        licensePeriod: 1000,
+      });
+
+      const licenseMock = await ethers.getContractAt(
+        'NativeStewardLicenseMock',
+        instance.address,
+      );
+
+      await licenseMock
+        .connect(owner)
+        .addTokenToCollection(
+          nonOwner.address,
+          'new-token-uri',
+          initialPeriodStartTime + 100,
+        );
+
+      expect(await instance.auctionStartTime(10)).to.equal(
+        initialPeriodStartTime + 100,
+      );
     });
   });
 });

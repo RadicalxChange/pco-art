@@ -12,6 +12,7 @@ import { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';
 import { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';
 import { UintUtils } from '@solidstate/contracts/utils/UintUtils.sol';
 import { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';
+import { EnglishPeriodicAuctionStorage } from '../auction/EnglishPeriodicAuctionStorage.sol';
 
 /**
  * @title StewardLicenseInternal
@@ -118,7 +119,8 @@ abstract contract StewardLicenseInternal is
      */
     function _addTokenToCollection(
         address to,
-        string memory tokenURI
+        string memory tokenURI,
+        uint256 tokenInitialPeriodStartTime
     ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
@@ -129,6 +131,11 @@ abstract contract StewardLicenseInternal is
 
         // Override metadata
         ERC721MetadataStorage.layout().tokenURIs[newTokenId] = tokenURI;
+
+        // Override auction start time
+        EnglishPeriodicAuctionStorage.layout().tokenInitialPeriodStartTime[
+            newTokenId
+        ] = tokenInitialPeriodStartTime;
 
         if (to != address(0)) {
             // Mint token
@@ -141,7 +148,8 @@ abstract contract StewardLicenseInternal is
      */
     function _addTokenWithBaseURIToCollection(
         string memory _baseURI,
-        bool shouldMint
+        bool shouldMint,
+        uint256 tokenInitialPeriodStartTime
     ) internal {
         StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();
 
@@ -154,6 +162,11 @@ abstract contract StewardLicenseInternal is
         ERC721MetadataStorage.layout().tokenURIs[newTokenId] = string(
             abi.encodePacked(_baseURI, newTokenId.toString())
         );
+
+        // Override auction start time
+        EnglishPeriodicAuctionStorage.layout().tokenInitialPeriodStartTime[
+            newTokenId
+        ] = tokenInitialPeriodStartTime;
 
         if (shouldMint) {
             // Mint token

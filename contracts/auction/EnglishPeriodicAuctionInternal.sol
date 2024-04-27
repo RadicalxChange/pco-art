@@ -327,7 +327,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             feeAmount = totalCollateralAmount;
         } else {
             require(
-                totalCollateralAmount > bidAmount,
+                totalCollateralAmount >= bidAmount,
                 'EnglishPeriodicAuction: Collateral must be greater than current bid'
             );
             // If new bidder, collateral is bidAmount + fee
@@ -608,6 +608,9 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 feeDenominator = IPeriodicPCOParamsReadable(address(this))
             .feeDenominator();
 
+        if (feeNumerator == 0 || feeDenominator == 0) {
+            return 0;
+        }
         return (bidAmount * feeNumerator) / feeDenominator;
     }
 

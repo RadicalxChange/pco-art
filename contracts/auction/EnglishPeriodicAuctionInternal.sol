@@ -418,8 +418,17 @@ abstract contract EnglishPeriodicAuctionInternal is
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+        uint256 availableAuctionRound = currentAuctionRound;
+        if (bidder == l.highestBids[tokenId][currentAuctionRound].bidder) {
+            if (currentAuctionRound == 0) {
+                revert(
+                    'EnglishPeriodicAuction: Cannot cancel bid if highest bidder'
+                );
+            }
+            availableAuctionRound = currentAuctionRound - 1;
+        }
 
-        for (uint256 i = 0; i <= currentAuctionRound; i++) {
+        for (uint256 i = 0; i <= availableAuctionRound; i++) {
             Bid storage bid = l.bids[tokenId][i][bidder];
 
             if (bid.collateralAmount > 0) {

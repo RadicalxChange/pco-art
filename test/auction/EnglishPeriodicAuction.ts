@@ -1608,6 +1608,30 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
+    it('should revert if highest bidder tries to cancel all bids', async function () {
+      // Auction start: Now - 200
+      // Auction end: Now + 100
+      const instance = await getInstance({
+        auctionLengthSeconds: 300,
+        initialPeriodStartTime: (await time.latest()) - 200,
+        licensePeriod: 1000,
+      });
+
+      const bidAmount = ethers.utils.parseEther('1.1');
+      const feeAmount = await instance.calculateFeeFromBid(bidAmount);
+      const collateralAmount = feeAmount.add(bidAmount);
+
+      await instance
+        .connect(bidder1)
+        .placeBid(0, bidAmount, { value: collateralAmount });
+
+      await expect(
+        instance.connect(bidder1).cancelAllBidsAndWithdrawCollateral(0),
+      ).to.be.revertedWith(
+        'EnglishPeriodicAuction: Cannot cancel bid if highest bidder',
+      );
+    });
+
     it('should revert if highest bidder tries to cancel bid after auction ends', async function () {
       // Auction start: Now - 200
       // Auction end: Now + 100

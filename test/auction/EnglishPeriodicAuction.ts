@@ -212,7 +212,7 @@ describe('EnglishPeriodicAuction', function () {
           facetFactory.interface.getSighash('auctionEndTime(uint256)'),
           facetFactory.interface.getSighash('cancelBid(uint256,uint256)'),
           facetFactory.interface.getSighash(
-            'cancelAllBidsAndWithdrawCollateral(uint256)',
+            'cancelAllBidsAndWithdrawCollateral(uint256, uint256)',
           ),
           facetFactory.interface.getSighash(
             'cancelBidAndWithdrawCollateral(uint256,uint256)',
@@ -1626,7 +1626,7 @@ describe('EnglishPeriodicAuction', function () {
         .placeBid(0, bidAmount, { value: collateralAmount });
 
       await expect(
-        instance.connect(bidder1).cancelAllBidsAndWithdrawCollateral(0),
+        instance.connect(bidder1).cancelAllBidsAndWithdrawCollateral(0, 0),
       ).to.be.revertedWith(
         'EnglishPeriodicAuction: Cannot cancel bid if highest bidder',
       );
@@ -1830,7 +1830,7 @@ describe('EnglishPeriodicAuction', function () {
       );
       const res = await instance
         .connect(bidder1)
-        .cancelAllBidsAndWithdrawCollateral(0);
+        .cancelAllBidsAndWithdrawCollateral(0, 0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 
@@ -1884,7 +1884,7 @@ describe('EnglishPeriodicAuction', function () {
       );
       const res = await instance
         .connect(bidder2)
-        .cancelAllBidsAndWithdrawCollateral(0);
+        .cancelAllBidsAndWithdrawCollateral(0, 0);
       const receipt = await res.wait();
       const gasFee = receipt.gasUsed.mul(res.gasPrice);
 

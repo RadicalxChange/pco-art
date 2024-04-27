@@ -184,8 +184,11 @@ contract EnglishPeriodicAuctionFacet is
     /**
      * @notice Cancel all bids and withdraw collateral
      */
-    function cancelAllBidsAndWithdrawCollateral(uint256 tokenId) external {
-        _cancelAllBids(tokenId, msg.sender);
+    function cancelAllBidsAndWithdrawCollateral(
+        uint256 tokenId,
+        uint256 round
+    ) external {
+        _cancelAllBids(tokenId, round, msg.sender);
         _withdrawCollateral(msg.sender);
     }
 

@@ -413,11 +413,20 @@ abstract contract EnglishPeriodicAuctionInternal is
     /**
      * @notice Cancel bids for all rounds
      */
-    function _cancelAllBids(uint256 tokenId, address bidder) internal {
+    function _cancelAllBids(
+        uint256 tokenId,
+        uint256 round,
+        address bidder
+    ) internal {
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+
+        require(
+            bidder != l.highestBids[tokenId][round].bidder,
+            'EnglishPeriodicAuction: Cannot cancel bid if highest bidder'
+        );
 
         for (uint256 i = 0; i <= currentAuctionRound; i++) {
             Bid storage bid = l.bids[tokenId][i][bidder];

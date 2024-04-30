@@ -256,7 +256,7 @@ describe('EnglishPeriodicAuction', function () {
     return instance;
   }
 
-  async function getZeroHonorariumInstance({
+  async function getSpecialInstance({
     hasOwner = false,
     auctionLengthSeconds = 100,
     licensePeriod = 1,
@@ -2929,11 +2929,11 @@ describe('EnglishPeriodicAuction', function () {
       );
     });
 
-    describe('honorarium', function () {
+    describe('special edge cases', function () {
       it('should allow bidding while honorarium is set to 0', async function () {
         // Auction start: Now + 100
         // Auction end: Now + 400
-        const instance = await getZeroHonorariumInstance({
+        const instance = await getSpecialInstance({
           auctionLengthSeconds: 300,
           initialPeriodStartTime: (await time.latest()) + 100,
           licensePeriod: 1000,
@@ -2954,14 +2954,37 @@ describe('EnglishPeriodicAuction', function () {
         const feeAmount = await instance.calculateFeeFromBid(bidAmount);
         const collateralAmount = feeAmount.add(bidAmount);
 
-        // Reverts when a user tries to place a bid
-        console.log('Placing collateral bid: ', collateralAmount);
-        console.log('Bid Amount: ', bidAmount);
         await expect(
           instance
             .connect(bidder1)
             .placeBid(0, bidAmount, { value: collateralAmount }),
         ).to.not.be.reverted;
+      });
+
+      it('should block early period start override', async function () {
+        // Auction start: Now + 100
+        // Auction end: Now + 400
+        const instance = await getSpecialInstance({
+          auctionLengthSeconds: 300,
+          initialPeriodStartTime: (await time.latest()) + 100,
+          licensePeriod: 1000,
+        });
+        const licenseMock = await ethers.getContractAt(
+          'NativeStewardLicenseMock',
+          instance.address,
+        );
+
+        await expect(
+          licenseMock
+            .connect(owner)
+            .addTokenToCollection(
+              ethers.constants.AddressZero,
+              'new-token-uri',
+              1,
+            ),
+        ).to.be.revertedWith(
+          'StewardLicenseFacet: New period time must be greater than or equal to current period time',
+        );
       });
     });
   });

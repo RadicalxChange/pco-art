@@ -132,6 +132,15 @@ abstract contract StewardLicenseInternal is
         // Override metadata
         ERC721MetadataStorage.layout().tokenURIs[newTokenId] = tokenURI;
 
+        uint256 currentInitialPeriodStartTime = EnglishPeriodicAuctionStorage
+            .layout()
+            .initialPeriodStartTime;
+
+        require(
+            tokenInitialPeriodStartTime >= currentInitialPeriodStartTime,
+            'StewardLicenseFacet: New period time must be greater than or equal to current period time'
+        );
+
         // Override auction start time
         EnglishPeriodicAuctionStorage.layout().tokenInitialPeriodStartTime[
             newTokenId
@@ -161,6 +170,15 @@ abstract contract StewardLicenseInternal is
         // Override metadata
         ERC721MetadataStorage.layout().tokenURIs[newTokenId] = string(
             abi.encodePacked(_baseURI, newTokenId.toString())
+        );
+
+        uint256 currentInitialPeriodStartTime = EnglishPeriodicAuctionStorage
+            .layout()
+            .initialPeriodStartTime;
+
+        require(
+            tokenInitialPeriodStartTime >= currentInitialPeriodStartTime,
+            'StewardLicenseFacet: New period time must be greater than or equal to current period time'
         );
 
         // Override auction start time

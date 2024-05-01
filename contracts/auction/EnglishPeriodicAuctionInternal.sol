@@ -30,6 +30,10 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
+        require(
+            minBidIncrement > 0,
+            'EnglishPeriodicAuction: Min bid increment must be greater than 0'
+        );
         l.isInitialized = true;
         l.initialBidder = initialBidder;
         l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;
@@ -53,6 +57,10 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 bidExtensionSeconds,
         uint256 startingBid
     ) internal {
+        require(
+            minBidIncrement > 0,
+            'EnglishPeriodicAuction: Min bid increment must be greater than 0'
+        );
         _setRepossessor(repossessor);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);

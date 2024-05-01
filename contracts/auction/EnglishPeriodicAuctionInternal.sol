@@ -255,7 +255,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             return false;
         }
         //slither-disable-next-line timestamp
-        return block.timestamp >= _auctionEndTime(tokenId);
+        return block.timestamp > _auctionEndTime(tokenId);
     }
 
     /**

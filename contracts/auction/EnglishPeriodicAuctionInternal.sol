@@ -34,6 +34,11 @@ abstract contract EnglishPeriodicAuctionInternal is
             minBidIncrement > 0,
             'EnglishPeriodicAuction: Min bid increment must be greater than 0'
         );
+
+        require(
+            initialBidder != address(0) && repossessor != address(0),
+            'EnglishPeriodicAuction: !Address Zero'
+        );
         l.isInitialized = true;
         l.initialBidder = initialBidder;
         l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;

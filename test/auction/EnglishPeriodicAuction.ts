@@ -256,7 +256,7 @@ describe('EnglishPeriodicAuction', function () {
     return instance;
   }
 
-  async function getRevertInstance({
+  async function getRevertIncrementInstance({
     hasOwner = false,
     auctionLengthSeconds = 100,
     licensePeriod = 1,
@@ -415,6 +415,251 @@ describe('EnglishPeriodicAuction', function () {
                 startingBid,
                 auctionLengthSeconds,
                 0,
+                bidExtensionWindowLengthSeconds,
+                bidExtensionSeconds,
+              ],
+            ),
+        selectors: [
+          hasOwner
+            ? facetFactory.interface.getSighash(
+                'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              )
+            : facetFactory.interface.getSighash(
+                'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              ),
+          facetFactory.interface.getSighash('isAuctionPeriod(uint256)'),
+          facetFactory.interface.getSighash('isReadyForTransfer(uint256)'),
+          facetFactory.interface.getSighash('placeBid(uint256,uint256)'),
+          facetFactory.interface.getSighash('closeAuction(uint256)'),
+          facetFactory.interface.getSighash('calculateFeeFromBid(uint256)'),
+          facetFactory.interface.getSighash('repossessor()'),
+          facetFactory.interface.getSighash('setRepossessor(address)'),
+          facetFactory.interface.getSighash('initialPeriodStartTime()'),
+          facetFactory.interface.getSighash('initialBidder()'),
+          facetFactory.interface.getSighash('setAuctionLengthSeconds(uint256)'),
+          facetFactory.interface.getSighash('auctionLengthSeconds()'),
+          facetFactory.interface.getSighash('minBidIncrement()'),
+          facetFactory.interface.getSighash('setMinBidIncrement(uint256)'),
+          facetFactory.interface.getSighash(
+            'setBidExtensionWindowLengthSeconds(uint256)',
+          ),
+          facetFactory.interface.getSighash(
+            'bidExtensionWindowLengthSeconds()',
+          ),
+          facetFactory.interface.getSighash('bidExtensionSeconds()'),
+          facetFactory.interface.getSighash('setBidExtensionSeconds(uint256)'),
+          facetFactory.interface.getSighash('bidOf(uint256,address)'),
+          facetFactory.interface.getSighash('bidOf(uint256,uint256,address)'),
+          facetFactory.interface.getSighash('highestBid(uint256)'),
+          facetFactory.interface.getSighash('highestBid(uint256,uint256)'),
+          facetFactory.interface.getSighash('currentAuctionRound(uint256)'),
+          facetFactory.interface.getSighash('auctionStartTime(uint256)'),
+          facetFactory.interface.getSighash('auctionEndTime(uint256)'),
+          facetFactory.interface.getSighash('cancelBid(uint256,uint256)'),
+          facetFactory.interface.getSighash(
+            'cancelAllBidsAndWithdrawCollateral(uint256)',
+          ),
+          facetFactory.interface.getSighash(
+            'cancelBidAndWithdrawCollateral(uint256,uint256)',
+          ),
+          facetFactory.interface.getSighash('withdrawCollateral()'),
+          facetFactory.interface.getSighash(
+            'setAuctionParameters(address,uint256,uint256,uint256,uint256,uint256)',
+          ),
+          facetFactory.interface.getSighash('startingBid()'),
+          facetFactory.interface.getSighash('setStartingBid(uint256)'),
+          facetFactory.interface.getSighash('availableCollateral(address)'),
+          facetFactory.interface.getSighash(
+            'lockedCollateral(uint256,address)',
+          ),
+        ],
+      },
+      {
+        target: accessControl.address,
+        initTarget: accessControl.address,
+        initData: accessControl.interface.encodeFunctionData(
+          'initializeAccessControl(address)',
+          [admin.address],
+        ),
+        selectors: [
+          accessControl.interface.getSighash(
+            'initializeAccessControl(address)',
+          ),
+          accessControl.interface.getSighash('grantRole(bytes32,address)'),
+          accessControl.interface.getSighash('renounceRole(bytes32)'),
+          accessControl.interface.getSighash('hasRole(bytes32,address)'),
+        ],
+      },
+    ]);
+    await instance.deployed();
+
+    instance = await ethers.getContractAt(
+      'EnglishPeriodicAuctionFacet',
+      instance.address,
+    );
+
+    return instance;
+  }
+
+  async function getRevertZeroAddressInstance({
+    hasOwner = false,
+    auctionLengthSeconds = 100,
+    licensePeriod = 1,
+    initialPeriodStartTime = 2,
+    initialPeriodStartTimeOffset = 0,
+    startingBid = ethers.utils.parseEther('1'),
+    bidExtensionWindowLengthSeconds = 10,
+    bidExtensionSeconds = 20,
+    shouldMint = false,
+    repossessor = nonOwner.address,
+    initialBidder = owner.address,
+  } = {}) {
+    const pcoParamsFacetFactory = await ethers.getContractFactory(
+      'PeriodicPCOParamsFacet',
+    );
+    const pcoParamsFacetInstance = await pcoParamsFacetFactory.deploy();
+    await pcoParamsFacetInstance.deployed();
+
+    const licenseMockFactory = await ethers.getContractFactory(
+      'NativeStewardLicenseMock',
+    );
+    const licenseMock = await licenseMockFactory.deploy();
+    await licenseMock.deployed();
+
+    const beneficiaryFactory = await ethers.getContractFactory(
+      'BeneficiaryMock',
+    );
+    const beneficiaryMock = await beneficiaryFactory.deploy();
+    await beneficiaryMock.deployed();
+
+    const allowlistFactory = await ethers.getContractFactory('AllowlistMock');
+    const allowlistMock = await allowlistFactory.deploy();
+    await allowlistMock.deployed();
+
+    const accessControlFactory = await ethers.getContractFactory(
+      'AccessControlFacet',
+    );
+    const accessControl = await accessControlFactory.deploy();
+    await accessControl.deployed();
+
+    const facetFactory = await ethers.getContractFactory(
+      'EnglishPeriodicAuctionFacet',
+    );
+    const facetInstance = await facetFactory.deploy();
+    await facetInstance.deployed();
+
+    const factory = await ethers.getContractFactory('SingleCutDiamond');
+    instance = await factory.deploy([
+      {
+        target: pcoParamsFacetInstance.address,
+        initTarget: pcoParamsFacetInstance.address,
+        initData: pcoParamsFacetInstance.interface.encodeFunctionData(
+          'initializePCOParams(address,uint256,uint256,uint256)',
+          [await owner.getAddress(), licensePeriod, 1, 10],
+        ),
+        selectors: [
+          pcoParamsFacetInstance.interface.getSighash(
+            'initializePCOParams(address,uint256,uint256,uint256)',
+          ),
+          pcoParamsFacetInstance.interface.getSighash('licensePeriod()'),
+          pcoParamsFacetInstance.interface.getSighash(
+            'setLicensePeriod(uint256)',
+          ),
+          pcoParamsFacetInstance.interface.getSighash('feeNumerator()'),
+          pcoParamsFacetInstance.interface.getSighash('feeDenominator()'),
+        ],
+      },
+      {
+        target: licenseMock.address,
+        initTarget: licenseMock.address,
+        initData: licenseMock.interface.encodeFunctionData(
+          'initializeStewardLicense(address,address,address,uint256,bool,string,string,string)',
+          [
+            await owner.getAddress(),
+            await owner.getAddress(),
+            await owner.getAddress(),
+            10,
+            shouldMint,
+            'name',
+            'symbol',
+            'tokenURI',
+          ],
+        ),
+        selectors: [
+          licenseMock.interface.getSighash(
+            'initializeStewardLicense(address,address,address,uint256,bool,string,string,string)',
+          ),
+          licenseMock.interface.getSighash(
+            'triggerTransfer(address,address,uint256)',
+          ),
+          licenseMock.interface.getSighash('ownerOf(uint256)'),
+          licenseMock.interface.getSighash('mint(address,uint256)'),
+          licenseMock.interface.getSighash('exists(uint256)'),
+          licenseMock.interface.getSighash(
+            'transferFrom(address,address,uint256)',
+          ),
+          licenseMock.interface.getSighash('maxTokenCount()'),
+          licenseMock.interface.getSighash('mintToken(address,uint256)'),
+          licenseMock.interface.getSighash(
+            'addTokenToCollection(address,string,uint256)',
+          ),
+        ],
+      },
+      {
+        target: beneficiaryMock.address,
+        initTarget: beneficiaryMock.address,
+        initData: beneficiaryMock.interface.encodeFunctionData(
+          'initializeMockBeneficiary(address)',
+          [await nonOwner.getAddress()],
+        ),
+        selectors: [
+          beneficiaryMock.interface.getSighash(
+            'initializeMockBeneficiary(address)',
+          ),
+          beneficiaryMock.interface.getSighash('distribute()'),
+        ],
+      },
+      {
+        target: allowlistMock.address,
+        initTarget: allowlistMock.address,
+        initData: allowlistMock.interface.encodeFunctionData(
+          'setIsAllowed(bool)',
+          [true],
+        ),
+        selectors: [
+          allowlistMock.interface.getSighash('isAllowed(address)'),
+          allowlistMock.interface.getSighash('setIsAllowed(bool)'),
+        ],
+      },
+      {
+        target: facetInstance.address,
+        initTarget: facetInstance.address,
+        initData: hasOwner
+          ? facetInstance.interface.encodeFunctionData(
+              'initializeAuction(address,address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              [
+                await owner.getAddress(),
+                ethers.constants.AddressZero,
+                initialBidder,
+                initialPeriodStartTime,
+                initialPeriodStartTimeOffset,
+                startingBid,
+                auctionLengthSeconds,
+                200,
+                bidExtensionWindowLengthSeconds,
+                bidExtensionSeconds,
+              ],
+            )
+          : facetInstance.interface.encodeFunctionData(
+              'initializeAuction(address,address,uint256,uint256,uint256,uint256,uint256,uint256,uint256)',
+              [
+                ethers.constants.AddressZero,
+                initialBidder,
+                initialPeriodStartTime,
+                initialPeriodStartTimeOffset,
+                startingBid,
+                auctionLengthSeconds,
+                200,
                 bidExtensionWindowLengthSeconds,
                 bidExtensionSeconds,
               ],
@@ -2817,6 +3062,21 @@ describe('EnglishPeriodicAuction', function () {
       ).to.be.reverted;
     });
 
+    it('should not set repossessor as zero address', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(
+        instance.setAuctionParameters(
+          ethers.constants.AddressZero,
+          101,
+          201,
+          11,
+          21,
+          31,
+        ),
+      ).to.be.revertedWith('EnglishPeriodicAuction: !Address Zero');
+    });
+
     it('should not allow anyone to set when no owner', async function () {
       const instance = await getInstance({ hasOwner: false });
 
@@ -3263,8 +3523,14 @@ describe('EnglishPeriodicAuction', function () {
       });
 
       it('should revert if min bid increment is zero', async function () {
-        await expect(getRevertInstance()).to.be.revertedWith(
+        await expect(getRevertIncrementInstance()).to.be.revertedWith(
           'EnglishPeriodicAuction: Min bid increment must be greater than 0',
+        );
+      });
+
+      it('should revert if initialized with address zero', async function () {
+        await expect(getRevertZeroAddressInstance()).to.be.revertedWith(
+          'EnglishPeriodicAuction: !Address Zero',
         );
       });
     });

@@ -1257,6 +1257,20 @@ describe('EnglishPeriodicAuction', function () {
       expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
     });
 
+    it('should return false on the final second of the auction', async function () {
+      // Auction start: Now
+      // Auction end: Now + 100
+      const auctionEnd = (await time.latest()) + 100;
+      const instance = await getInstance({
+        auctionLengthSeconds: 100,
+        initialPeriodStartTime: await time.latest(),
+      });
+
+      await time.increaseTo(auctionEnd);
+
+      expect(await instance.isReadyForTransfer(0)).to.be.equal(false);
+    });
+
     it('should return true if initial auction ended', async function () {
       // Auction start: Now - 200
       // Auction end: Now - 100

@@ -66,6 +66,11 @@ abstract contract EnglishPeriodicAuctionInternal is
             minBidIncrement > 0,
             'EnglishPeriodicAuction: Min bid increment must be greater than 0'
         );
+
+        require(
+            repossessor != address(0),
+            'EnglishPeriodicAuction: !Address Zero'
+        );
         _setRepossessor(repossessor);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);

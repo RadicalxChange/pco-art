@@ -3062,6 +3062,21 @@ describe('EnglishPeriodicAuction', function () {
       ).to.be.reverted;
     });
 
+    it('should not set repossessor as zero address', async function () {
+      const instance = await getInstance({ hasOwner: true });
+
+      await expect(
+        instance.setAuctionParameters(
+          ethers.constants.AddressZero,
+          101,
+          201,
+          11,
+          21,
+          31,
+        ),
+      ).to.be.revertedWith('EnglishPeriodicAuction: !Address Zero');
+    });
+
     it('should not allow anyone to set when no owner', async function () {
       const instance = await getInstance({ hasOwner: false });
 

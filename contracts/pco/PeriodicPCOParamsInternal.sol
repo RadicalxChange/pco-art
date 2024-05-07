@@ -17,7 +17,7 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
         uint256 feeDenominator
     ) internal {
         require(
-            feeDenominator > feeNumerator && feeDenominator < 10_001,
+            feeDenominator < 10_001,
             'PeriodicPCOParamsInternal: invalid fee'
         );
 

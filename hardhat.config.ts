@@ -36,10 +36,10 @@ const config: HardhatUserConfig = {
       accounts: PKEY_TESTNET ? [PKEY_TESTNET] : [],
       chainId: 100,
     },
-    'op-goerli': {
-      url: 'https://optimism-goerli.publicnode.com',
+    'op-sepolia': {
+      url: 'https://optimism-sepolia-rpc.publicnode.com',
       accounts: PKEY_TESTNET ? [PKEY_TESTNET] : [],
-      chainId: 420,
+      chainId: 11155420,
     },
   },
 

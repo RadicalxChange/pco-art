@@ -1,0 +1,506 @@
+{
+  "address": "0xf7800284309faA8BF0D4b1fa10B0192c2a1336ff",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "ERC165Base__InvalidInterfaceId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "UintUtils__InsufficientHexLength",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "AllowAnyUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "Allowlisted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "BatchAllowlisted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "BatchUnallowlisted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "Unallowlisted",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "addToAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "addToAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "batchAddToAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "batchAddToAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "batchRemoveFromAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "batchRemoveFromAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_removeAddresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_addAddresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "batchUpdateAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "_removeAddresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_addAddresses",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "batchUpdateAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllowAny",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAllowlist",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "allowAny",
+          "type": "bool"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "initializeAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "allowAny",
+          "type": "bool"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_addresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "initializeAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "isAllowed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "removeFromAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "removeFromAllowlist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "_allowAny",
+          "type": "bool"
+        }
+      ],
+      "name": "setAllowAny",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xfe15ab9c56c6364a7d34bed651a810fd581d8c5dac9b83e1fae015d973456992",
+  "receipt": {
+    "to": null,
+    "from": "0xfF5Be16460704eFd0263dB1444Eaa216b77477c5",
+    "contractAddress": "0xf7800284309faA8BF0D4b1fa10B0192c2a1336ff",
+    "transactionIndex": 3,
+    "gasUsed": "1070423",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x861f25058579b9f2f0ad2168786c0b667e1018ef633f58b04a9bd347eedb31e4",
+    "transactionHash": "0xfe15ab9c56c6364a7d34bed651a810fd581d8c5dac9b83e1fae015d973456992",
+    "logs": [],
+    "blockNumber": 14931014,
+    "cumulativeGasUsed": "3537266",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "c548b1a12c4a5b4508c1d2fe38e3b576",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"ERC165Base__InvalidInterfaceId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UintUtils__InsufficientHexLength\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"AllowAnyUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"Allowlisted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"BatchAllowlisted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"BatchUnallowlisted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"Unallowlisted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"addToAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"addToAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"batchAddToAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"},{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"batchAddToAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"batchRemoveFromAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"},{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"batchRemoveFromAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_removeAddresses\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_addAddresses\",\"type\":\"address[]\"}],\"name\":\"batchUpdateAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_removeAddresses\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"_addAddresses\",\"type\":\"address[]\"},{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"batchUpdateAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllowAny\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllowlist\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"allowAny\",\"type\":\"bool\"},{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"initializeAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"allowAny\",\"type\":\"bool\"},{\"internalType\":\"address[]\",\"name\":\"_addresses\",\"type\":\"address[]\"}],\"name\":\"initializeAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"isAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"removeFromAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"removeFromAllowlist\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_allowAny\",\"type\":\"bool\"}],\"name\":\"setAllowAny\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Allows owner to set an allowlist of addresses\",\"kind\":\"dev\",\"methods\":{},\"title\":\"AllowlistFacet\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"addToAllowlist(address)\":{\"notice\":\"Add to allowlist\"},\"addToAllowlist(address,bool)\":{\"notice\":\"Add to allowlist with allow any\"},\"batchAddToAllowlist(address[])\":{\"notice\":\"Batch add to allowlist\"},\"batchAddToAllowlist(address[],bool)\":{\"notice\":\"Batch add to allowlist with allow any\"},\"batchRemoveFromAllowlist(address[])\":{\"notice\":\"Batch remove from allowlist\"},\"batchRemoveFromAllowlist(address[],bool)\":{\"notice\":\"Batch remove from allowlist with allow any\"},\"batchUpdateAllowlist(address[],address[])\":{\"notice\":\"Batch update allowlist\"},\"batchUpdateAllowlist(address[],address[],bool)\":{\"notice\":\"Batch update allowlist with allow any\"},\"getAllowAny()\":{\"notice\":\"Get allow any\"},\"getAllowlist()\":{\"notice\":\"Get allowlist as array\"},\"initializeAllowlist(address,bool,address[])\":{\"notice\":\"Initialize allowlist with owner\"},\"initializeAllowlist(bool,address[])\":{\"notice\":\"Initialize allowlist\"},\"isAllowed(address)\":{\"notice\":\"Check if address is allowed\"},\"removeFromAllowlist(address)\":{\"notice\":\"Remove from allowlist\"},\"removeFromAllowlist(address,bool)\":{\"notice\":\"Remove from allowlist with allow any\"},\"setAllowAny(bool)\":{\"notice\":\"Set allow any\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/allowlist/facets/AllowlistFacet.sol\":\"AllowlistFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@solidstate/contracts/access/access_control/AccessControlInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { EnumerableSet } from '../../data/EnumerableSet.sol';\\nimport { AddressUtils } from '../../utils/AddressUtils.sol';\\nimport { UintUtils } from '../../utils/UintUtils.sol';\\nimport { IAccessControlInternal } from './IAccessControlInternal.sol';\\nimport { AccessControlStorage } from './AccessControlStorage.sol';\\n\\n/**\\n * @title Role-based access control system\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts (MIT license)\\n */\\nabstract contract AccessControlInternal is IAccessControlInternal {\\n    using AddressUtils for address;\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n    using UintUtils for uint256;\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role);\\n        _;\\n    }\\n\\n    /*\\n     * @notice query whether role is assigned to account\\n     * @param role role to query\\n     * @param account account to query\\n     * @return whether role is assigned to account\\n     */\\n    function _hasRole(\\n        bytes32 role,\\n        address account\\n    ) internal view virtual returns (bool) {\\n        return\\n            AccessControlStorage.layout().roles[role].members.contains(account);\\n    }\\n\\n    /**\\n     * @notice revert if sender does not have given role\\n     * @param role role to query\\n     */\\n    function _checkRole(bytes32 role) internal view virtual {\\n        _checkRole(role, msg.sender);\\n    }\\n\\n    /**\\n     * @notice revert if given account does not have given role\\n     * @param role role to query\\n     * @param account to query\\n     */\\n    function _checkRole(bytes32 role, address account) internal view virtual {\\n        if (!_hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        'AccessControl: account ',\\n                        account.toString(),\\n                        ' is missing role ',\\n                        uint256(role).toHexString(32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n    /*\\n     * @notice query admin role for given role\\n     * @param role role to query\\n     * @return admin role\\n     */\\n    function _getRoleAdmin(\\n        bytes32 role\\n    ) internal view virtual returns (bytes32) {\\n        return AccessControlStorage.layout().roles[role].adminRole;\\n    }\\n\\n    /**\\n     * @notice set role as admin role\\n     * @param role role to set\\n     * @param adminRole admin role to set\\n     */\\n    function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {\\n        bytes32 previousAdminRole = _getRoleAdmin(role);\\n        AccessControlStorage.layout().roles[role].adminRole = adminRole;\\n        emit RoleAdminChanged(role, previousAdminRole, adminRole);\\n    }\\n\\n    /*\\n     * @notice assign role to given account\\n     * @param role role to assign\\n     * @param account recipient of role assignment\\n     */\\n    function _grantRole(bytes32 role, address account) internal virtual {\\n        AccessControlStorage.layout().roles[role].members.add(account);\\n        emit RoleGranted(role, account, msg.sender);\\n    }\\n\\n    /*\\n     * @notice unassign role from given account\\n     * @param role role to unassign\\n     * @parm account\\n     */\\n    function _revokeRole(bytes32 role, address account) internal virtual {\\n        AccessControlStorage.layout().roles[role].members.remove(account);\\n        emit RoleRevoked(role, account, msg.sender);\\n    }\\n\\n    /**\\n     * @notice relinquish role\\n     * @param role role to relinquish\\n     */\\n    function _renounceRole(bytes32 role) internal virtual {\\n        _revokeRole(role, msg.sender);\\n    }\\n\\n    /**\\n     * @notice query role for member at given index\\n     * @param role role to query\\n     * @param index index to query\\n     */\\n    function _getRoleMember(\\n        bytes32 role,\\n        uint256 index\\n    ) internal view virtual returns (address) {\\n        return AccessControlStorage.layout().roles[role].members.at(index);\\n    }\\n\\n    /**\\n     * @notice query role for member count\\n     * @param role role to query\\n     */\\n    function _getRoleMemberCount(\\n        bytes32 role\\n    ) internal view virtual returns (uint256) {\\n        return AccessControlStorage.layout().roles[role].members.length();\\n    }\\n}\\n\",\"keccak256\":\"0x313d74202592af8c7a890c051959b58a3e016b9d0b263d03887a39f2bce27f76\",\"license\":\"MIT\"},\"@solidstate/contracts/access/access_control/AccessControlStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { EnumerableSet } from '../../data/EnumerableSet.sol';\\n\\nlibrary AccessControlStorage {\\n    struct RoleData {\\n        EnumerableSet.AddressSet members;\\n        bytes32 adminRole;\\n    }\\n\\n    struct Layout {\\n        mapping(bytes32 => RoleData) roles;\\n    }\\n\\n    bytes32 internal constant DEFAULT_ADMIN_ROLE = 0x00;\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.AccessControl');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xae788d37a6e20edf7f94be23d78517324f50bccbf0541e10ce0850d7d5bca062\",\"license\":\"MIT\"},\"@solidstate/contracts/access/access_control/IAccessControlInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @title Partial AccessControl interface needed by internal functions\\n */\\ninterface IAccessControlInternal {\\n    event RoleAdminChanged(\\n        bytes32 indexed role,\\n        bytes32 indexed previousAdminRole,\\n        bytes32 indexed newAdminRole\\n    );\\n\\n    event RoleGranted(\\n        bytes32 indexed role,\\n        address indexed account,\\n        address indexed sender\\n    );\\n\\n    event RoleRevoked(\\n        bytes32 indexed role,\\n        address indexed account,\\n        address indexed sender\\n    );\\n}\\n\",\"keccak256\":\"0xcc4a1d78a60955d673104adaee1211de3b3cfb95668f1fbfc43ed0e7f36ad110\",\"license\":\"MIT\"},\"@solidstate/contracts/data/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title Set implementation with enumeration functions\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts (MIT license)\\n */\\nlibrary EnumerableSet {\\n    error EnumerableSet__IndexOutOfBounds();\\n\\n    struct Set {\\n        bytes32[] _values;\\n        // 1-indexed to allow 0 to signify nonexistence\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    function at(\\n        Bytes32Set storage set,\\n        uint256 index\\n    ) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    function at(\\n        AddressSet storage set,\\n        uint256 index\\n    ) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    function at(\\n        UintSet storage set,\\n        uint256 index\\n    ) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    function contains(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    function contains(\\n        AddressSet storage set,\\n        address value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function contains(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    function indexOf(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, value);\\n    }\\n\\n    function indexOf(\\n        AddressSet storage set,\\n        address value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function indexOf(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, bytes32(value));\\n    }\\n\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function add(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    function add(\\n        AddressSet storage set,\\n        address value\\n    ) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    function remove(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    function remove(\\n        AddressSet storage set,\\n        address value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function remove(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    function toArray(\\n        Bytes32Set storage set\\n    ) internal view returns (bytes32[] memory) {\\n        return set._inner._values;\\n    }\\n\\n    function toArray(\\n        AddressSet storage set\\n    ) internal view returns (address[] memory) {\\n        bytes32[] storage values = set._inner._values;\\n        address[] storage array;\\n\\n        assembly {\\n            array.slot := values.slot\\n        }\\n\\n        return array;\\n    }\\n\\n    function toArray(\\n        UintSet storage set\\n    ) internal view returns (uint256[] memory) {\\n        bytes32[] storage values = set._inner._values;\\n        uint256[] storage array;\\n\\n        assembly {\\n            array.slot := values.slot\\n        }\\n\\n        return array;\\n    }\\n\\n    function _at(\\n        Set storage set,\\n        uint256 index\\n    ) private view returns (bytes32) {\\n        if (index >= set._values.length)\\n            revert EnumerableSet__IndexOutOfBounds();\\n        return set._values[index];\\n    }\\n\\n    function _contains(\\n        Set storage set,\\n        bytes32 value\\n    ) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    function _indexOf(\\n        Set storage set,\\n        bytes32 value\\n    ) private view returns (uint256) {\\n        unchecked {\\n            return set._indexes[value] - 1;\\n        }\\n    }\\n\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    function _add(\\n        Set storage set,\\n        bytes32 value\\n    ) private returns (bool status) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            set._indexes[value] = set._values.length;\\n            status = true;\\n        }\\n    }\\n\\n    function _remove(\\n        Set storage set,\\n        bytes32 value\\n    ) private returns (bool status) {\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            unchecked {\\n                bytes32 last = set._values[set._values.length - 1];\\n\\n                // move last value to now-vacant index\\n\\n                set._values[valueIndex - 1] = last;\\n                set._indexes[last] = valueIndex;\\n            }\\n            // clear last index\\n\\n            set._values.pop();\\n            delete set._indexes[value];\\n\\n            status = true;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xbbaaeb805b3e1e704ceba33c9093285220254b1ff6b4b7f577e515b118e116f6\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC165Internal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title ERC165 interface registration interface\\n */\\ninterface IERC165Internal {\\n\\n}\\n\",\"keccak256\":\"0xf4d4708a60ed04887849509a258db49d4eb686f33214cb9c9643325cd8dae89d\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC165BaseInternal } from './IERC165BaseInternal.sol';\\nimport { ERC165BaseStorage } from './ERC165BaseStorage.sol';\\n\\n/**\\n * @title ERC165 implementation\\n */\\nabstract contract ERC165BaseInternal is IERC165BaseInternal {\\n    /**\\n     * @notice indicates whether an interface is already supported based on the interfaceId\\n     * @param interfaceId id of interface to check\\n     * @return bool indicating whether interface is supported\\n     */\\n    function _supportsInterface(\\n        bytes4 interfaceId\\n    ) internal view virtual returns (bool) {\\n        return ERC165BaseStorage.layout().supportedInterfaces[interfaceId];\\n    }\\n\\n    /**\\n     * @notice sets status of interface support\\n     * @param interfaceId id of interface to set status for\\n     * @param status boolean indicating whether interface will be set as supported\\n     */\\n    function _setSupportsInterface(\\n        bytes4 interfaceId,\\n        bool status\\n    ) internal virtual {\\n        if (interfaceId == 0xffffffff) revert ERC165Base__InvalidInterfaceId();\\n        ERC165BaseStorage.layout().supportedInterfaces[interfaceId] = status;\\n    }\\n}\\n\",\"keccak256\":\"0xad163d89454d9c8a018880253c5be156ee0f847f05a392a12b2a7061c7fa8682\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/ERC165BaseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nlibrary ERC165BaseStorage {\\n    struct Layout {\\n        mapping(bytes4 => bool) supportedInterfaces;\\n    }\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.ERC165Base');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xfd1cfba40f8aabda5898ffe21adeeea8c7011da12bfdad7f7aa0cf87b3635653\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/IERC165BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { IERC165Internal } from '../../../interfaces/IERC165Internal.sol';\\n\\ninterface IERC165BaseInternal is IERC165Internal {\\n    error ERC165Base__InvalidInterfaceId();\\n}\\n\",\"keccak256\":\"0xccda4b118c8c09c276a0e577168aa404ea6207aad6b384b04f5f3a8923316422\",\"license\":\"MIT\"},\"@solidstate/contracts/utils/AddressUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { UintUtils } from './UintUtils.sol';\\n\\nlibrary AddressUtils {\\n    using UintUtils for uint256;\\n\\n    error AddressUtils__InsufficientBalance();\\n    error AddressUtils__NotContract();\\n    error AddressUtils__SendValueFailed();\\n\\n    function toString(address account) internal pure returns (string memory) {\\n        return uint256(uint160(account)).toHexString(20);\\n    }\\n\\n    function isContract(address account) internal view returns (bool) {\\n        uint256 size;\\n        assembly {\\n            size := extcodesize(account)\\n        }\\n        return size > 0;\\n    }\\n\\n    function sendValue(address payable account, uint256 amount) internal {\\n        (bool success, ) = account.call{ value: amount }('');\\n        if (!success) revert AddressUtils__SendValueFailed();\\n    }\\n\\n    function functionCall(\\n        address target,\\n        bytes memory data\\n    ) internal returns (bytes memory) {\\n        return\\n            functionCall(target, data, 'AddressUtils: failed low-level call');\\n    }\\n\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory error\\n    ) internal returns (bytes memory) {\\n        return _functionCallWithValue(target, data, 0, error);\\n    }\\n\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value\\n    ) internal returns (bytes memory) {\\n        return\\n            functionCallWithValue(\\n                target,\\n                data,\\n                value,\\n                'AddressUtils: failed low-level call with value'\\n            );\\n    }\\n\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory error\\n    ) internal returns (bytes memory) {\\n        if (value > address(this).balance)\\n            revert AddressUtils__InsufficientBalance();\\n        return _functionCallWithValue(target, data, value, error);\\n    }\\n\\n    /**\\n     * @notice execute arbitrary external call with limited gas usage and amount of copied return data\\n     * @dev derived from https://github.com/nomad-xyz/ExcessivelySafeCall (MIT License)\\n     * @param target recipient of call\\n     * @param gasAmount gas allowance for call\\n     * @param value native token value to include in call\\n     * @param maxCopy maximum number of bytes to copy from return data\\n     * @param data encoded call data\\n     * @return success whether call is successful\\n     * @return returnData copied return data\\n     */\\n    function excessivelySafeCall(\\n        address target,\\n        uint256 gasAmount,\\n        uint256 value,\\n        uint16 maxCopy,\\n        bytes memory data\\n    ) internal returns (bool success, bytes memory returnData) {\\n        returnData = new bytes(maxCopy);\\n\\n        assembly {\\n            // execute external call via assembly to avoid automatic copying of return data\\n            success := call(\\n                gasAmount,\\n                target,\\n                value,\\n                add(data, 0x20),\\n                mload(data),\\n                0,\\n                0\\n            )\\n\\n            // determine whether to limit amount of data to copy\\n            let toCopy := returndatasize()\\n\\n            if gt(toCopy, maxCopy) {\\n                toCopy := maxCopy\\n            }\\n\\n            // store the length of the copied bytes\\n            mstore(returnData, toCopy)\\n\\n            // copy the bytes from returndata[0:toCopy]\\n            returndatacopy(add(returnData, 0x20), 0, toCopy)\\n        }\\n    }\\n\\n    function _functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory error\\n    ) private returns (bytes memory) {\\n        if (!isContract(target)) revert AddressUtils__NotContract();\\n\\n        (bool success, bytes memory returnData) = target.call{ value: value }(\\n            data\\n        );\\n\\n        if (success) {\\n            return returnData;\\n        } else if (returnData.length > 0) {\\n            assembly {\\n                let returnData_size := mload(returnData)\\n                revert(add(32, returnData), returnData_size)\\n            }\\n        } else {\\n            revert(error);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x7d924db4dbd9210923ab08db77db3c77438014c255fd49fa208ebce283d991bf\",\"license\":\"MIT\"},\"@solidstate/contracts/utils/UintUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title utility functions for uint256 operations\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts/ (MIT license)\\n */\\nlibrary UintUtils {\\n    error UintUtils__InsufficientHexLength();\\n\\n    bytes16 private constant HEX_SYMBOLS = '0123456789abcdef';\\n\\n    function add(uint256 a, int256 b) internal pure returns (uint256) {\\n        return b < 0 ? sub(a, -b) : a + uint256(b);\\n    }\\n\\n    function sub(uint256 a, int256 b) internal pure returns (uint256) {\\n        return b < 0 ? add(a, -b) : a - uint256(b);\\n    }\\n\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return '0';\\n        }\\n\\n        uint256 temp = value;\\n        uint256 digits;\\n\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n\\n        bytes memory buffer = new bytes(digits);\\n\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n\\n        return string(buffer);\\n    }\\n\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return '0x00';\\n        }\\n\\n        uint256 length = 0;\\n\\n        for (uint256 temp = value; temp != 0; temp >>= 8) {\\n            unchecked {\\n                length++;\\n            }\\n        }\\n\\n        return toHexString(value, length);\\n    }\\n\\n    function toHexString(\\n        uint256 value,\\n        uint256 length\\n    ) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = '0';\\n        buffer[1] = 'x';\\n\\n        unchecked {\\n            for (uint256 i = 2 * length + 1; i > 1; --i) {\\n                buffer[i] = HEX_SYMBOLS[value & 0xf];\\n                value >>= 4;\\n            }\\n        }\\n\\n        if (value != 0) revert UintUtils__InsufficientHexLength();\\n\\n        return string(buffer);\\n    }\\n}\\n\",\"keccak256\":\"0x5aaeaea22a0800402c6f2d8ce6185293bc64f74f6c390c1b1c53b624b43972f8\",\"license\":\"MIT\"},\"contracts/allowlist/AllowlistReadableInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';\\nimport { AllowlistStorage } from './AllowlistStorage.sol';\\n\\n/**\\n * @title AllowlistReadableInternal\\n */\\nabstract contract AllowlistReadableInternal {\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n\\n    /**\\n     * @notice Check if address is allowed\\n     */\\n    function _isAllowed(address _address) internal view returns (bool) {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        if (l.allowAny) {\\n            return true;\\n        }\\n        return l.allowlist.contains(_address);\\n    }\\n\\n    /**\\n     * @notice Get allowlist as array\\n     */\\n    function _getAllowlist() internal view returns (address[] memory) {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        return l.allowlist.toArray();\\n    }\\n\\n    /**\\n     * @notice Get allow any\\n     */\\n    function _getAllowAny() internal view returns (bool) {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        return l.allowAny;\\n    }\\n}\\n\",\"keccak256\":\"0x5d98adb5097b89dbb0414f0ff0d0d61270a9f0e270b42c44153ce0da67806767\",\"license\":\"MIT\"},\"contracts/allowlist/AllowlistStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';\\n\\n/**\\n * @title AllowlistStorage\\n */\\nlibrary AllowlistStorage {\\n    struct Layout {\\n        bool isInitialized;\\n        bool allowAny;\\n        EnumerableSet.AddressSet allowlist;\\n    }\\n\\n    bytes32 private constant STORAGE_SLOT =\\n        keccak256('pcoart.contracts.storage.AllowlistStorage');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        //slither-disable-next-line assembly\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xe240679762bee41883c5939a95bfd2f0e6624b00a8cb9fd8f13a2ea1b3a76558\",\"license\":\"MIT\"},\"contracts/allowlist/AllowlistWritableInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';\\nimport { AllowlistStorage } from './AllowlistStorage.sol';\\nimport { IAllowlistWritableInternal } from './IAllowlistWritableInternal.sol';\\n\\n/**\\n * @title AllowlistWritableInternal\\n */\\nabstract contract AllowlistWritableInternal is IAllowlistWritableInternal {\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n\\n    /**\\n     * @notice Initialize allowlist\\n     */\\n    function _initializeAllowlist(\\n        bool _allowAny,\\n        address[] memory _addresses\\n    ) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        l.isInitialized = true;\\n\\n        _setAllowAny(_allowAny);\\n\\n        for (uint256 i = 0; i < _addresses.length; i++) {\\n            //slither-disable-next-line unused-return\\n            l.allowlist.add(_addresses[i]);\\n        }\\n    }\\n\\n    /**\\n     * @notice Check if initialized\\n     */\\n    function _isInitialized() internal view returns (bool) {\\n        return AllowlistStorage.layout().isInitialized;\\n    }\\n\\n    /**\\n     * @notice Set allow any\\n     */\\n    function _setAllowAny(bool _allowAny) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        l.allowAny = _allowAny;\\n\\n        emit AllowAnyUpdated(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Add to allowlist\\n     */\\n    function _addToAllowlist(address _address) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        //slither-disable-next-line unused-return\\n        l.allowlist.add(_address);\\n\\n        emit Allowlisted(_address);\\n    }\\n\\n    /**\\n     * @notice Remove from allowlist\\n     */\\n    function _removeFromAllowlist(address _address) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        //slither-disable-next-line unused-return\\n        l.allowlist.remove(_address);\\n\\n        emit Unallowlisted(_address);\\n    }\\n\\n    /**\\n     * @notice Batch add to allowlist\\n     */\\n    function _batchAddToAllowlist(address[] memory _addresses) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        for (uint256 i = 0; i < _addresses.length; i++) {\\n            //slither-disable-next-line unused-return\\n            l.allowlist.add(_addresses[i]);\\n        }\\n\\n        emit BatchAllowlisted(_addresses);\\n    }\\n\\n    /**\\n     * @notice Batch remove from allowlist\\n     */\\n    function _batchRemoveFromAllowlist(address[] memory _addresses) internal {\\n        AllowlistStorage.Layout storage l = AllowlistStorage.layout();\\n\\n        for (uint256 i = 0; i < _addresses.length; i++) {\\n            //slither-disable-next-line unused-return\\n            l.allowlist.remove(_addresses[i]);\\n        }\\n\\n        emit BatchUnallowlisted(_addresses);\\n    }\\n}\\n\",\"keccak256\":\"0x1259bca6e076b04725f00a5e1b53fbcccae03b31fa8b158155a815a0a7ae845f\",\"license\":\"MIT\"},\"contracts/allowlist/IAllowlistReadable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title IAllowlistReadable\\n */\\ninterface IAllowlistReadable {\\n    /**\\n     * @notice Check if address is allowed\\n     */\\n    function isAllowed(address _address) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x6ab698a298645931b3071959619ae7dfc3f1bcaa0fb78aee56b06a185c1d11cd\",\"license\":\"MIT\"},\"contracts/allowlist/IAllowlistWritable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title IAllowlistWritable\\n */\\ninterface IAllowlistWritable {\\n    /**\\n     * @notice Set allow any\\n     */\\n    function setAllowAny(bool _allowAny) external;\\n\\n    /**\\n     * @notice Add to allowlist\\n     */\\n    function addToAllowlist(address _address) external;\\n\\n    /**\\n     * @notice Remove from allowlist\\n     */\\n    function removeFromAllowlist(address _address) external;\\n}\\n\",\"keccak256\":\"0x00635c1706eeec085335c06802aad21205ec98323adca4ece2d454c75b441f90\",\"license\":\"MIT\"},\"contracts/allowlist/IAllowlistWritableInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title IAllowlistWritableInternal\\n */\\ninterface IAllowlistWritableInternal {\\n    event Allowlisted(address indexed _address);\\n    event BatchAllowlisted(address[] _addresses);\\n\\n    event Unallowlisted(address indexed _address);\\n    event BatchUnallowlisted(address[] _addresses);\\n\\n    event AllowAnyUpdated(bool indexed _allowAny);\\n}\\n\",\"keccak256\":\"0xba6e4a09da93b3b09d2bfd20ce604c0aa5a42397bc872887f1e85af2f3bdc549\",\"license\":\"MIT\"},\"contracts/allowlist/facets/AllowlistFacet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { EnumerableSet } from '@solidstate/contracts/data/EnumerableSet.sol';\\nimport { IAllowlistWritable } from '../IAllowlistWritable.sol';\\nimport { AllowlistStorage } from '../AllowlistStorage.sol';\\nimport { AllowlistReadableInternal } from '../AllowlistReadableInternal.sol';\\nimport { AllowlistWritableInternal } from '../AllowlistWritableInternal.sol';\\nimport { ERC165BaseInternal } from '@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol';\\nimport { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';\\nimport { IAllowlistReadable } from '../IAllowlistReadable.sol';\\n\\n/**\\n * @title AllowlistFacet\\n * @dev Allows owner to set an allowlist of addresses\\n */\\ncontract AllowlistFacet is\\n    AccessControlInternal,\\n    IAllowlistWritable,\\n    IAllowlistReadable,\\n    AllowlistReadableInternal,\\n    AllowlistWritableInternal,\\n    ERC165BaseInternal\\n{\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n\\n    // Component role\\n    bytes32 internal constant COMPONENT_ROLE =\\n        keccak256('AllowlistFacet.COMPONENT_ROLE');\\n\\n    /**\\n     * @notice Initialize allowlist\\n     */\\n    function initializeAllowlist(\\n        bool allowAny,\\n        address[] memory _addresses\\n    ) external {\\n        require(!_isInitialized(), 'AllowlistFacet: already initialized');\\n\\n        _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);\\n        _initializeAllowlist(allowAny, _addresses);\\n    }\\n\\n    /**\\n     * @notice Initialize allowlist with owner\\n     */\\n    function initializeAllowlist(\\n        address _owner,\\n        bool allowAny,\\n        address[] memory _addresses\\n    ) external {\\n        require(!_isInitialized(), 'AllowlistFacet: already initialized');\\n\\n        _setSupportsInterface(type(IAllowlistReadable).interfaceId, true);\\n        _setSupportsInterface(type(IAllowlistWritable).interfaceId, true);\\n        _grantRole(COMPONENT_ROLE, _owner);\\n        _initializeAllowlist(allowAny, _addresses);\\n    }\\n\\n    /**\\n     * @notice Check if address is allowed\\n     */\\n    function isAllowed(address _address) external view returns (bool) {\\n        return _isAllowed(_address);\\n    }\\n\\n    /**\\n     * @notice Set allow any\\n     */\\n    function setAllowAny(bool _allowAny) external onlyRole(COMPONENT_ROLE) {\\n        return _setAllowAny(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Get allow any\\n     */\\n    function getAllowAny() external view returns (bool) {\\n        return _getAllowAny();\\n    }\\n\\n    /**\\n     * @notice Get allowlist as array\\n     */\\n    function getAllowlist() external view returns (address[] memory) {\\n        return _getAllowlist();\\n    }\\n\\n    /**\\n     * @notice Add to allowlist\\n     */\\n    function addToAllowlist(\\n        address _address\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _addToAllowlist(_address);\\n    }\\n\\n    /**\\n     * @notice Add to allowlist with allow any\\n     */\\n    function addToAllowlist(\\n        address _address,\\n        bool _allowAny\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _addToAllowlist(_address);\\n        _setAllowAny(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Remove from allowlist\\n     */\\n    function removeFromAllowlist(\\n        address _address\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _removeFromAllowlist(_address);\\n    }\\n\\n    /**\\n     * @notice Remove from allowlist with allow any\\n     */\\n    function removeFromAllowlist(\\n        address _address,\\n        bool _allowAny\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _removeFromAllowlist(_address);\\n        _setAllowAny(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Batch add to allowlist\\n     */\\n    function batchAddToAllowlist(\\n        address[] memory _addresses\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchAddToAllowlist(_addresses);\\n    }\\n\\n    /**\\n     * @notice Batch add to allowlist with allow any\\n     */\\n    function batchAddToAllowlist(\\n        address[] memory _addresses,\\n        bool _allowAny\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchAddToAllowlist(_addresses);\\n        _setAllowAny(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Batch remove from allowlist\\n     */\\n    function batchRemoveFromAllowlist(\\n        address[] memory _addresses\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchRemoveFromAllowlist(_addresses);\\n    }\\n\\n    /**\\n     * @notice Batch remove from allowlist with allow any\\n     */\\n    function batchRemoveFromAllowlist(\\n        address[] memory _addresses,\\n        bool _allowAny\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchRemoveFromAllowlist(_addresses);\\n        _setAllowAny(_allowAny);\\n    }\\n\\n    /**\\n     * @notice Batch update allowlist\\n     */\\n    function batchUpdateAllowlist(\\n        address[] memory _removeAddresses,\\n        address[] memory _addAddresses\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchRemoveFromAllowlist(_removeAddresses);\\n        _batchAddToAllowlist(_addAddresses);\\n    }\\n\\n    /**\\n     * @notice Batch update allowlist with allow any\\n     */\\n    function batchUpdateAllowlist(\\n        address[] memory _removeAddresses,\\n        address[] memory _addAddresses,\\n        bool _allowAny\\n    ) external onlyRole(COMPONENT_ROLE) {\\n        _batchRemoveFromAllowlist(_removeAddresses);\\n        _batchAddToAllowlist(_addAddresses);\\n        _setAllowAny(_allowAny);\\n    }\\n}\\n\",\"keccak256\":\"0x19953caffadb2d4483e4ac091fff51b781f8a32cf8921f3cc762ef27f42ec7b1\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50611266806100206000396000f3fe608060405234801561001057600080fd5b50600436106101005760003560e01c8063ac3a8c1111610097578063ec7ce71111610066578063ec7ce71114610208578063ed455af61461021b578063efa0a33f1461022e578063f8e86ece1461024157600080fd5b8063ac3a8c11146101ba578063babcc539146101cd578063c5eff3d0146101e0578063ce38b84a146101f557600080fd5b80639371ff2d116100d35780639371ff2d14610153578063939c2673146101665780639edcd94014610194578063a1ecb276146101a757600080fd5b806329953efa146101055780635da93d7e1461011a5780636d85c43c1461012d5780638ac7979114610140575b600080fd5b610118610113366004610cd3565b610254565b005b610118610128366004610d05565b610279565b61011861013b366004610dd8565b61029a565b61011861014e366004610dd8565b6102bb565b610118610161366004610e15565b6102dc565b60008051602061121183398151915254610100900460ff165b60405190151581526020015b60405180910390f35b6101186101a2366004610e73565b610365565b6101186101b5366004610ec1565b61038f565b6101186101c8366004610f0f565b6103db565b61017f6101db366004610d05565b610405565b6101e8610416565b60405161018b9190610f69565b610118610203366004610fb6565b610420565b61011861021636600461102a565b610459565b61011861022936600461102a565b61047a565b61011861023c366004610e73565b61049b565b61011861024f366004610d05565b6104bc565b6000805160206111f183398151915261026c816104dd565b610275826104ea565b5050565b6000805160206111f1833981519152610291816104dd565b6102758261053c565b6000805160206111f18339815191526102b2816104dd565b610275826105ae565b6000805160206111f18339815191526102d3816104dd565b61027582610647565b6000805160206112118339815191525460ff16156103155760405162461bcd60e51b815260040161030c90611054565b60405180910390fd5b61032763babcc53960e01b60016106d4565b61033963466a36a560e11b60016106d4565b6103516000805160206111f18339815191528461074a565b61035b82826107be565b505050565b905090565b6000805160206111f183398151915261037d816104dd565b610386836105ae565b61035b826104ea565b6000805160206112118339815191525460ff16156103bf5760405162461bcd60e51b815260040161030c90611054565b6103d163babcc53960e01b60016106d4565b61027582826107be565b6000805160206111f18339815191526103f3816104dd565b6103fc836105ae565b61035b82610647565b600061041082610815565b92915050565b6060610360610854565b6000805160206111f1833981519152610438816104dd565b610441846105ae565b61044a83610647565b610453826104ea565b50505050565b6000805160206111f1833981519152610471816104dd565b6103868361053c565b6000805160206111f1833981519152610492816104dd565b61038683610894565b6000805160206111f18339815191526104b3816104dd565b61038683610647565b6000805160206111f18339815191526104d4816104dd565b61027582610894565b6104e78133610906565b50565b600080516020611211833981519152805461ff0019166101008315159081029190911782556040517f20a26f70c17ef9c9bac355de2d5319262bc14d5476e4e9a379fa663ef172486e90600090a25050565b6000805160206112118339815191526105757f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c583610968565b506040516001600160a01b038316907fe5058b95b8b6a8d48a6d241621ef523fab84db6043988a2f925baebedaa7883890600090a25050565b60008051602061121183398151915260005b825181101561060b576105f88382815181106105de576105de611097565b60200260200101518360010161096890919063ffffffff16565b5080610603816110c3565b9150506105c0565b507f51c358fa6c3f60ee363b7ab42087f4213a5587a26894a20bd7834f6f05448d7b8260405161063b9190610f69565b60405180910390a15050565b60008051602061121183398151915260005b82518110156106a45761069183828151811061067757610677611097565b60200260200101518360010161097d90919063ffffffff16565b508061069c816110c3565b915050610659565b507fa35b66497e60321eb5acd99f32e26a2b40c0257bf1c3a9fa52173dfd719c46218260405161063b9190610f69565b6001600160e01b031980831690036106ff5760405163b0a19dd560e01b815260040160405180910390fd5b6001600160e01b03199190911660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d860205260409020805460ff1916911515919091179055565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c62281160205260409020610781908261097d565b5060405133906001600160a01b0383169084907f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d90600090a45050565b600080516020611211833981519152805460ff191660011781556107e1836104ea565b60005b82518110156104535761080283828151811061067757610677611097565b508061080d816110c3565b9150506107e4565b600080516020611211833981519152805460009190610100900460ff16156108405750600192915050565b61084d6001820184610992565b9392505050565b606060008051602061121183398151915261088e7f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c56109b4565b91505090565b6000805160206112118339815191526108cd7f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c58361097d565b506040516001600160a01b038316907f7eb3c7851085a7c7e2aa1a622201d2fcd72a7edf43e9321c62367687b30bb76f90600090a25050565b6109108282610a1a565b61027557610926816001600160a01b0316610a51565b610931836020610a63565b604051602001610942929190611100565b60408051601f198184030181529082905262461bcd60e51b825261030c91600401611175565b600061084d836001600160a01b038416610bb6565b600061084d836001600160a01b038416610c7b565b6001600160a01b0381166000908152600183016020526040812054151561084d565b80546040805160208084028201810190925282815260609284928392918391830182828015610a0c57602002820191906000526020600020905b81546001600160a01b031681526001909101906020018083116109ee575b505050505092505050919050565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c6228116020526040812061084d9083610992565b60606104106001600160a01b03831660145b60606000610a728360026111a8565b610a7d9060026111c7565b67ffffffffffffffff811115610a9557610a95610d20565b6040519080825280601f01601f191660200182016040528015610abf576020820181803683370190505b509050600360fc1b81600081518110610ada57610ada611097565b60200101906001600160f81b031916908160001a905350600f60fb1b81600181518110610b0957610b09611097565b60200101906001600160f81b031916908160001a905350600160028402015b6001811115610b96576f181899199a1a9b1b9c1cb0b131b232b360811b85600f1660108110610b5957610b59611097565b1a60f81b828281518110610b6f57610b6f611097565b60200101906001600160f81b031916908160001a90535060049490941c9360001901610b28565b50831561084d5760405163c913478560e01b815260040160405180910390fd5b60008181526001830160205260408120548015610c7457835460009085906000198101908110610be857610be8611097565b9060005260206000200154905080856000016001840381548110610c0e57610c0e611097565b6000918252602080832090910192909255918252600186019052604090208190558354849080610c4057610c406111da565b6001900381819060005260206000200160009055905583600101600084815260200190815260200160002060009055600191505b5092915050565b6000818152600183016020526040812054610410575081546001808201845560008481526020808220909301849055845493815293810190915260409092205590565b80358015158114610cce57600080fd5b919050565b600060208284031215610ce557600080fd5b61084d82610cbe565b80356001600160a01b0381168114610cce57600080fd5b600060208284031215610d1757600080fd5b61084d82610cee565b634e487b7160e01b600052604160045260246000fd5b600082601f830112610d4757600080fd5b8135602067ffffffffffffffff80831115610d6457610d64610d20565b8260051b604051601f19603f83011681018181108482111715610d8957610d89610d20565b604052938452858101830193838101925087851115610da757600080fd5b83870191505b84821015610dcd57610dbe82610cee565b83529183019190830190610dad565b979650505050505050565b600060208284031215610dea57600080fd5b813567ffffffffffffffff811115610e0157600080fd5b610e0d84828501610d36565b949350505050565b600080600060608486031215610e2a57600080fd5b610e3384610cee565b9250610e4160208501610cbe565b9150604084013567ffffffffffffffff811115610e5d57600080fd5b610e6986828701610d36565b9150509250925092565b60008060408385031215610e8657600080fd5b823567ffffffffffffffff811115610e9d57600080fd5b610ea985828601610d36565b925050610eb860208401610cbe565b90509250929050565b60008060408385031215610ed457600080fd5b610edd83610cbe565b9150602083013567ffffffffffffffff811115610ef957600080fd5b610f0585828601610d36565b9150509250929050565b60008060408385031215610f2257600080fd5b823567ffffffffffffffff80821115610f3a57600080fd5b610f4686838701610d36565b93506020850135915080821115610f5c57600080fd5b50610f0585828601610d36565b6020808252825182820181905260009190848201906040850190845b81811015610faa5783516001600160a01b031683529284019291840191600101610f85565b50909695505050505050565b600080600060608486031215610fcb57600080fd5b833567ffffffffffffffff80821115610fe357600080fd5b610fef87838801610d36565b9450602086013591508082111561100557600080fd5b5061101286828701610d36565b92505061102160408501610cbe565b90509250925092565b6000806040838503121561103d57600080fd5b61104683610cee565b9150610eb860208401610cbe565b60208082526023908201527f416c6c6f776c69737446616365743a20616c726561647920696e697469616c696040820152621e995960ea1b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b6000600182016110d5576110d56110ad565b5060010190565b60005b838110156110f75781810151838201526020016110df565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008152600083516111388160178501602088016110dc565b7001034b99036b4b9b9b4b733903937b6329607d1b60179184019182015283516111698160288401602088016110dc565b01602801949350505050565b60208152600082518060208401526111948160408501602087016110dc565b601f01601f19169190910160400192915050565b60008160001904831182151516156111c2576111c26110ad565b500290565b80820180821115610410576104106110ad565b634e487b7160e01b600052603160045260246000fdfe18442e22641370002622a608e197db432d3d4c113dab8ef4bf55fdc4eeed18699fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c4a2646970667358221220d63a09347165f1f9089c0aee136c8f7f9ec6d92f85671d26728614cb8a9805aa64736f6c63430008100033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101005760003560e01c8063ac3a8c1111610097578063ec7ce71111610066578063ec7ce71114610208578063ed455af61461021b578063efa0a33f1461022e578063f8e86ece1461024157600080fd5b8063ac3a8c11146101ba578063babcc539146101cd578063c5eff3d0146101e0578063ce38b84a146101f557600080fd5b80639371ff2d116100d35780639371ff2d14610153578063939c2673146101665780639edcd94014610194578063a1ecb276146101a757600080fd5b806329953efa146101055780635da93d7e1461011a5780636d85c43c1461012d5780638ac7979114610140575b600080fd5b610118610113366004610cd3565b610254565b005b610118610128366004610d05565b610279565b61011861013b366004610dd8565b61029a565b61011861014e366004610dd8565b6102bb565b610118610161366004610e15565b6102dc565b60008051602061121183398151915254610100900460ff165b60405190151581526020015b60405180910390f35b6101186101a2366004610e73565b610365565b6101186101b5366004610ec1565b61038f565b6101186101c8366004610f0f565b6103db565b61017f6101db366004610d05565b610405565b6101e8610416565b60405161018b9190610f69565b610118610203366004610fb6565b610420565b61011861021636600461102a565b610459565b61011861022936600461102a565b61047a565b61011861023c366004610e73565b61049b565b61011861024f366004610d05565b6104bc565b6000805160206111f183398151915261026c816104dd565b610275826104ea565b5050565b6000805160206111f1833981519152610291816104dd565b6102758261053c565b6000805160206111f18339815191526102b2816104dd565b610275826105ae565b6000805160206111f18339815191526102d3816104dd565b61027582610647565b6000805160206112118339815191525460ff16156103155760405162461bcd60e51b815260040161030c90611054565b60405180910390fd5b61032763babcc53960e01b60016106d4565b61033963466a36a560e11b60016106d4565b6103516000805160206111f18339815191528461074a565b61035b82826107be565b505050565b905090565b6000805160206111f183398151915261037d816104dd565b610386836105ae565b61035b826104ea565b6000805160206112118339815191525460ff16156103bf5760405162461bcd60e51b815260040161030c90611054565b6103d163babcc53960e01b60016106d4565b61027582826107be565b6000805160206111f18339815191526103f3816104dd565b6103fc836105ae565b61035b82610647565b600061041082610815565b92915050565b6060610360610854565b6000805160206111f1833981519152610438816104dd565b610441846105ae565b61044a83610647565b610453826104ea565b50505050565b6000805160206111f1833981519152610471816104dd565b6103868361053c565b6000805160206111f1833981519152610492816104dd565b61038683610894565b6000805160206111f18339815191526104b3816104dd565b61038683610647565b6000805160206111f18339815191526104d4816104dd565b61027582610894565b6104e78133610906565b50565b600080516020611211833981519152805461ff0019166101008315159081029190911782556040517f20a26f70c17ef9c9bac355de2d5319262bc14d5476e4e9a379fa663ef172486e90600090a25050565b6000805160206112118339815191526105757f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c583610968565b506040516001600160a01b038316907fe5058b95b8b6a8d48a6d241621ef523fab84db6043988a2f925baebedaa7883890600090a25050565b60008051602061121183398151915260005b825181101561060b576105f88382815181106105de576105de611097565b60200260200101518360010161096890919063ffffffff16565b5080610603816110c3565b9150506105c0565b507f51c358fa6c3f60ee363b7ab42087f4213a5587a26894a20bd7834f6f05448d7b8260405161063b9190610f69565b60405180910390a15050565b60008051602061121183398151915260005b82518110156106a45761069183828151811061067757610677611097565b60200260200101518360010161097d90919063ffffffff16565b508061069c816110c3565b915050610659565b507fa35b66497e60321eb5acd99f32e26a2b40c0257bf1c3a9fa52173dfd719c46218260405161063b9190610f69565b6001600160e01b031980831690036106ff5760405163b0a19dd560e01b815260040160405180910390fd5b6001600160e01b03199190911660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d860205260409020805460ff1916911515919091179055565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c62281160205260409020610781908261097d565b5060405133906001600160a01b0383169084907f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d90600090a45050565b600080516020611211833981519152805460ff191660011781556107e1836104ea565b60005b82518110156104535761080283828151811061067757610677611097565b508061080d816110c3565b9150506107e4565b600080516020611211833981519152805460009190610100900460ff16156108405750600192915050565b61084d6001820184610992565b9392505050565b606060008051602061121183398151915261088e7f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c56109b4565b91505090565b6000805160206112118339815191526108cd7f9fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c58361097d565b506040516001600160a01b038316907f7eb3c7851085a7c7e2aa1a622201d2fcd72a7edf43e9321c62367687b30bb76f90600090a25050565b6109108282610a1a565b61027557610926816001600160a01b0316610a51565b610931836020610a63565b604051602001610942929190611100565b60408051601f198184030181529082905262461bcd60e51b825261030c91600401611175565b600061084d836001600160a01b038416610bb6565b600061084d836001600160a01b038416610c7b565b6001600160a01b0381166000908152600183016020526040812054151561084d565b80546040805160208084028201810190925282815260609284928392918391830182828015610a0c57602002820191906000526020600020905b81546001600160a01b031681526001909101906020018083116109ee575b505050505092505050919050565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c6228116020526040812061084d9083610992565b60606104106001600160a01b03831660145b60606000610a728360026111a8565b610a7d9060026111c7565b67ffffffffffffffff811115610a9557610a95610d20565b6040519080825280601f01601f191660200182016040528015610abf576020820181803683370190505b509050600360fc1b81600081518110610ada57610ada611097565b60200101906001600160f81b031916908160001a905350600f60fb1b81600181518110610b0957610b09611097565b60200101906001600160f81b031916908160001a905350600160028402015b6001811115610b96576f181899199a1a9b1b9c1cb0b131b232b360811b85600f1660108110610b5957610b59611097565b1a60f81b828281518110610b6f57610b6f611097565b60200101906001600160f81b031916908160001a90535060049490941c9360001901610b28565b50831561084d5760405163c913478560e01b815260040160405180910390fd5b60008181526001830160205260408120548015610c7457835460009085906000198101908110610be857610be8611097565b9060005260206000200154905080856000016001840381548110610c0e57610c0e611097565b6000918252602080832090910192909255918252600186019052604090208190558354849080610c4057610c406111da565b6001900381819060005260206000200160009055905583600101600084815260200190815260200160002060009055600191505b5092915050565b6000818152600183016020526040812054610410575081546001808201845560008481526020808220909301849055845493815293810190915260409092205590565b80358015158114610cce57600080fd5b919050565b600060208284031215610ce557600080fd5b61084d82610cbe565b80356001600160a01b0381168114610cce57600080fd5b600060208284031215610d1757600080fd5b61084d82610cee565b634e487b7160e01b600052604160045260246000fd5b600082601f830112610d4757600080fd5b8135602067ffffffffffffffff80831115610d6457610d64610d20565b8260051b604051601f19603f83011681018181108482111715610d8957610d89610d20565b604052938452858101830193838101925087851115610da757600080fd5b83870191505b84821015610dcd57610dbe82610cee565b83529183019190830190610dad565b979650505050505050565b600060208284031215610dea57600080fd5b813567ffffffffffffffff811115610e0157600080fd5b610e0d84828501610d36565b949350505050565b600080600060608486031215610e2a57600080fd5b610e3384610cee565b9250610e4160208501610cbe565b9150604084013567ffffffffffffffff811115610e5d57600080fd5b610e6986828701610d36565b9150509250925092565b60008060408385031215610e8657600080fd5b823567ffffffffffffffff811115610e9d57600080fd5b610ea985828601610d36565b925050610eb860208401610cbe565b90509250929050565b60008060408385031215610ed457600080fd5b610edd83610cbe565b9150602083013567ffffffffffffffff811115610ef957600080fd5b610f0585828601610d36565b9150509250929050565b60008060408385031215610f2257600080fd5b823567ffffffffffffffff80821115610f3a57600080fd5b610f4686838701610d36565b93506020850135915080821115610f5c57600080fd5b50610f0585828601610d36565b6020808252825182820181905260009190848201906040850190845b81811015610faa5783516001600160a01b031683529284019291840191600101610f85565b50909695505050505050565b600080600060608486031215610fcb57600080fd5b833567ffffffffffffffff80821115610fe357600080fd5b610fef87838801610d36565b9450602086013591508082111561100557600080fd5b5061101286828701610d36565b92505061102160408501610cbe565b90509250925092565b6000806040838503121561103d57600080fd5b61104683610cee565b9150610eb860208401610cbe565b60208082526023908201527f416c6c6f776c69737446616365743a20616c726561647920696e697469616c696040820152621e995960ea1b606082015260800190565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b6000600182016110d5576110d56110ad565b5060010190565b60005b838110156110f75781810151838201526020016110df565b50506000910152565b7f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008152600083516111388160178501602088016110dc565b7001034b99036b4b9b9b4b733903937b6329607d1b60179184019182015283516111698160288401602088016110dc565b01602801949350505050565b60208152600082518060208401526111948160408501602087016110dc565b601f01601f19169190910160400192915050565b60008160001904831182151516156111c2576111c26110ad565b500290565b80820180821115610410576104106110ad565b634e487b7160e01b600052603160045260246000fdfe18442e22641370002622a608e197db432d3d4c113dab8ef4bf55fdc4eeed18699fca1883cea1af9526093bc3a6f14a88fc5b5aaf6b6820bb26ccaa4c275327c4a2646970667358221220d63a09347165f1f9089c0aee136c8f7f9ec6d92f85671d26728614cb8a9805aa64736f6c63430008100033",
+  "devdoc": {
+    "details": "Allows owner to set an allowlist of addresses",
+    "kind": "dev",
+    "methods": {},
+    "title": "AllowlistFacet",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "addToAllowlist(address)": {
+        "notice": "Add to allowlist"
+      },
+      "addToAllowlist(address,bool)": {
+        "notice": "Add to allowlist with allow any"
+      },
+      "batchAddToAllowlist(address[])": {
+        "notice": "Batch add to allowlist"
+      },
+      "batchAddToAllowlist(address[],bool)": {
+        "notice": "Batch add to allowlist with allow any"
+      },
+      "batchRemoveFromAllowlist(address[])": {
+        "notice": "Batch remove from allowlist"
+      },
+      "batchRemoveFromAllowlist(address[],bool)": {
+        "notice": "Batch remove from allowlist with allow any"
+      },
+      "batchUpdateAllowlist(address[],address[])": {
+        "notice": "Batch update allowlist"
+      },
+      "batchUpdateAllowlist(address[],address[],bool)": {
+        "notice": "Batch update allowlist with allow any"
+      },
+      "getAllowAny()": {
+        "notice": "Get allow any"
+      },
+      "getAllowlist()": {
+        "notice": "Get allowlist as array"
+      },
+      "initializeAllowlist(address,bool,address[])": {
+        "notice": "Initialize allowlist with owner"
+      },
+      "initializeAllowlist(bool,address[])": {
+        "notice": "Initialize allowlist"
+      },
+      "isAllowed(address)": {
+        "notice": "Check if address is allowed"
+      },
+      "removeFromAllowlist(address)": {
+        "notice": "Remove from allowlist"
+      },
+      "removeFromAllowlist(address,bool)": {
+        "notice": "Remove from allowlist with allow any"
+      },
+      "setAllowAny(bool)": {
+        "notice": "Set allow any"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

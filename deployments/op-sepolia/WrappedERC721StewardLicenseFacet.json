@@ -1,0 +1,1043 @@
+{
+  "address": "0x8f0fF28Ce206C12248bBa64D7f72Fc6959a2717e",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "AddressUtils__NotContract",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC165Base__InvalidInterfaceId",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__BalanceQueryZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__ERC721ReceiverNotImplemented",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__InvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__MintToZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__NonExistentToken",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__NotOwnerOrApproved",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__NotTokenOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__SelfApproval",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__TokenAlreadyMinted",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Base__TransferToZeroAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ERC721Metadata__NonExistentToken",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EnumerableMap__IndexOutOfBounds",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EnumerableMap__NonExistentKey",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EnumerableSet__IndexOutOfBounds",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "UintUtils__InsufficientHexLength",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Approval",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "ApprovalForAll",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "previousAdminRole",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "newAdminRole",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RoleAdminChanged",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "role",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "RoleRevoked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "tokenURI",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenInitialPeriodStartTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "addTokenToCollection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string[]",
+          "name": "tokenURIs",
+          "type": "string[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "tokenInitialPeriodStartTimes",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bool",
+          "name": "shouldMint",
+          "type": "bool"
+        }
+      ],
+      "name": "addTokensToCollection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "to",
+          "type": "address[]"
+        },
+        {
+          "internalType": "string[]",
+          "name": "tokenURIs",
+          "type": "string[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "tokenInitialPeriodStartTimes",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "addTokensToCollection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint32",
+          "name": "amount",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialPeriodStartTime",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialPeriodStartTimeOffset",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "baseURI",
+          "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "shouldMint",
+          "type": "bool"
+        }
+      ],
+      "name": "addTokensWithBaseURIToCollection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "exists",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApproved",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "minter_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "addToCollectionMinter_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "steward_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxTokenCount_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "shouldMint",
+          "type": "bool"
+        },
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "symbol",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "tokenURI",
+          "type": "string"
+        }
+      ],
+      "name": "initializeWrappedStewardLicense",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "maxTokenCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "name": "onERC721Received",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "safeTransferFrom",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "status",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenByIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenOfOwnerByIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "tokenURI",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferFrom",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "triggerTransfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xaaf5e5acb9dc7256de807b47a4911c12e210490978dc8e6fd7e022f3ea8dd96f",
+  "receipt": {
+    "to": null,
+    "from": "0xfF5Be16460704eFd0263dB1444Eaa216b77477c5",
+    "contractAddress": "0x8f0fF28Ce206C12248bBa64D7f72Fc6959a2717e",
+    "transactionIndex": 1,
+    "gasUsed": "2811245",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x348fb5a57c03fcee85c9bdd2d1ef3a7c7a192aeb0553d0009d759e7c30505535",
+    "transactionHash": "0xaaf5e5acb9dc7256de807b47a4911c12e210490978dc8e6fd7e022f3ea8dd96f",
+    "logs": [],
+    "blockNumber": 14931028,
+    "cumulativeGasUsed": "2855120",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "4d1a131ade7d531f20f9db4f4cb05ba8",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"AddressUtils__NotContract\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC165Base__InvalidInterfaceId\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__BalanceQueryZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__ERC721ReceiverNotImplemented\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__InvalidOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__MintToZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__NonExistentToken\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__NotOwnerOrApproved\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__NotTokenOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__SelfApproval\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__TokenAlreadyMinted\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Base__TransferToZeroAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ERC721Metadata__NonExistentToken\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EnumerableMap__IndexOutOfBounds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EnumerableMap__NonExistentKey\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EnumerableSet__IndexOutOfBounds\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"UintUtils__InsufficientHexLength\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"tokenInitialPeriodStartTime\",\"type\":\"uint256\"}],\"name\":\"addTokenToCollection\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string[]\",\"name\":\"tokenURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenInitialPeriodStartTimes\",\"type\":\"uint256[]\"},{\"internalType\":\"bool\",\"name\":\"shouldMint\",\"type\":\"bool\"}],\"name\":\"addTokensToCollection\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"to\",\"type\":\"address[]\"},{\"internalType\":\"string[]\",\"name\":\"tokenURIs\",\"type\":\"string[]\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenInitialPeriodStartTimes\",\"type\":\"uint256[]\"}],\"name\":\"addTokensToCollection\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"amount\",\"type\":\"uint32\"},{\"internalType\":\"uint256\",\"name\":\"initialPeriodStartTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"initialPeriodStartTimeOffset\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"baseURI\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"shouldMint\",\"type\":\"bool\"}],\"name\":\"addTokensWithBaseURIToCollection\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"exists\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"minter_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"addToCollectionMinter_\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"steward_\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"maxTokenCount_\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"shouldMint\",\"type\":\"bool\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"tokenURI\",\"type\":\"string\"}],\"name\":\"initializeWrappedStewardLicense\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxTokenCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"mintToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"minter\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"status\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"triggerTransfer\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"ERC-721 token license for Steward that wraps existing ERC-721. Only a particular ERC721 transfer is accepted.\",\"kind\":\"dev\",\"methods\":{\"approve(address,uint256)\":{\"params\":{\"operator\":\"address to be approved\",\"tokenId\":\"token to approve\"}},\"balanceOf(address)\":{\"returns\":{\"_0\":\"quantity of tokens held\"}},\"getApproved(uint256)\":{\"params\":{\"tokenId\":\"token to query\"},\"returns\":{\"_0\":\"address approved to spend token\"}},\"isApprovedForAll(address,address)\":{\"params\":{\"account\":\"address to query for approval granted\",\"operator\":\"address to query for approval received\"},\"returns\":{\"_0\":\"whether operator is approved to spend tokens held by account\"}},\"ownerOf(uint256)\":{\"params\":{\"tokenId\":\"token to query\"},\"returns\":{\"_0\":\"token owner\"}},\"safeTransferFrom(address,address,uint256)\":{\"params\":{\"from\":\"sender of token\",\"to\":\"receiver of token\",\"tokenId\":\"token id\"}},\"safeTransferFrom(address,address,uint256,bytes)\":{\"params\":{\"data\":\"data payload\",\"from\":\"sender of token\",\"to\":\"receiver of token\",\"tokenId\":\"token id\"}},\"setApprovalForAll(address,bool)\":{\"params\":{\"operator\":\"address to be approved\",\"status\":\"approval status\"}},\"supportsInterface(bytes4)\":{\"params\":{\"interfaceId\":\"interface id\"},\"returns\":{\"_0\":\"bool whether interface is supported\"}},\"tokenByIndex(uint256)\":{\"params\":{\"index\":\"position in global token list to query\"},\"returns\":{\"_0\":\"id of retrieved token\"}},\"tokenOfOwnerByIndex(address,uint256)\":{\"params\":{\"index\":\"position in owner's token list to query\",\"owner\":\"token holder to query\"},\"returns\":{\"_0\":\"id of retrieved token\"}},\"totalSupply()\":{\"returns\":{\"_0\":\"total supply\"}},\"transferFrom(address,address,uint256)\":{\"params\":{\"from\":\"sender of token\",\"to\":\"receiver of token\",\"tokenId\":\"token id\"}}},\"title\":\"WrappedERC721StewardLicenseFacet\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"addTokenToCollection(address,string,uint256)\":{\"notice\":\"Add token to collection\"},\"addTokensToCollection(address[],string[],uint256[])\":{\"notice\":\"Add tokens to collection with to\"},\"addTokensToCollection(string[],uint256[],bool)\":{\"notice\":\"Add tokens to collection\"},\"addTokensWithBaseURIToCollection(uint32,uint256,uint256,string,bool)\":{\"notice\":\"Add tokens to collection with baseURI\"},\"approve(address,uint256)\":{\"notice\":\"grant approval to given account to spend token\"},\"balanceOf(address)\":{\"notice\":\"query the balance of given address\"},\"exists(uint256)\":{\"notice\":\"Check if token exists\"},\"getApproved(uint256)\":{\"notice\":\"get approval status for given token\"},\"initializeWrappedStewardLicense(address,uint256,address,address,address,uint256,bool,string,string,string)\":{\"notice\":\"Initialize license\"},\"isApprovedForAll(address,address)\":{\"notice\":\"query approval status of given operator with respect to given address\"},\"maxTokenCount()\":{\"notice\":\"Get max token count\"},\"mintToken(address,uint256)\":{\"notice\":\"Initial bidder can mint token if it doesn't exist\"},\"minter()\":{\"notice\":\"Get minter\"},\"name()\":{\"notice\":\"inheritdoc IERC721Metadata\"},\"ownerOf(uint256)\":{\"notice\":\"query the owner of given token\"},\"safeTransferFrom(address,address,uint256)\":{\"notice\":\"transfer token between given addresses, checking for ERC721Receiver implementation if applicable\"},\"safeTransferFrom(address,address,uint256,bytes)\":{\"notice\":\"transfer token between given addresses, checking for ERC721Receiver implementation if applicable\"},\"setApprovalForAll(address,bool)\":{\"notice\":\"grant approval to or revoke approval from given account to spend all tokens held by sender\"},\"supportsInterface(bytes4)\":{\"notice\":\"query whether contract has registered support for given interface\"},\"symbol()\":{\"notice\":\"inheritdoc IERC721Metadata\"},\"tokenByIndex(uint256)\":{\"notice\":\"get token at given internal storage index\"},\"tokenOfOwnerByIndex(address,uint256)\":{\"notice\":\"get token of given owner at given internal storage index\"},\"tokenURI(uint256)\":{\"notice\":\"inheritdoc IERC721Metadata\"},\"totalSupply()\":{\"notice\":\"get total token supply\"},\"transferFrom(address,address,uint256)\":{\"notice\":\"transfer token between given addresses, without checking for ERC721Receiver implementation if applicable\"},\"triggerTransfer(address,address,uint256)\":{\"notice\":\"Trigger transfer of license\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/license/facets/WrappedERC721StewardLicenseFacet.sol\":\"WrappedERC721StewardLicenseFacet\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@solidstate/contracts/access/access_control/AccessControlInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { EnumerableSet } from '../../data/EnumerableSet.sol';\\nimport { AddressUtils } from '../../utils/AddressUtils.sol';\\nimport { UintUtils } from '../../utils/UintUtils.sol';\\nimport { IAccessControlInternal } from './IAccessControlInternal.sol';\\nimport { AccessControlStorage } from './AccessControlStorage.sol';\\n\\n/**\\n * @title Role-based access control system\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts (MIT license)\\n */\\nabstract contract AccessControlInternal is IAccessControlInternal {\\n    using AddressUtils for address;\\n    using EnumerableSet for EnumerableSet.AddressSet;\\n    using UintUtils for uint256;\\n\\n    modifier onlyRole(bytes32 role) {\\n        _checkRole(role);\\n        _;\\n    }\\n\\n    /*\\n     * @notice query whether role is assigned to account\\n     * @param role role to query\\n     * @param account account to query\\n     * @return whether role is assigned to account\\n     */\\n    function _hasRole(\\n        bytes32 role,\\n        address account\\n    ) internal view virtual returns (bool) {\\n        return\\n            AccessControlStorage.layout().roles[role].members.contains(account);\\n    }\\n\\n    /**\\n     * @notice revert if sender does not have given role\\n     * @param role role to query\\n     */\\n    function _checkRole(bytes32 role) internal view virtual {\\n        _checkRole(role, msg.sender);\\n    }\\n\\n    /**\\n     * @notice revert if given account does not have given role\\n     * @param role role to query\\n     * @param account to query\\n     */\\n    function _checkRole(bytes32 role, address account) internal view virtual {\\n        if (!_hasRole(role, account)) {\\n            revert(\\n                string(\\n                    abi.encodePacked(\\n                        'AccessControl: account ',\\n                        account.toString(),\\n                        ' is missing role ',\\n                        uint256(role).toHexString(32)\\n                    )\\n                )\\n            );\\n        }\\n    }\\n\\n    /*\\n     * @notice query admin role for given role\\n     * @param role role to query\\n     * @return admin role\\n     */\\n    function _getRoleAdmin(\\n        bytes32 role\\n    ) internal view virtual returns (bytes32) {\\n        return AccessControlStorage.layout().roles[role].adminRole;\\n    }\\n\\n    /**\\n     * @notice set role as admin role\\n     * @param role role to set\\n     * @param adminRole admin role to set\\n     */\\n    function _setRoleAdmin(bytes32 role, bytes32 adminRole) internal virtual {\\n        bytes32 previousAdminRole = _getRoleAdmin(role);\\n        AccessControlStorage.layout().roles[role].adminRole = adminRole;\\n        emit RoleAdminChanged(role, previousAdminRole, adminRole);\\n    }\\n\\n    /*\\n     * @notice assign role to given account\\n     * @param role role to assign\\n     * @param account recipient of role assignment\\n     */\\n    function _grantRole(bytes32 role, address account) internal virtual {\\n        AccessControlStorage.layout().roles[role].members.add(account);\\n        emit RoleGranted(role, account, msg.sender);\\n    }\\n\\n    /*\\n     * @notice unassign role from given account\\n     * @param role role to unassign\\n     * @parm account\\n     */\\n    function _revokeRole(bytes32 role, address account) internal virtual {\\n        AccessControlStorage.layout().roles[role].members.remove(account);\\n        emit RoleRevoked(role, account, msg.sender);\\n    }\\n\\n    /**\\n     * @notice relinquish role\\n     * @param role role to relinquish\\n     */\\n    function _renounceRole(bytes32 role) internal virtual {\\n        _revokeRole(role, msg.sender);\\n    }\\n\\n    /**\\n     * @notice query role for member at given index\\n     * @param role role to query\\n     * @param index index to query\\n     */\\n    function _getRoleMember(\\n        bytes32 role,\\n        uint256 index\\n    ) internal view virtual returns (address) {\\n        return AccessControlStorage.layout().roles[role].members.at(index);\\n    }\\n\\n    /**\\n     * @notice query role for member count\\n     * @param role role to query\\n     */\\n    function _getRoleMemberCount(\\n        bytes32 role\\n    ) internal view virtual returns (uint256) {\\n        return AccessControlStorage.layout().roles[role].members.length();\\n    }\\n}\\n\",\"keccak256\":\"0x313d74202592af8c7a890c051959b58a3e016b9d0b263d03887a39f2bce27f76\",\"license\":\"MIT\"},\"@solidstate/contracts/access/access_control/AccessControlStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { EnumerableSet } from '../../data/EnumerableSet.sol';\\n\\nlibrary AccessControlStorage {\\n    struct RoleData {\\n        EnumerableSet.AddressSet members;\\n        bytes32 adminRole;\\n    }\\n\\n    struct Layout {\\n        mapping(bytes32 => RoleData) roles;\\n    }\\n\\n    bytes32 internal constant DEFAULT_ADMIN_ROLE = 0x00;\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.AccessControl');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xae788d37a6e20edf7f94be23d78517324f50bccbf0541e10ce0850d7d5bca062\",\"license\":\"MIT\"},\"@solidstate/contracts/access/access_control/IAccessControlInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @title Partial AccessControl interface needed by internal functions\\n */\\ninterface IAccessControlInternal {\\n    event RoleAdminChanged(\\n        bytes32 indexed role,\\n        bytes32 indexed previousAdminRole,\\n        bytes32 indexed newAdminRole\\n    );\\n\\n    event RoleGranted(\\n        bytes32 indexed role,\\n        address indexed account,\\n        address indexed sender\\n    );\\n\\n    event RoleRevoked(\\n        bytes32 indexed role,\\n        address indexed account,\\n        address indexed sender\\n    );\\n}\\n\",\"keccak256\":\"0xcc4a1d78a60955d673104adaee1211de3b3cfb95668f1fbfc43ed0e7f36ad110\",\"license\":\"MIT\"},\"@solidstate/contracts/data/EnumerableMap.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title Map implementation with enumeration functions\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts (MIT license)\\n */\\nlibrary EnumerableMap {\\n    error EnumerableMap__IndexOutOfBounds();\\n    error EnumerableMap__NonExistentKey();\\n\\n    struct MapEntry {\\n        bytes32 _key;\\n        bytes32 _value;\\n    }\\n\\n    struct Map {\\n        MapEntry[] _entries;\\n        // 1-indexed to allow 0 to signify nonexistence\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    struct AddressToAddressMap {\\n        Map _inner;\\n    }\\n\\n    struct UintToAddressMap {\\n        Map _inner;\\n    }\\n\\n    function at(\\n        AddressToAddressMap storage map,\\n        uint256 index\\n    ) internal view returns (address, address) {\\n        (bytes32 key, bytes32 value) = _at(map._inner, index);\\n\\n        return (\\n            address(uint160(uint256(key))),\\n            address(uint160(uint256(value)))\\n        );\\n    }\\n\\n    function at(\\n        UintToAddressMap storage map,\\n        uint256 index\\n    ) internal view returns (uint256, address) {\\n        (bytes32 key, bytes32 value) = _at(map._inner, index);\\n        return (uint256(key), address(uint160(uint256(value))));\\n    }\\n\\n    function contains(\\n        AddressToAddressMap storage map,\\n        address key\\n    ) internal view returns (bool) {\\n        return _contains(map._inner, bytes32(uint256(uint160(key))));\\n    }\\n\\n    function contains(\\n        UintToAddressMap storage map,\\n        uint256 key\\n    ) internal view returns (bool) {\\n        return _contains(map._inner, bytes32(key));\\n    }\\n\\n    function length(\\n        AddressToAddressMap storage map\\n    ) internal view returns (uint256) {\\n        return _length(map._inner);\\n    }\\n\\n    function length(\\n        UintToAddressMap storage map\\n    ) internal view returns (uint256) {\\n        return _length(map._inner);\\n    }\\n\\n    function get(\\n        AddressToAddressMap storage map,\\n        address key\\n    ) internal view returns (address) {\\n        return\\n            address(\\n                uint160(\\n                    uint256(_get(map._inner, bytes32(uint256(uint160(key)))))\\n                )\\n            );\\n    }\\n\\n    function get(\\n        UintToAddressMap storage map,\\n        uint256 key\\n    ) internal view returns (address) {\\n        return address(uint160(uint256(_get(map._inner, bytes32(key)))));\\n    }\\n\\n    function set(\\n        AddressToAddressMap storage map,\\n        address key,\\n        address value\\n    ) internal returns (bool) {\\n        return\\n            _set(\\n                map._inner,\\n                bytes32(uint256(uint160(key))),\\n                bytes32(uint256(uint160(value)))\\n            );\\n    }\\n\\n    function set(\\n        UintToAddressMap storage map,\\n        uint256 key,\\n        address value\\n    ) internal returns (bool) {\\n        return _set(map._inner, bytes32(key), bytes32(uint256(uint160(value))));\\n    }\\n\\n    function remove(\\n        AddressToAddressMap storage map,\\n        address key\\n    ) internal returns (bool) {\\n        return _remove(map._inner, bytes32(uint256(uint160(key))));\\n    }\\n\\n    function remove(\\n        UintToAddressMap storage map,\\n        uint256 key\\n    ) internal returns (bool) {\\n        return _remove(map._inner, bytes32(key));\\n    }\\n\\n    function toArray(\\n        AddressToAddressMap storage map\\n    )\\n        internal\\n        view\\n        returns (address[] memory keysOut, address[] memory valuesOut)\\n    {\\n        uint256 len = map._inner._entries.length;\\n\\n        keysOut = new address[](len);\\n        valuesOut = new address[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                keysOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._key))\\n                );\\n                valuesOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._value))\\n                );\\n            }\\n        }\\n    }\\n\\n    function toArray(\\n        UintToAddressMap storage map\\n    )\\n        internal\\n        view\\n        returns (uint256[] memory keysOut, address[] memory valuesOut)\\n    {\\n        uint256 len = map._inner._entries.length;\\n\\n        keysOut = new uint256[](len);\\n        valuesOut = new address[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                keysOut[i] = uint256(map._inner._entries[i]._key);\\n                valuesOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._value))\\n                );\\n            }\\n        }\\n    }\\n\\n    function keys(\\n        AddressToAddressMap storage map\\n    ) internal view returns (address[] memory keysOut) {\\n        uint256 len = map._inner._entries.length;\\n\\n        keysOut = new address[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                keysOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._key))\\n                );\\n            }\\n        }\\n    }\\n\\n    function keys(\\n        UintToAddressMap storage map\\n    ) internal view returns (uint256[] memory keysOut) {\\n        uint256 len = map._inner._entries.length;\\n\\n        keysOut = new uint256[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                keysOut[i] = uint256(map._inner._entries[i]._key);\\n            }\\n        }\\n    }\\n\\n    function values(\\n        AddressToAddressMap storage map\\n    ) internal view returns (address[] memory valuesOut) {\\n        uint256 len = map._inner._entries.length;\\n\\n        valuesOut = new address[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                valuesOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._value))\\n                );\\n            }\\n        }\\n    }\\n\\n    function values(\\n        UintToAddressMap storage map\\n    ) internal view returns (address[] memory valuesOut) {\\n        uint256 len = map._inner._entries.length;\\n\\n        valuesOut = new address[](len);\\n\\n        unchecked {\\n            for (uint256 i; i < len; ++i) {\\n                valuesOut[i] = address(\\n                    uint160(uint256(map._inner._entries[i]._value))\\n                );\\n            }\\n        }\\n    }\\n\\n    function _at(\\n        Map storage map,\\n        uint256 index\\n    ) private view returns (bytes32, bytes32) {\\n        if (index >= map._entries.length)\\n            revert EnumerableMap__IndexOutOfBounds();\\n\\n        MapEntry storage entry = map._entries[index];\\n        return (entry._key, entry._value);\\n    }\\n\\n    function _contains(\\n        Map storage map,\\n        bytes32 key\\n    ) private view returns (bool) {\\n        return map._indexes[key] != 0;\\n    }\\n\\n    function _length(Map storage map) private view returns (uint256) {\\n        return map._entries.length;\\n    }\\n\\n    function _get(Map storage map, bytes32 key) private view returns (bytes32) {\\n        uint256 keyIndex = map._indexes[key];\\n        if (keyIndex == 0) revert EnumerableMap__NonExistentKey();\\n        unchecked {\\n            return map._entries[keyIndex - 1]._value;\\n        }\\n    }\\n\\n    function _set(\\n        Map storage map,\\n        bytes32 key,\\n        bytes32 value\\n    ) private returns (bool) {\\n        uint256 keyIndex = map._indexes[key];\\n\\n        if (keyIndex == 0) {\\n            map._entries.push(MapEntry({ _key: key, _value: value }));\\n            map._indexes[key] = map._entries.length;\\n            return true;\\n        } else {\\n            unchecked {\\n                map._entries[keyIndex - 1]._value = value;\\n            }\\n            return false;\\n        }\\n    }\\n\\n    function _remove(Map storage map, bytes32 key) private returns (bool) {\\n        uint256 keyIndex = map._indexes[key];\\n\\n        if (keyIndex != 0) {\\n            unchecked {\\n                MapEntry storage last = map._entries[map._entries.length - 1];\\n\\n                // move last entry to now-vacant index\\n                map._entries[keyIndex - 1] = last;\\n                map._indexes[last._key] = keyIndex;\\n            }\\n\\n            // clear last index\\n            map._entries.pop();\\n            delete map._indexes[key];\\n\\n            return true;\\n        } else {\\n            return false;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x1140a8669a93db82ea70d7f53e112049d42a813fe7188f50aa2f7ec5e529d38a\",\"license\":\"MIT\"},\"@solidstate/contracts/data/EnumerableSet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title Set implementation with enumeration functions\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts (MIT license)\\n */\\nlibrary EnumerableSet {\\n    error EnumerableSet__IndexOutOfBounds();\\n\\n    struct Set {\\n        bytes32[] _values;\\n        // 1-indexed to allow 0 to signify nonexistence\\n        mapping(bytes32 => uint256) _indexes;\\n    }\\n\\n    struct Bytes32Set {\\n        Set _inner;\\n    }\\n\\n    struct AddressSet {\\n        Set _inner;\\n    }\\n\\n    struct UintSet {\\n        Set _inner;\\n    }\\n\\n    function at(\\n        Bytes32Set storage set,\\n        uint256 index\\n    ) internal view returns (bytes32) {\\n        return _at(set._inner, index);\\n    }\\n\\n    function at(\\n        AddressSet storage set,\\n        uint256 index\\n    ) internal view returns (address) {\\n        return address(uint160(uint256(_at(set._inner, index))));\\n    }\\n\\n    function at(\\n        UintSet storage set,\\n        uint256 index\\n    ) internal view returns (uint256) {\\n        return uint256(_at(set._inner, index));\\n    }\\n\\n    function contains(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, value);\\n    }\\n\\n    function contains(\\n        AddressSet storage set,\\n        address value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function contains(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal view returns (bool) {\\n        return _contains(set._inner, bytes32(value));\\n    }\\n\\n    function indexOf(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, value);\\n    }\\n\\n    function indexOf(\\n        AddressSet storage set,\\n        address value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function indexOf(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal view returns (uint256) {\\n        return _indexOf(set._inner, bytes32(value));\\n    }\\n\\n    function length(Bytes32Set storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function length(AddressSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function length(UintSet storage set) internal view returns (uint256) {\\n        return _length(set._inner);\\n    }\\n\\n    function add(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal returns (bool) {\\n        return _add(set._inner, value);\\n    }\\n\\n    function add(\\n        AddressSet storage set,\\n        address value\\n    ) internal returns (bool) {\\n        return _add(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function add(UintSet storage set, uint256 value) internal returns (bool) {\\n        return _add(set._inner, bytes32(value));\\n    }\\n\\n    function remove(\\n        Bytes32Set storage set,\\n        bytes32 value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, value);\\n    }\\n\\n    function remove(\\n        AddressSet storage set,\\n        address value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, bytes32(uint256(uint160(value))));\\n    }\\n\\n    function remove(\\n        UintSet storage set,\\n        uint256 value\\n    ) internal returns (bool) {\\n        return _remove(set._inner, bytes32(value));\\n    }\\n\\n    function toArray(\\n        Bytes32Set storage set\\n    ) internal view returns (bytes32[] memory) {\\n        return set._inner._values;\\n    }\\n\\n    function toArray(\\n        AddressSet storage set\\n    ) internal view returns (address[] memory) {\\n        bytes32[] storage values = set._inner._values;\\n        address[] storage array;\\n\\n        assembly {\\n            array.slot := values.slot\\n        }\\n\\n        return array;\\n    }\\n\\n    function toArray(\\n        UintSet storage set\\n    ) internal view returns (uint256[] memory) {\\n        bytes32[] storage values = set._inner._values;\\n        uint256[] storage array;\\n\\n        assembly {\\n            array.slot := values.slot\\n        }\\n\\n        return array;\\n    }\\n\\n    function _at(\\n        Set storage set,\\n        uint256 index\\n    ) private view returns (bytes32) {\\n        if (index >= set._values.length)\\n            revert EnumerableSet__IndexOutOfBounds();\\n        return set._values[index];\\n    }\\n\\n    function _contains(\\n        Set storage set,\\n        bytes32 value\\n    ) private view returns (bool) {\\n        return set._indexes[value] != 0;\\n    }\\n\\n    function _indexOf(\\n        Set storage set,\\n        bytes32 value\\n    ) private view returns (uint256) {\\n        unchecked {\\n            return set._indexes[value] - 1;\\n        }\\n    }\\n\\n    function _length(Set storage set) private view returns (uint256) {\\n        return set._values.length;\\n    }\\n\\n    function _add(\\n        Set storage set,\\n        bytes32 value\\n    ) private returns (bool status) {\\n        if (!_contains(set, value)) {\\n            set._values.push(value);\\n            set._indexes[value] = set._values.length;\\n            status = true;\\n        }\\n    }\\n\\n    function _remove(\\n        Set storage set,\\n        bytes32 value\\n    ) private returns (bool status) {\\n        uint256 valueIndex = set._indexes[value];\\n\\n        if (valueIndex != 0) {\\n            unchecked {\\n                bytes32 last = set._values[set._values.length - 1];\\n\\n                // move last value to now-vacant index\\n\\n                set._values[valueIndex - 1] = last;\\n                set._indexes[last] = valueIndex;\\n            }\\n            // clear last index\\n\\n            set._values.pop();\\n            delete set._indexes[value];\\n\\n            status = true;\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xbbaaeb805b3e1e704ceba33c9093285220254b1ff6b4b7f577e515b118e116f6\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC165.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC165Internal } from './IERC165Internal.sol';\\n\\n/**\\n * @title ERC165 interface registration interface\\n * @dev see https://eips.ethereum.org/EIPS/eip-165\\n */\\ninterface IERC165 is IERC165Internal {\\n    /**\\n     * @notice query whether contract has registered support for given interface\\n     * @param interfaceId interface id\\n     * @return bool whether interface is supported\\n     */\\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0xc250e493770feaa0da8e5a55d241712c1c6526caa7d8df2455c3e5fa25124c0b\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC165Internal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title ERC165 interface registration interface\\n */\\ninterface IERC165Internal {\\n\\n}\\n\",\"keccak256\":\"0xf4d4708a60ed04887849509a258db49d4eb686f33214cb9c9643325cd8dae89d\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC721.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC165 } from './IERC165.sol';\\nimport { IERC721Internal } from './IERC721Internal.sol';\\n\\n/**\\n * @title ERC721 interface\\n * @dev see https://eips.ethereum.org/EIPS/eip-721\\n */\\ninterface IERC721 is IERC721Internal, IERC165 {\\n    /**\\n     * @notice query the balance of given address\\n     * @return balance quantity of tokens held\\n     */\\n    function balanceOf(address account) external view returns (uint256 balance);\\n\\n    /**\\n     * @notice query the owner of given token\\n     * @param tokenId token to query\\n     * @return owner token owner\\n     */\\n    function ownerOf(uint256 tokenId) external view returns (address owner);\\n\\n    /**\\n     * @notice transfer token between given addresses, checking for ERC721Receiver implementation if applicable\\n     * @param from sender of token\\n     * @param to receiver of token\\n     * @param tokenId token id\\n     */\\n    function safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) external payable;\\n\\n    /**\\n     * @notice transfer token between given addresses, checking for ERC721Receiver implementation if applicable\\n     * @param from sender of token\\n     * @param to receiver of token\\n     * @param tokenId token id\\n     * @param data data payload\\n     */\\n    function safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        bytes calldata data\\n    ) external payable;\\n\\n    /**\\n     * @notice transfer token between given addresses, without checking for ERC721Receiver implementation if applicable\\n     * @param from sender of token\\n     * @param to receiver of token\\n     * @param tokenId token id\\n     */\\n    function transferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) external payable;\\n\\n    /**\\n     * @notice grant approval to given account to spend token\\n     * @param operator address to be approved\\n     * @param tokenId token to approve\\n     */\\n    function approve(address operator, uint256 tokenId) external payable;\\n\\n    /**\\n     * @notice get approval status for given token\\n     * @param tokenId token to query\\n     * @return operator address approved to spend token\\n     */\\n    function getApproved(\\n        uint256 tokenId\\n    ) external view returns (address operator);\\n\\n    /**\\n     * @notice grant approval to or revoke approval from given account to spend all tokens held by sender\\n     * @param operator address to be approved\\n     * @param status approval status\\n     */\\n    function setApprovalForAll(address operator, bool status) external;\\n\\n    /**\\n     * @notice query approval status of given operator with respect to given address\\n     * @param account address to query for approval granted\\n     * @param operator address to query for approval received\\n     * @return status whether operator is approved to spend tokens held by account\\n     */\\n    function isApprovedForAll(\\n        address account,\\n        address operator\\n    ) external view returns (bool status);\\n}\\n\",\"keccak256\":\"0xa14655a5bdee327bc019b583b04480e8542fa6b0788e5569077ec54805d1463a\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC721Internal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title Partial ERC721 interface needed by internal functions\\n */\\ninterface IERC721Internal {\\n    event Transfer(\\n        address indexed from,\\n        address indexed to,\\n        uint256 indexed tokenId\\n    );\\n\\n    event Approval(\\n        address indexed owner,\\n        address indexed operator,\\n        uint256 indexed tokenId\\n    );\\n\\n    event ApprovalForAll(\\n        address indexed owner,\\n        address indexed operator,\\n        bool approved\\n    );\\n}\\n\",\"keccak256\":\"0x8d46d596fa0e48cdcbf8bb8d6a42120351c4d1b002156bf647f95523178cbe08\",\"license\":\"MIT\"},\"@solidstate/contracts/interfaces/IERC721Receiver.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\ninterface IERC721Receiver {\\n    function onERC721Received(\\n        address operator,\\n        address from,\\n        uint256 tokenId,\\n        bytes calldata data\\n    ) external returns (bytes4);\\n}\\n\",\"keccak256\":\"0x38ca94617ab4a4cdc08d9fed753f1b17d91a9823b36f7f485cd1ed5e5324aa8f\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC165 } from '../../../interfaces/IERC165.sol';\\nimport { IERC165Base } from './IERC165Base.sol';\\nimport { ERC165BaseInternal } from './ERC165BaseInternal.sol';\\nimport { ERC165BaseStorage } from './ERC165BaseStorage.sol';\\n\\n/**\\n * @title ERC165 implementation\\n */\\nabstract contract ERC165Base is IERC165Base, ERC165BaseInternal {\\n    /**\\n     * @inheritdoc IERC165\\n     */\\n    function supportsInterface(bytes4 interfaceId) public view returns (bool) {\\n        return _supportsInterface(interfaceId);\\n    }\\n}\\n\",\"keccak256\":\"0x3f2268856fdd9b27946adc65010bc83992069a90034bf692ab630802a926a9c2\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/ERC165BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC165BaseInternal } from './IERC165BaseInternal.sol';\\nimport { ERC165BaseStorage } from './ERC165BaseStorage.sol';\\n\\n/**\\n * @title ERC165 implementation\\n */\\nabstract contract ERC165BaseInternal is IERC165BaseInternal {\\n    /**\\n     * @notice indicates whether an interface is already supported based on the interfaceId\\n     * @param interfaceId id of interface to check\\n     * @return bool indicating whether interface is supported\\n     */\\n    function _supportsInterface(\\n        bytes4 interfaceId\\n    ) internal view virtual returns (bool) {\\n        return ERC165BaseStorage.layout().supportedInterfaces[interfaceId];\\n    }\\n\\n    /**\\n     * @notice sets status of interface support\\n     * @param interfaceId id of interface to set status for\\n     * @param status boolean indicating whether interface will be set as supported\\n     */\\n    function _setSupportsInterface(\\n        bytes4 interfaceId,\\n        bool status\\n    ) internal virtual {\\n        if (interfaceId == 0xffffffff) revert ERC165Base__InvalidInterfaceId();\\n        ERC165BaseStorage.layout().supportedInterfaces[interfaceId] = status;\\n    }\\n}\\n\",\"keccak256\":\"0xad163d89454d9c8a018880253c5be156ee0f847f05a392a12b2a7061c7fa8682\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/ERC165BaseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nlibrary ERC165BaseStorage {\\n    struct Layout {\\n        mapping(bytes4 => bool) supportedInterfaces;\\n    }\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.ERC165Base');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xfd1cfba40f8aabda5898ffe21adeeea8c7011da12bfdad7f7aa0cf87b3635653\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/IERC165Base.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { IERC165 } from '../../../interfaces/IERC165.sol';\\nimport { IERC165BaseInternal } from './IERC165BaseInternal.sol';\\n\\ninterface IERC165Base is IERC165, IERC165BaseInternal {}\\n\",\"keccak256\":\"0x288c50013c735cf30be90eb084589fc54bc0ee77a88ec69c3cc1efb11d7dccf4\",\"license\":\"MIT\"},\"@solidstate/contracts/introspection/ERC165/base/IERC165BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\nimport { IERC165Internal } from '../../../interfaces/IERC165Internal.sol';\\n\\ninterface IERC165BaseInternal is IERC165Internal {\\n    error ERC165Base__InvalidInterfaceId();\\n}\\n\",\"keccak256\":\"0xccda4b118c8c09c276a0e577168aa404ea6207aad6b384b04f5f3a8923316422\",\"license\":\"MIT\"},\"@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @dev derived from https://github.com/mudgen/diamond-2 (MIT license)\\n */\\nlibrary DiamondBaseStorage {\\n    struct Layout {\\n        // function selector => (facet address, selector slot position)\\n        mapping(bytes4 => bytes32) facets;\\n        // total number of selectors registered\\n        uint16 selectorCount;\\n        // array of selector slots with 8 selectors per slot\\n        mapping(uint256 => bytes32) selectorSlots;\\n        address fallbackAddress;\\n    }\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.DiamondBase');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x74365666c0e9917d742bbab21e174dea6bc6ccf6146153e43dd9d9fe8417a36a\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/base/ERC721Base.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721 } from '../../../interfaces/IERC721.sol';\\nimport { IERC721Base } from './IERC721Base.sol';\\nimport { ERC721BaseInternal } from './ERC721BaseInternal.sol';\\n\\n/**\\n * @title Base ERC721 implementation, excluding optional extensions\\n * @dev inheritor must either implement ERC165 supportsInterface or inherit ERC165Base\\n */\\nabstract contract ERC721Base is IERC721Base, ERC721BaseInternal {\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function balanceOf(address account) external view returns (uint256) {\\n        return _balanceOf(account);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function ownerOf(uint256 tokenId) external view returns (address) {\\n        return _ownerOf(tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function getApproved(uint256 tokenId) external view returns (address) {\\n        return _getApproved(tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function isApprovedForAll(\\n        address account,\\n        address operator\\n    ) external view returns (bool) {\\n        return _isApprovedForAll(account, operator);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function transferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) external payable {\\n        _transferFrom(from, to, tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) external payable {\\n        _safeTransferFrom(from, to, tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        bytes memory data\\n    ) external payable {\\n        _safeTransferFrom(from, to, tokenId, data);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function approve(address operator, uint256 tokenId) external payable {\\n        _approve(operator, tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721\\n     */\\n    function setApprovalForAll(address operator, bool status) external {\\n        _setApprovalForAll(operator, status);\\n    }\\n}\\n\",\"keccak256\":\"0xfedcffd8d3aaf06e7c2f42ce7b8756c8b62442b0cb731c15b53f5d237104863a\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/base/ERC721BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721Receiver } from '../../../interfaces/IERC721Receiver.sol';\\nimport { EnumerableMap } from '../../../data/EnumerableMap.sol';\\nimport { EnumerableSet } from '../../../data/EnumerableSet.sol';\\nimport { AddressUtils } from '../../../utils/AddressUtils.sol';\\nimport { IERC721BaseInternal } from './IERC721BaseInternal.sol';\\nimport { ERC721BaseStorage } from './ERC721BaseStorage.sol';\\n\\n/**\\n * @title Base ERC721 internal functions\\n */\\nabstract contract ERC721BaseInternal is IERC721BaseInternal {\\n    using AddressUtils for address;\\n    using EnumerableMap for EnumerableMap.UintToAddressMap;\\n    using EnumerableSet for EnumerableSet.UintSet;\\n\\n    function _balanceOf(\\n        address account\\n    ) internal view virtual returns (uint256) {\\n        if (account == address(0)) revert ERC721Base__BalanceQueryZeroAddress();\\n        return ERC721BaseStorage.layout().holderTokens[account].length();\\n    }\\n\\n    function _ownerOf(uint256 tokenId) internal view virtual returns (address) {\\n        address owner = ERC721BaseStorage.layout().tokenOwners.get(tokenId);\\n        if (owner == address(0)) revert ERC721Base__InvalidOwner();\\n        return owner;\\n    }\\n\\n    function _exists(uint256 tokenId) internal view virtual returns (bool) {\\n        return ERC721BaseStorage.layout().tokenOwners.contains(tokenId);\\n    }\\n\\n    function _getApproved(\\n        uint256 tokenId\\n    ) internal view virtual returns (address) {\\n        if (!_exists(tokenId)) revert ERC721Base__NonExistentToken();\\n\\n        return ERC721BaseStorage.layout().tokenApprovals[tokenId];\\n    }\\n\\n    function _isApprovedForAll(\\n        address account,\\n        address operator\\n    ) internal view virtual returns (bool) {\\n        return ERC721BaseStorage.layout().operatorApprovals[account][operator];\\n    }\\n\\n    function _isApprovedOrOwner(\\n        address spender,\\n        uint256 tokenId\\n    ) internal view virtual returns (bool) {\\n        if (!_exists(tokenId)) revert ERC721Base__NonExistentToken();\\n\\n        address owner = _ownerOf(tokenId);\\n\\n        return (spender == owner ||\\n            _getApproved(tokenId) == spender ||\\n            _isApprovedForAll(owner, spender));\\n    }\\n\\n    function _mint(address to, uint256 tokenId) internal virtual {\\n        if (to == address(0)) revert ERC721Base__MintToZeroAddress();\\n        if (_exists(tokenId)) revert ERC721Base__TokenAlreadyMinted();\\n\\n        _beforeTokenTransfer(address(0), to, tokenId);\\n\\n        ERC721BaseStorage.Layout storage l = ERC721BaseStorage.layout();\\n\\n        l.holderTokens[to].add(tokenId);\\n        l.tokenOwners.set(tokenId, to);\\n\\n        emit Transfer(address(0), to, tokenId);\\n    }\\n\\n    function _safeMint(address to, uint256 tokenId) internal virtual {\\n        _safeMint(to, tokenId, '');\\n    }\\n\\n    function _safeMint(\\n        address to,\\n        uint256 tokenId,\\n        bytes memory data\\n    ) internal virtual {\\n        _mint(to, tokenId);\\n        if (!_checkOnERC721Received(address(0), to, tokenId, data))\\n            revert ERC721Base__ERC721ReceiverNotImplemented();\\n    }\\n\\n    function _burn(uint256 tokenId) internal virtual {\\n        address owner = _ownerOf(tokenId);\\n\\n        _beforeTokenTransfer(owner, address(0), tokenId);\\n\\n        ERC721BaseStorage.Layout storage l = ERC721BaseStorage.layout();\\n\\n        l.holderTokens[owner].remove(tokenId);\\n        l.tokenOwners.remove(tokenId);\\n\\n        l.tokenApprovals[tokenId] = address(0);\\n\\n        emit Approval(owner, address(0), tokenId);\\n        emit Transfer(owner, address(0), tokenId);\\n    }\\n\\n    function _transfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual {\\n        address owner = _ownerOf(tokenId);\\n\\n        if (owner != from) revert ERC721Base__NotTokenOwner();\\n        if (to == address(0)) revert ERC721Base__TransferToZeroAddress();\\n\\n        _beforeTokenTransfer(from, to, tokenId);\\n\\n        ERC721BaseStorage.Layout storage l = ERC721BaseStorage.layout();\\n\\n        l.holderTokens[from].remove(tokenId);\\n        l.holderTokens[to].add(tokenId);\\n        l.tokenOwners.set(tokenId, to);\\n        l.tokenApprovals[tokenId] = address(0);\\n\\n        emit Approval(owner, address(0), tokenId);\\n        emit Transfer(from, to, tokenId);\\n    }\\n\\n    function _transferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual {\\n        _handleTransferMessageValue(from, to, tokenId, msg.value);\\n        if (!_isApprovedOrOwner(msg.sender, tokenId))\\n            revert ERC721Base__NotOwnerOrApproved();\\n        _transfer(from, to, tokenId);\\n    }\\n\\n    function _safeTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        bytes memory data\\n    ) internal virtual {\\n        _transfer(from, to, tokenId);\\n        if (!_checkOnERC721Received(from, to, tokenId, data))\\n            revert ERC721Base__ERC721ReceiverNotImplemented();\\n    }\\n\\n    function _safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual {\\n        _safeTransferFrom(from, to, tokenId, '');\\n    }\\n\\n    function _safeTransferFrom(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        bytes memory data\\n    ) internal virtual {\\n        _handleTransferMessageValue(from, to, tokenId, msg.value);\\n        if (!_isApprovedOrOwner(msg.sender, tokenId))\\n            revert ERC721Base__NotOwnerOrApproved();\\n        _safeTransfer(from, to, tokenId, data);\\n    }\\n\\n    function _approve(address operator, uint256 tokenId) internal virtual {\\n        _handleApproveMessageValue(operator, tokenId, msg.value);\\n\\n        address owner = _ownerOf(tokenId);\\n\\n        if (operator == owner) revert ERC721Base__SelfApproval();\\n        if (msg.sender != owner && !_isApprovedForAll(owner, msg.sender))\\n            revert ERC721Base__NotOwnerOrApproved();\\n\\n        ERC721BaseStorage.layout().tokenApprovals[tokenId] = operator;\\n        emit Approval(owner, operator, tokenId);\\n    }\\n\\n    function _setApprovalForAll(\\n        address operator,\\n        bool status\\n    ) internal virtual {\\n        if (operator == msg.sender) revert ERC721Base__SelfApproval();\\n        ERC721BaseStorage.layout().operatorApprovals[msg.sender][\\n            operator\\n        ] = status;\\n        emit ApprovalForAll(msg.sender, operator, status);\\n    }\\n\\n    function _checkOnERC721Received(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        bytes memory data\\n    ) internal virtual returns (bool) {\\n        if (!to.isContract()) {\\n            return true;\\n        }\\n\\n        bytes memory returnData = to.functionCall(\\n            abi.encodeWithSelector(\\n                IERC721Receiver(to).onERC721Received.selector,\\n                msg.sender,\\n                from,\\n                tokenId,\\n                data\\n            ),\\n            'ERC721: transfer to non ERC721Receiver implementer'\\n        );\\n\\n        bytes4 returnValue = abi.decode(returnData, (bytes4));\\n        return returnValue == type(IERC721Receiver).interfaceId;\\n    }\\n\\n    /**\\n     * @notice ERC721 hook, called before externally called approvals for processing of included message value\\n     * @param operator beneficiary of approval\\n     * @param tokenId id of transferred token\\n     * @param value message value\\n     */\\n    function _handleApproveMessageValue(\\n        address operator,\\n        uint256 tokenId,\\n        uint256 value\\n    ) internal virtual {}\\n\\n    /**\\n     * @notice ERC721 hook, called before externally called transfers for processing of included message value\\n     * @param from sender of token\\n     * @param to receiver of token\\n     * @param tokenId id of transferred token\\n     * @param value message value\\n     */\\n    function _handleTransferMessageValue(\\n        address from,\\n        address to,\\n        uint256 tokenId,\\n        uint256 value\\n    ) internal virtual {}\\n\\n    /**\\n     * @notice ERC721 hook, called before all transfers including mint and burn\\n     * @dev function should be overridden and new implementation must call super\\n     * @param from sender of token\\n     * @param to receiver of token\\n     * @param tokenId id of transferred token\\n     */\\n    function _beforeTokenTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual {}\\n}\\n\",\"keccak256\":\"0xcc7bc3523871dc4f4e67c88f9c12931fd92d261de914144e749a1b71a3787dae\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/base/ERC721BaseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { EnumerableMap } from '../../../data/EnumerableMap.sol';\\nimport { EnumerableSet } from '../../../data/EnumerableSet.sol';\\n\\nlibrary ERC721BaseStorage {\\n    using EnumerableSet for EnumerableSet.UintSet;\\n    using EnumerableMap for EnumerableMap.UintToAddressMap;\\n\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.ERC721Base');\\n\\n    struct Layout {\\n        EnumerableMap.UintToAddressMap tokenOwners;\\n        mapping(address => EnumerableSet.UintSet) holderTokens;\\n        mapping(uint256 => address) tokenApprovals;\\n        mapping(address => mapping(address => bool)) operatorApprovals;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x9570596eca4d18e1c872177aa12125fcaba1dd7db940e5affa44e6ce2231b0a1\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/base/IERC721Base.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721 } from '../../../interfaces/IERC721.sol';\\nimport { IERC721BaseInternal } from './IERC721BaseInternal.sol';\\n\\n/**\\n * @title ERC721 base interface\\n */\\ninterface IERC721Base is IERC721BaseInternal, IERC721 {\\n\\n}\\n\",\"keccak256\":\"0x5b99ebbddcc97f5a825cb21fb377b04c9ad184c4e4b69b92685334b6d42b7636\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/base/IERC721BaseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721Internal } from '../../../interfaces/IERC721Internal.sol';\\n\\n/**\\n * @title ERC721 base interface\\n */\\ninterface IERC721BaseInternal is IERC721Internal {\\n    error ERC721Base__NotOwnerOrApproved();\\n    error ERC721Base__SelfApproval();\\n    error ERC721Base__BalanceQueryZeroAddress();\\n    error ERC721Base__ERC721ReceiverNotImplemented();\\n    error ERC721Base__InvalidOwner();\\n    error ERC721Base__MintToZeroAddress();\\n    error ERC721Base__NonExistentToken();\\n    error ERC721Base__NotTokenOwner();\\n    error ERC721Base__TokenAlreadyMinted();\\n    error ERC721Base__TransferToZeroAddress();\\n}\\n\",\"keccak256\":\"0x3118e4b75bc32c0c5b1f7aca49d30bf618966260179d848171b2ce3e3e0b5373\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/enumerable/ERC721Enumerable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { EnumerableMap } from '../../../data/EnumerableMap.sol';\\nimport { EnumerableSet } from '../../../data/EnumerableSet.sol';\\nimport { ERC721BaseStorage } from '../base/ERC721BaseStorage.sol';\\nimport { IERC721Enumerable } from './IERC721Enumerable.sol';\\nimport { ERC721EnumerableInternal } from './ERC721EnumerableInternal.sol';\\n\\nabstract contract ERC721Enumerable is\\n    IERC721Enumerable,\\n    ERC721EnumerableInternal\\n{\\n    using EnumerableMap for EnumerableMap.UintToAddressMap;\\n    using EnumerableSet for EnumerableSet.UintSet;\\n\\n    /**\\n     * @inheritdoc IERC721Enumerable\\n     */\\n    function totalSupply() public view returns (uint256) {\\n        return _totalSupply();\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721Enumerable\\n     */\\n    function tokenOfOwnerByIndex(\\n        address owner,\\n        uint256 index\\n    ) public view returns (uint256) {\\n        return _tokenOfOwnerByIndex(owner, index);\\n    }\\n\\n    /**\\n     * @inheritdoc IERC721Enumerable\\n     */\\n    function tokenByIndex(uint256 index) public view returns (uint256) {\\n        return _tokenByIndex(index);\\n    }\\n}\\n\",\"keccak256\":\"0x762db931dbe79f32fa48ba2f66b23b096e9c43e89c09310a98c10ab18b6e73b6\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/enumerable/ERC721EnumerableInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { EnumerableMap } from '../../../data/EnumerableMap.sol';\\nimport { EnumerableSet } from '../../../data/EnumerableSet.sol';\\nimport { ERC721BaseStorage } from '../base/ERC721BaseStorage.sol';\\n\\nabstract contract ERC721EnumerableInternal {\\n    using EnumerableMap for EnumerableMap.UintToAddressMap;\\n    using EnumerableSet for EnumerableSet.UintSet;\\n\\n    /**\\n     * @notice TODO\\n     */\\n    function _totalSupply() internal view returns (uint256) {\\n        return ERC721BaseStorage.layout().tokenOwners.length();\\n    }\\n\\n    /**\\n     * @notice TODO\\n     */\\n    function _tokenOfOwnerByIndex(\\n        address owner,\\n        uint256 index\\n    ) internal view returns (uint256) {\\n        return ERC721BaseStorage.layout().holderTokens[owner].at(index);\\n    }\\n\\n    /**\\n     * @notice TODO\\n     */\\n    function _tokenByIndex(\\n        uint256 index\\n    ) internal view returns (uint256 tokenId) {\\n        (tokenId, ) = ERC721BaseStorage.layout().tokenOwners.at(index);\\n    }\\n}\\n\",\"keccak256\":\"0xcb195fe5d264a1756a67b0c9bf8ac5493c12d25f947290196f15a67d7f3e81ad\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/enumerable/IERC721Enumerable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\ninterface IERC721Enumerable {\\n    /**\\n     * @notice get total token supply\\n     * @return total supply\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @notice get token of given owner at given internal storage index\\n     * @param owner token holder to query\\n     * @param index position in owner's token list to query\\n     * @return tokenId id of retrieved token\\n     */\\n    function tokenOfOwnerByIndex(\\n        address owner,\\n        uint256 index\\n    ) external view returns (uint256 tokenId);\\n\\n    /**\\n     * @notice get token at given internal storage index\\n     * @param index position in global token list to query\\n     * @return tokenId id of retrieved token\\n     */\\n    function tokenByIndex(\\n        uint256 index\\n    ) external view returns (uint256 tokenId);\\n}\\n\",\"keccak256\":\"0x4dcc1d41df336f28a2ea6fa2e7ec17e3d1745938146db5385400238a7e7a1bad\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/metadata/ERC721Metadata.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { ERC721MetadataInternal } from './ERC721MetadataInternal.sol';\\nimport { IERC721Metadata } from './IERC721Metadata.sol';\\n\\n/**\\n * @title ERC721 metadata extensions\\n */\\nabstract contract ERC721Metadata is IERC721Metadata, ERC721MetadataInternal {\\n    /**\\n     * @notice inheritdoc IERC721Metadata\\n     */\\n    function name() external view virtual returns (string memory) {\\n        return _name();\\n    }\\n\\n    /**\\n     * @notice inheritdoc IERC721Metadata\\n     */\\n    function symbol() external view virtual returns (string memory) {\\n        return _symbol();\\n    }\\n\\n    /**\\n     * @notice inheritdoc IERC721Metadata\\n     */\\n    function tokenURI(\\n        uint256 tokenId\\n    ) external view virtual returns (string memory) {\\n        return _tokenURI(tokenId);\\n    }\\n\\n    /**\\n     * @inheritdoc ERC721MetadataInternal\\n     */\\n    function _beforeTokenTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual override {\\n        super._beforeTokenTransfer(from, to, tokenId);\\n    }\\n}\\n\",\"keccak256\":\"0xc626c723aa50119564d77caa3749a728526ca8a93b385000e3d52208b6bc40c5\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/metadata/ERC721MetadataInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { UintUtils } from '../../../utils/UintUtils.sol';\\nimport { ERC721BaseStorage } from '../base/ERC721BaseStorage.sol';\\nimport { ERC721BaseInternal } from '../base/ERC721Base.sol';\\nimport { IERC721MetadataInternal } from './IERC721MetadataInternal.sol';\\nimport { ERC721MetadataStorage } from './ERC721MetadataStorage.sol';\\n\\n/**\\n * @title ERC721Metadata internal functions\\n */\\nabstract contract ERC721MetadataInternal is\\n    IERC721MetadataInternal,\\n    ERC721BaseInternal\\n{\\n    using UintUtils for uint256;\\n\\n    /**\\n     * @notice get token name\\n     * @return token name\\n     */\\n    function _name() internal view virtual returns (string memory) {\\n        return ERC721MetadataStorage.layout().name;\\n    }\\n\\n    /**\\n     * @notice get token symbol\\n     * @return token symbol\\n     */\\n    function _symbol() internal view virtual returns (string memory) {\\n        return ERC721MetadataStorage.layout().symbol;\\n    }\\n\\n    /**\\n     * @notice get generated URI for given token\\n     * @return token URI\\n     */\\n    function _tokenURI(\\n        uint256 tokenId\\n    ) internal view virtual returns (string memory) {\\n        if (!_exists(tokenId)) revert ERC721Metadata__NonExistentToken();\\n\\n        ERC721MetadataStorage.Layout storage l = ERC721MetadataStorage.layout();\\n\\n        string memory tokenIdURI = l.tokenURIs[tokenId];\\n        string memory baseURI = l.baseURI;\\n\\n        if (bytes(baseURI).length == 0) {\\n            return tokenIdURI;\\n        } else if (bytes(tokenIdURI).length > 0) {\\n            return string(abi.encodePacked(baseURI, tokenIdURI));\\n        } else {\\n            return string(abi.encodePacked(baseURI, tokenId.toString()));\\n        }\\n    }\\n\\n    /**\\n     * @notice ERC721 hook: clear per-token URI data on burn\\n     * @inheritdoc ERC721BaseInternal\\n     */\\n    function _beforeTokenTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual override {\\n        super._beforeTokenTransfer(from, to, tokenId);\\n\\n        if (to == address(0)) {\\n            delete ERC721MetadataStorage.layout().tokenURIs[tokenId];\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xcd61c0be2e81ab0c140a5753d2bea656ad6ade067fe4b8994ce0bcc825feeaa2\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/metadata/ERC721MetadataStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nlibrary ERC721MetadataStorage {\\n    bytes32 internal constant STORAGE_SLOT =\\n        keccak256('solidstate.contracts.storage.ERC721Metadata');\\n\\n    struct Layout {\\n        string name;\\n        string symbol;\\n        string baseURI;\\n        mapping(uint256 => string) tokenURIs;\\n    }\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xe220a86657018b0d498708b7d8c728042d9a41e8ac230e22d1a09b6bf866332e\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/metadata/IERC721Metadata.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721MetadataInternal } from './IERC721MetadataInternal.sol';\\n\\n/**\\n * @title ERC721Metadata interface\\n */\\ninterface IERC721Metadata is IERC721MetadataInternal {\\n    /**\\n     * @notice get token name\\n     * @return token name\\n     */\\n    function name() external view returns (string memory);\\n\\n    /**\\n     * @notice get token symbol\\n     * @return token symbol\\n     */\\n    function symbol() external view returns (string memory);\\n\\n    /**\\n     * @notice get generated URI for given token\\n     * @return token URI\\n     */\\n    function tokenURI(uint256 tokenId) external view returns (string memory);\\n}\\n\",\"keccak256\":\"0x281dd4dbf81c3acf12bf43bc6e0f77ae68cb2764450cce8121a53c061bf87960\",\"license\":\"MIT\"},\"@solidstate/contracts/token/ERC721/metadata/IERC721MetadataInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { IERC721BaseInternal } from '../base/IERC721BaseInternal.sol';\\n\\n/**\\n * @title ERC721Metadata internal interface\\n */\\ninterface IERC721MetadataInternal is IERC721BaseInternal {\\n    error ERC721Metadata__NonExistentToken();\\n}\\n\",\"keccak256\":\"0xd420b4227db773f26b0e40cb6ea4819d340d0ee5ea59d6321c27e79ae7ecca86\",\"license\":\"MIT\"},\"@solidstate/contracts/utils/AddressUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\nimport { UintUtils } from './UintUtils.sol';\\n\\nlibrary AddressUtils {\\n    using UintUtils for uint256;\\n\\n    error AddressUtils__InsufficientBalance();\\n    error AddressUtils__NotContract();\\n    error AddressUtils__SendValueFailed();\\n\\n    function toString(address account) internal pure returns (string memory) {\\n        return uint256(uint160(account)).toHexString(20);\\n    }\\n\\n    function isContract(address account) internal view returns (bool) {\\n        uint256 size;\\n        assembly {\\n            size := extcodesize(account)\\n        }\\n        return size > 0;\\n    }\\n\\n    function sendValue(address payable account, uint256 amount) internal {\\n        (bool success, ) = account.call{ value: amount }('');\\n        if (!success) revert AddressUtils__SendValueFailed();\\n    }\\n\\n    function functionCall(\\n        address target,\\n        bytes memory data\\n    ) internal returns (bytes memory) {\\n        return\\n            functionCall(target, data, 'AddressUtils: failed low-level call');\\n    }\\n\\n    function functionCall(\\n        address target,\\n        bytes memory data,\\n        string memory error\\n    ) internal returns (bytes memory) {\\n        return _functionCallWithValue(target, data, 0, error);\\n    }\\n\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value\\n    ) internal returns (bytes memory) {\\n        return\\n            functionCallWithValue(\\n                target,\\n                data,\\n                value,\\n                'AddressUtils: failed low-level call with value'\\n            );\\n    }\\n\\n    function functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory error\\n    ) internal returns (bytes memory) {\\n        if (value > address(this).balance)\\n            revert AddressUtils__InsufficientBalance();\\n        return _functionCallWithValue(target, data, value, error);\\n    }\\n\\n    /**\\n     * @notice execute arbitrary external call with limited gas usage and amount of copied return data\\n     * @dev derived from https://github.com/nomad-xyz/ExcessivelySafeCall (MIT License)\\n     * @param target recipient of call\\n     * @param gasAmount gas allowance for call\\n     * @param value native token value to include in call\\n     * @param maxCopy maximum number of bytes to copy from return data\\n     * @param data encoded call data\\n     * @return success whether call is successful\\n     * @return returnData copied return data\\n     */\\n    function excessivelySafeCall(\\n        address target,\\n        uint256 gasAmount,\\n        uint256 value,\\n        uint16 maxCopy,\\n        bytes memory data\\n    ) internal returns (bool success, bytes memory returnData) {\\n        returnData = new bytes(maxCopy);\\n\\n        assembly {\\n            // execute external call via assembly to avoid automatic copying of return data\\n            success := call(\\n                gasAmount,\\n                target,\\n                value,\\n                add(data, 0x20),\\n                mload(data),\\n                0,\\n                0\\n            )\\n\\n            // determine whether to limit amount of data to copy\\n            let toCopy := returndatasize()\\n\\n            if gt(toCopy, maxCopy) {\\n                toCopy := maxCopy\\n            }\\n\\n            // store the length of the copied bytes\\n            mstore(returnData, toCopy)\\n\\n            // copy the bytes from returndata[0:toCopy]\\n            returndatacopy(add(returnData, 0x20), 0, toCopy)\\n        }\\n    }\\n\\n    function _functionCallWithValue(\\n        address target,\\n        bytes memory data,\\n        uint256 value,\\n        string memory error\\n    ) private returns (bytes memory) {\\n        if (!isContract(target)) revert AddressUtils__NotContract();\\n\\n        (bool success, bytes memory returnData) = target.call{ value: value }(\\n            data\\n        );\\n\\n        if (success) {\\n            return returnData;\\n        } else if (returnData.length > 0) {\\n            assembly {\\n                let returnData_size := mload(returnData)\\n                revert(add(32, returnData), returnData_size)\\n            }\\n        } else {\\n            revert(error);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x7d924db4dbd9210923ab08db77db3c77438014c255fd49fa208ebce283d991bf\",\"license\":\"MIT\"},\"@solidstate/contracts/utils/UintUtils.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.8;\\n\\n/**\\n * @title utility functions for uint256 operations\\n * @dev derived from https://github.com/OpenZeppelin/openzeppelin-contracts/ (MIT license)\\n */\\nlibrary UintUtils {\\n    error UintUtils__InsufficientHexLength();\\n\\n    bytes16 private constant HEX_SYMBOLS = '0123456789abcdef';\\n\\n    function add(uint256 a, int256 b) internal pure returns (uint256) {\\n        return b < 0 ? sub(a, -b) : a + uint256(b);\\n    }\\n\\n    function sub(uint256 a, int256 b) internal pure returns (uint256) {\\n        return b < 0 ? add(a, -b) : a - uint256(b);\\n    }\\n\\n    function toString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return '0';\\n        }\\n\\n        uint256 temp = value;\\n        uint256 digits;\\n\\n        while (temp != 0) {\\n            digits++;\\n            temp /= 10;\\n        }\\n\\n        bytes memory buffer = new bytes(digits);\\n\\n        while (value != 0) {\\n            digits -= 1;\\n            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));\\n            value /= 10;\\n        }\\n\\n        return string(buffer);\\n    }\\n\\n    function toHexString(uint256 value) internal pure returns (string memory) {\\n        if (value == 0) {\\n            return '0x00';\\n        }\\n\\n        uint256 length = 0;\\n\\n        for (uint256 temp = value; temp != 0; temp >>= 8) {\\n            unchecked {\\n                length++;\\n            }\\n        }\\n\\n        return toHexString(value, length);\\n    }\\n\\n    function toHexString(\\n        uint256 value,\\n        uint256 length\\n    ) internal pure returns (string memory) {\\n        bytes memory buffer = new bytes(2 * length + 2);\\n        buffer[0] = '0';\\n        buffer[1] = 'x';\\n\\n        unchecked {\\n            for (uint256 i = 2 * length + 1; i > 1; --i) {\\n                buffer[i] = HEX_SYMBOLS[value & 0xf];\\n                value >>= 4;\\n            }\\n        }\\n\\n        if (value != 0) revert UintUtils__InsufficientHexLength();\\n\\n        return string(buffer);\\n    }\\n}\\n\",\"keccak256\":\"0x5aaeaea22a0800402c6f2d8ce6185293bc64f74f6c390c1b1c53b624b43972f8\",\"license\":\"MIT\"},\"contracts/auction/EnglishPeriodicAuctionStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { IEnglishPeriodicAuctionInternal } from './IEnglishPeriodicAuctionInternal.sol';\\n\\nlibrary EnglishPeriodicAuctionStorage {\\n    struct Layout {\\n        bool isInitialized;\\n        // Same for all tokens\\n        address initialBidder;\\n        uint256 startingBid;\\n        address repossessor;\\n        uint256 initialPeriodStartTime;\\n        uint256 initialPeriodStartTimeOffset;\\n        uint256 auctionLengthSeconds;\\n        uint256 minBidIncrement;\\n        uint256 bidExtensionWindowLengthSeconds;\\n        uint256 bidExtensionSeconds;\\n        // Per token config\\n        mapping(uint256 => uint256) tokenInitialPeriodStartTime;\\n        mapping(uint256 => uint256) lastPeriodEndTime;\\n        mapping(uint256 => uint256) currentLicensePeriod;\\n        mapping(uint256 => uint256) currentAuctionRound;\\n        mapping(uint256 => uint256) currentAuctionLength;\\n        mapping(uint256 => mapping(uint256 => mapping(address => IEnglishPeriodicAuctionInternal.Bid))) bids;\\n        mapping(uint256 => mapping(uint256 => IEnglishPeriodicAuctionInternal.Bid)) highestBids;\\n        mapping(address => uint256) availableCollateral;\\n    }\\n\\n    bytes32 private constant STORAGE_SLOT =\\n        keccak256('pcoart.contracts.storage.EnglishPeriodicAuctionStorage');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        //slither-disable-next-line assembly\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xc85330c8dd6713256a2a289297d591ba0850d6a09d1aeb4178c513c5395868cb\",\"license\":\"MIT\"},\"contracts/auction/IEnglishPeriodicAuctionInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title IEnglishPeriodicAuctionInternal\\n */\\ninterface IEnglishPeriodicAuctionInternal {\\n    struct Bid {\\n        address bidder;\\n        uint256 bidAmount;\\n        uint256 feeAmount;\\n        uint256 collateralAmount;\\n    }\\n\\n    event InitialPeriodStartTimeSet(uint256 initialPeriodStartTime);\\n    event RepossessorSet(address repossessor);\\n    event AuctionLengthSet(uint256 auctionLengthSeconds);\\n    event MinBidIncrementSet(uint256 minBidIncrement);\\n    event BidExtensionWindowLengthSet(uint256 bidExtensionWindowLengthSeconds);\\n    event BidExtensionSet(uint256 bidExtensionSeconds);\\n    event StartingBidSet(uint256 startingBid);\\n\\n    event BidPlaced(\\n        uint256 indexed tokenId,\\n        uint256 indexed round,\\n        address indexed bidder,\\n        uint256 bidAmount\\n    );\\n    event AuctionClosed(\\n        uint256 indexed tokenId,\\n        uint256 indexed round,\\n        address indexed winningBidder,\\n        address previousOwner,\\n        uint256 bidAmount\\n    );\\n}\\n\",\"keccak256\":\"0x356f6d0c720ac0d7a9e6304dfc376d57664bb1abfe1733b5a84deebe86604ea3\",\"license\":\"MIT\"},\"contracts/auction/IPeriodicAuctionReadable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title IPeriodicAuctionReadable\\n */\\ninterface IPeriodicAuctionReadable {\\n    /**\\n     * @notice Get is auction period\\n     */\\n    function isAuctionPeriod(uint256 tokenId) external view returns (bool);\\n\\n    /**\\n     * @notice Get initial period start time\\n     */\\n    function initialPeriodStartTime() external view returns (uint256);\\n\\n    /**\\n     * @notice Get initial bidder\\n     */\\n    function initialBidder() external view returns (address);\\n}\\n\",\"keccak256\":\"0x0fe6f9b4d824cef153696c7464c616b0a493d0ad1d5c993bf16e19668b78bfeb\",\"license\":\"MIT\"},\"contracts/license/StewardLicenseBase.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { StewardLicenseInternal } from './StewardLicenseInternal.sol';\\nimport { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';\\nimport { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';\\n\\n/**\\n * @title StewardLicenseBase\\n */\\nabstract contract StewardLicenseBase is IERC721, StewardLicenseInternal {\\n    /**\\n     * @notice Trigger transfer of license\\n     */\\n    function triggerTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) external {\\n        require(\\n            msg.sender == address(this),\\n            'NativeStewardLicense: Trigger transfer can only be called from another facet'\\n        );\\n\\n        _triggerTransfer(from, to, tokenId);\\n    }\\n\\n    /**\\n     * @notice Initial bidder can mint token if it doesn't exist\\n     */\\n    function mintToken(address to, uint256 tokenId) external {\\n        require(\\n            msg.sender ==\\n                IPeriodicAuctionReadable(address(this)).initialBidder(),\\n            'StewardLicenseFacet: only initial bidder can mint token'\\n        );\\n        //slither-disable-next-line timestamp\\n        require(\\n            block.timestamp <\\n                IPeriodicAuctionReadable(address(this))\\n                    .initialPeriodStartTime(),\\n            'StewardLicenseFacet: cannot mint after initial period start time'\\n        );\\n        require(!_exists(tokenId), 'StewardLicenseFacet: Token already exists');\\n\\n        _triggerTransfer(address(0), to, tokenId);\\n    }\\n\\n    /**\\n     * @notice Add token to collection\\n     */\\n    function addTokenToCollection(\\n        address to,\\n        string memory tokenURI,\\n        uint256 tokenInitialPeriodStartTime\\n    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {\\n        _addTokenToCollection(to, tokenURI, tokenInitialPeriodStartTime);\\n    }\\n\\n    /**\\n     * @notice Add tokens to collection with to\\n     */\\n    function addTokensToCollection(\\n        address[] memory to,\\n        string[] memory tokenURIs,\\n        uint256[] memory tokenInitialPeriodStartTimes\\n    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {\\n        require(\\n            to.length == tokenURIs.length &&\\n                to.length == tokenInitialPeriodStartTimes.length,\\n            'StewardLicenseFacet: input array length mismatch'\\n        );\\n\\n        for (uint256 i = 0; i < tokenURIs.length; i++) {\\n            _addTokenToCollection(\\n                to[i],\\n                tokenURIs[i],\\n                tokenInitialPeriodStartTimes[i]\\n            );\\n        }\\n    }\\n\\n    /**\\n     * @notice Add tokens to collection\\n     */\\n    function addTokensToCollection(\\n        string[] memory tokenURIs,\\n        uint256[] memory tokenInitialPeriodStartTimes,\\n        bool shouldMint\\n    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {\\n        for (uint256 i = 0; i < tokenURIs.length; i++) {\\n            address to;\\n            if (shouldMint) {\\n                to = _initialSteward();\\n            } else {\\n                to = address(0);\\n            }\\n            _addTokenToCollection(\\n                to,\\n                tokenURIs[i],\\n                tokenInitialPeriodStartTimes[i]\\n            );\\n        }\\n    }\\n\\n    /**\\n     * @notice Add tokens to collection with baseURI\\n     */\\n    function addTokensWithBaseURIToCollection(\\n        uint32 amount,\\n        uint256 initialPeriodStartTime,\\n        uint256 initialPeriodStartTimeOffset,\\n        string memory baseURI,\\n        bool shouldMint\\n    ) external onlyRole(ADD_TOKEN_TO_COLLECTION_ROLE) {\\n        for (uint32 i = 0; i < amount; i++) {\\n            _addTokenWithBaseURIToCollection(\\n                baseURI,\\n                shouldMint,\\n                initialPeriodStartTime + (initialPeriodStartTimeOffset * i)\\n            );\\n        }\\n    }\\n\\n    /**\\n     * @notice Get max token count\\n     */\\n    function maxTokenCount() external view returns (uint256) {\\n        return _maxTokenCount();\\n    }\\n\\n    /**\\n     * @notice Check if token exists\\n     */\\n    function exists(uint256 tokenId) external view returns (bool) {\\n        return _exists(tokenId);\\n    }\\n}\\n\",\"keccak256\":\"0xa66c0d46b38279c5b17223126f3cc60c992ffa86fa02388891de358d0012bcc2\",\"license\":\"MIT\"},\"contracts/license/StewardLicenseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { StewardLicenseStorage } from './StewardLicenseStorage.sol';\\nimport { ERC721Base, ERC721BaseInternal } from '@solidstate/contracts/token/ERC721/base/ERC721Base.sol';\\nimport { ERC721Enumerable } from '@solidstate/contracts/token/ERC721/enumerable/ERC721Enumerable.sol';\\nimport { ERC721Metadata } from '@solidstate/contracts/token/ERC721/metadata/ERC721Metadata.sol';\\nimport { ERC721MetadataStorage } from '@solidstate/contracts/token/ERC721/metadata/ERC721MetadataStorage.sol';\\nimport { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';\\nimport { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';\\nimport { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';\\nimport { IPeriodicAuctionReadable } from '../auction/IPeriodicAuctionReadable.sol';\\nimport { UintUtils } from '@solidstate/contracts/utils/UintUtils.sol';\\nimport { AccessControlInternal } from '@solidstate/contracts/access/access_control/AccessControlInternal.sol';\\nimport { EnglishPeriodicAuctionStorage } from '../auction/EnglishPeriodicAuctionStorage.sol';\\n\\n/**\\n * @title StewardLicenseInternal\\n */\\nabstract contract StewardLicenseInternal is\\n    ERC721Base,\\n    ERC721Enumerable,\\n    ERC721Metadata,\\n    ERC165Base,\\n    AccessControlInternal\\n{\\n    using UintUtils for uint256;\\n\\n    // Add token role\\n    bytes32 internal constant ADD_TOKEN_TO_COLLECTION_ROLE =\\n        keccak256('StewardLicenseBase.ADD_TOKEN_TO_COLLECTION_ROLE');\\n\\n    /**\\n     * @notice Initialize license\\n     */\\n    function _initializeStewardLicense(\\n        address minter,\\n        address addToCollectionMinter,\\n        address initialSteward,\\n        uint256 maxTokenCount,\\n        bool shouldMint,\\n        string memory name,\\n        string memory symbol,\\n        string memory baseURI\\n    ) internal {\\n        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();\\n\\n        l.isInitialized = true;\\n        l.initialSteward = initialSteward;\\n        l.minter = minter;\\n        l.maxTokenCount = maxTokenCount;\\n\\n        // Initialize ERC721\\n        ERC721MetadataStorage.Layout storage ls = ERC721MetadataStorage\\n            .layout();\\n        ls.name = name;\\n        ls.symbol = symbol;\\n        ls.baseURI = baseURI;\\n\\n        _setSupportsInterface(type(IERC165).interfaceId, true);\\n        _setSupportsInterface(type(IERC721).interfaceId, true);\\n        _grantRole(ADD_TOKEN_TO_COLLECTION_ROLE, addToCollectionMinter);\\n\\n        if (shouldMint) {\\n            // Mint tokens\\n            for (uint256 i = 0; i < maxTokenCount; i++) {\\n                _mint(initialSteward, i);\\n            }\\n        }\\n    }\\n\\n    /**\\n     * @notice Check if initialized\\n     */\\n    function _isInitialized() internal view returns (bool) {\\n        return StewardLicenseStorage.layout().isInitialized;\\n    }\\n\\n    /**\\n     * @notice Get minter\\n     */\\n    function _minter() internal view returns (address) {\\n        return StewardLicenseStorage.layout().minter;\\n    }\\n\\n    /**\\n     * @notice Get initial steward\\n     */\\n    function _initialSteward() internal view returns (address) {\\n        return StewardLicenseStorage.layout().initialSteward;\\n    }\\n\\n    /**\\n     * @notice Trigger transfer\\n     */\\n    function _triggerTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal {\\n        if (!_exists(tokenId)) {\\n            // Mint token\\n            _mint(to, tokenId);\\n        } else {\\n            // Safe transfer is not needed. If receiver does not implement ERC721Receiver, next auction can still happen. This prevents a failed transfer from locking up license\\n            _transfer(from, to, tokenId);\\n        }\\n    }\\n\\n    /**\\n     * @notice Get max token count\\n     */\\n    function _maxTokenCount() internal view returns (uint256) {\\n        return StewardLicenseStorage.layout().maxTokenCount;\\n    }\\n\\n    /**\\n     * @notice Add token to collection\\n     */\\n    function _addTokenToCollection(\\n        address to,\\n        string memory tokenURI,\\n        uint256 tokenInitialPeriodStartTime\\n    ) internal {\\n        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();\\n\\n        uint256 newTokenId = l.maxTokenCount;\\n\\n        // Increment max token count\\n        l.maxTokenCount += 1;\\n\\n        // Override metadata\\n        ERC721MetadataStorage.layout().tokenURIs[newTokenId] = tokenURI;\\n\\n        // Override auction start time\\n        EnglishPeriodicAuctionStorage.layout().tokenInitialPeriodStartTime[\\n            newTokenId\\n        ] = tokenInitialPeriodStartTime;\\n\\n        if (to != address(0)) {\\n            // Mint token\\n            _mint(to, newTokenId);\\n        }\\n    }\\n\\n    /**\\n     * @notice Add token to collection\\n     */\\n    function _addTokenWithBaseURIToCollection(\\n        string memory _baseURI,\\n        bool shouldMint,\\n        uint256 tokenInitialPeriodStartTime\\n    ) internal {\\n        StewardLicenseStorage.Layout storage l = StewardLicenseStorage.layout();\\n\\n        uint256 newTokenId = l.maxTokenCount;\\n\\n        // Increment max token count\\n        l.maxTokenCount += 1;\\n\\n        // Override metadata\\n        ERC721MetadataStorage.layout().tokenURIs[newTokenId] = string(\\n            abi.encodePacked(_baseURI, newTokenId.toString())\\n        );\\n\\n        // Override auction start time\\n        EnglishPeriodicAuctionStorage.layout().tokenInitialPeriodStartTime[\\n            newTokenId\\n        ] = tokenInitialPeriodStartTime;\\n\\n        if (shouldMint) {\\n            // Mint token\\n            _mint(l.initialSteward, newTokenId);\\n        }\\n    }\\n\\n    /**\\n     * @notice Override token URI\\n     * @return token URI\\n     */\\n    function _tokenURI(\\n        uint256 tokenId\\n    ) internal view override returns (string memory) {\\n        StewardLicenseStorage.Layout storage licenseL = StewardLicenseStorage\\n            .layout();\\n\\n        if (tokenId >= licenseL.maxTokenCount)\\n            revert ERC721Metadata__NonExistentToken();\\n\\n        ERC721MetadataStorage.Layout storage metadataL = ERC721MetadataStorage\\n            .layout();\\n\\n        string memory tokenIdURI = metadataL.tokenURIs[tokenId];\\n        string memory baseURI = metadataL.baseURI;\\n\\n        if (bytes(tokenIdURI).length > 0) {\\n            return tokenIdURI;\\n        } else {\\n            return string(abi.encodePacked(baseURI, tokenId.toString()));\\n        }\\n    }\\n\\n    /**\\n     * @notice Disable transfers if during auction period\\n     */\\n    function _beforeTokenTransfer(\\n        address from,\\n        address to,\\n        uint256 tokenId\\n    ) internal virtual override(ERC721BaseInternal, ERC721Metadata) {\\n        // Disable transfers if not mint\\n        if (from != address(0x0)) {\\n            // External call is to known contract\\n            //slither-disable-next-line calls-loop\\n            bool isAuctionPeriod = IPeriodicAuctionReadable(address(this))\\n                .isAuctionPeriod(tokenId);\\n            require(\\n                !isAuctionPeriod,\\n                'StewardLicenseFacet: Cannot transfer during auction period'\\n            );\\n        }\\n\\n        super._beforeTokenTransfer(from, to, tokenId);\\n    }\\n}\\n\",\"keccak256\":\"0xac92dc2dde1cecb830368f8040ef901056fd80c5292416d1a0001a706c13c463\",\"license\":\"MIT\"},\"contracts/license/StewardLicenseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title StewardLicenseStorage\\n */\\nlibrary StewardLicenseStorage {\\n    struct Layout {\\n        bool isInitialized;\\n        address initialSteward;\\n        address minter;\\n        uint256 maxTokenCount;\\n    }\\n\\n    bytes32 private constant STORAGE_SLOT =\\n        keccak256('pcoart.contracts.storage.StewardLicenseStorage');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        //slither-disable-next-line assembly\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xe96dfd26a8898fffa67acf99ba29e6b0b90f7c95e7b6f83c540c860f68aa8b22\",\"license\":\"MIT\"},\"contracts/license/WrappedStewardLicenseInternal.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { WrappedStewardLicenseStorage } from './WrappedStewardLicenseStorage.sol';\\n\\n/**\\n * @title WrappedStewardLicenseInternal\\n */\\nabstract contract WrappedStewardLicenseInternal {\\n    /**\\n     * @notice Initialize license\\n     */\\n    function _initializeWrappedLicense(\\n        address wrappedTokenAddress,\\n        uint256 wrappedTokenId\\n    ) internal {\\n        WrappedStewardLicenseStorage.Layout\\n            storage l = WrappedStewardLicenseStorage.layout();\\n\\n        l.wrappedTokenAddress = wrappedTokenAddress;\\n        l.wrappedTokenId = wrappedTokenId;\\n    }\\n\\n    /**\\n     * @notice Get wrapped token address\\n     */\\n    function _wrappedTokenAddress() internal view returns (address) {\\n        return WrappedStewardLicenseStorage.layout().wrappedTokenAddress;\\n    }\\n\\n    /**\\n     * @notice Get wrapped token ID\\n     */\\n    function _wrappedTokenId() internal view returns (uint256) {\\n        return WrappedStewardLicenseStorage.layout().wrappedTokenId;\\n    }\\n}\\n\",\"keccak256\":\"0xb41bdc4046a5456f9e9ee9c4d4ffbc060a4084296fb7021127a16aebc5fc483e\",\"license\":\"MIT\"},\"contracts/license/WrappedStewardLicenseStorage.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\n/**\\n * @title WrappedStewardLicenseStorage\\n */\\nlibrary WrappedStewardLicenseStorage {\\n    struct Layout {\\n        address wrappedTokenAddress;\\n        uint256 wrappedTokenId;\\n    }\\n\\n    bytes32 private constant STORAGE_SLOT =\\n        keccak256('pcoart.contracts.storage.WrappedStewardLicenseStorage');\\n\\n    function layout() internal pure returns (Layout storage l) {\\n        bytes32 slot = STORAGE_SLOT;\\n        //slither-disable-next-line assembly\\n        assembly {\\n            l.slot := slot\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xc62a71a998306647fb784b0aeed20bb16685ec98c49681401539196c3c8f5c29\",\"license\":\"MIT\"},\"contracts/license/facets/WrappedERC721StewardLicenseFacet.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity 0.8.16;\\n\\nimport { ERC721Base, ERC721BaseInternal } from '@solidstate/contracts/token/ERC721/base/ERC721Base.sol';\\nimport { ERC721Enumerable } from '@solidstate/contracts/token/ERC721/enumerable/ERC721Enumerable.sol';\\nimport { ERC721Metadata } from '@solidstate/contracts/token/ERC721/metadata/ERC721Metadata.sol';\\nimport { IERC721Metadata } from '@solidstate/contracts/token/ERC721/metadata/IERC721Metadata.sol';\\nimport { ERC721MetadataStorage } from '@solidstate/contracts/token/ERC721/metadata/ERC721MetadataStorage.sol';\\nimport { IERC721Receiver } from '@solidstate/contracts/interfaces/IERC721Receiver.sol';\\nimport { ERC165Base } from '@solidstate/contracts/introspection/ERC165/base/ERC165Base.sol';\\nimport { IERC165 } from '@solidstate/contracts/interfaces/IERC165.sol';\\nimport { IERC721 } from '@solidstate/contracts/interfaces/IERC721.sol';\\nimport { DiamondBaseStorage } from '@solidstate/contracts/proxy/diamond/base/DiamondBaseStorage.sol';\\nimport { StewardLicenseInternal } from '../StewardLicenseInternal.sol';\\nimport { WrappedStewardLicenseInternal } from '../WrappedStewardLicenseInternal.sol';\\nimport { StewardLicenseBase } from '../StewardLicenseBase.sol';\\n\\n/**\\n * @title WrappedERC721StewardLicenseFacet\\n * @dev ERC-721 token license for Steward that wraps existing ERC-721. Only a particular ERC721 transfer is accepted.\\n */\\ncontract WrappedERC721StewardLicenseFacet is\\n    StewardLicenseInternal,\\n    WrappedStewardLicenseInternal,\\n    StewardLicenseBase,\\n    IERC721Receiver\\n{\\n    /**\\n     * @notice Initialize license\\n     */\\n    function initializeWrappedStewardLicense(\\n        address tokenAddress,\\n        uint256 tokenId,\\n        address minter_,\\n        address addToCollectionMinter_,\\n        address steward_,\\n        uint256 maxTokenCount_,\\n        bool shouldMint,\\n        string memory name,\\n        string memory symbol,\\n        string memory tokenURI\\n    ) external {\\n        require(\\n            !_isInitialized(),\\n            'WrappedERC721StewardLicenseFacet: already initialized'\\n        );\\n\\n        _initializeWrappedLicense(tokenAddress, tokenId);\\n        _initializeStewardLicense(\\n            minter_,\\n            addToCollectionMinter_,\\n            steward_,\\n            maxTokenCount_,\\n            shouldMint,\\n            name,\\n            symbol,\\n            tokenURI\\n        );\\n    }\\n\\n    /**\\n     * @notice Get minter\\n     */\\n    function minter() external view returns (address) {\\n        return _minter();\\n    }\\n\\n    function onERC721Received(\\n        address,\\n        address,\\n        uint256 tokenId,\\n        bytes calldata\\n    ) external view override returns (bytes4) {\\n        require(\\n            _isInitialized(),\\n            'WrappedERC721StewardLicenseFacet: must be initialized'\\n        );\\n\\n        require(\\n            msg.sender == _wrappedTokenAddress(),\\n            'WrappedERC721StewardLicenseFacet: cannot accept this token address'\\n        );\\n\\n        require(\\n            tokenId == _wrappedTokenId(),\\n            'WrappedERC721StewardLicenseFacet: cannot accept this token ID'\\n        );\\n\\n        return this.onERC721Received.selector;\\n    }\\n}\\n\",\"keccak256\":\"0x8c20dd1980aa4664868ec34dc5857b83c209b5e0ad26c41e8b0f52e6466e118f\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b506131e3806100206000396000f3fe60806040526004361061019c5760003560e01c80634f6ccce7116100ec578063a8de31cd1161008a578063c4e627c211610064578063c4e627c214610484578063c87b56dd14610499578063e31a7c01146104b9578063e985e9c5146104d957600080fd5b8063a8de31cd14610431578063b88d4fde14610451578063c3f75fc11461046457600080fd5b806370a08231116100c657806370a08231146103bc57806379c65068146103dc57806395d89b41146103fc578063a22cb4651461041157600080fd5b80634f6ccce71461035c5780635d3c438e1461037c5780636352211e1461039c57600080fd5b8063095ea7b31161015957806323b872dd1161013357806323b872dd146102f65780632f745c591461030957806342842e0e146103295780634f558e791461033c57600080fd5b8063095ea7b314610287578063150b7a021461029a57806318160ddd146102d357600080fd5b806301ffc9a7146101a157806303e8224e146101d657806306fdde03146101f8578063075461721461021a578063081812fc146102475780630849cc6914610267575b600080fd5b3480156101ad57600080fd5b506101c16101bc366004612513565b6104f9565b60405190151581526020015b60405180910390f35b3480156101e257600080fd5b506101f66101f136600461262b565b61053c565b005b34801561020457600080fd5b5061020d610627565b6040516101cd919061276b565b34801561022657600080fd5b5061022f610636565b6040516001600160a01b0390911681526020016101cd565b34801561025357600080fd5b5061022f61026236600461277e565b610669565b34801561027357600080fd5b506101f66102823660046128a4565b610674565b6101f661029536600461291b565b610720565b3480156102a657600080fd5b506102ba6102b5366004612947565b61072e565b6040516001600160e01b031990911681526020016101cd565b3480156102df57600080fd5b506102e86108cf565b6040519081526020016101cd565b6101f66103043660046129e5565b6108d9565b34801561031557600080fd5b506102e861032436600461291b565b6108e9565b6101f66103373660046129e5565b6108fc565b34801561034857600080fd5b506101c161035736600461277e565b610907565b34801561036857600080fd5b506102e861037736600461277e565b610912565b34801561038857600080fd5b506101f6610397366004612a26565b61091d565b3480156103a857600080fd5b5061022f6103b736600461277e565b610946565b3480156103c857600080fd5b506102e86103d7366004612a7e565b610951565b3480156103e857600080fd5b506101f66103f736600461291b565b61095c565b34801561040857600080fd5b5061020d610b90565b34801561041d57600080fd5b506101f661042c366004612a9b565b610b9a565b34801561043d57600080fd5b506101f661044c366004612ad4565b610ba4565b6101f661045f366004612bb9565b610c9a565b34801561047057600080fd5b506101f661047f366004612c38565b610ca6565b34801561049057600080fd5b506102e8610d14565b3480156104a557600080fd5b5061020d6104b436600461277e565b610d2c565b3480156104c557600080fd5b506101f66104d43660046129e5565b610d37565b3480156104e557600080fd5b506101c16104f4366004612cb8565b610dcc565b6001600160e01b0319811660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d8602052604081205460ff165b92915050565b60008051602061310e8339815191525460ff16156105ad5760405162461bcd60e51b815260206004820152603560248201526000805160206130ce8339815191526044820152740e88185b1c9958591e481a5b9a5d1a585b1a5e9959605a1b60648201526084015b60405180910390fd5b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6d80546001600160a01b0319166001600160a01b038c161790557f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6e89905561061b8888888888888888610dd8565b50505050505050505050565b6060610631610f0a565b905090565b60006106317f79ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e31546001600160a01b031690565b600061053682610fa9565b60008051602061318e83398151915261068c8161100c565b60005b845181101561071957600083156106c55760008051602061310e8339815191525461010090046001600160a01b031690506106c9565b5060005b610706818784815181106106df576106df612ce6565b60200260200101518785815181106106f9576106f9612ce6565b6020026020010151611019565b508061071181612d12565b91505061068f565b5050505050565b61072a82826110cf565b5050565b600061074960008051602061310e8339815191525460ff1690565b6107a15760405162461bcd60e51b815260206004820152603560248201526000805160206130ce8339815191526044820152740e881b5d5cdd081899481a5b9a5d1a585b1a5e9959605a1b60648201526084016105a4565b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6d546001600160a01b031633146108395760405162461bcd60e51b815260206004820152604260248201526000805160206130ce83398151915260448201527f3a2063616e6e6f7420616363657074207468697320746f6b656e206164647265606482015261737360f01b608482015260a4016105a4565b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6e5484146108bd5760405162461bcd60e51b815260206004820152603d60248201526000805160206130ce83398151915260448201527f3a2063616e6e6f7420616363657074207468697320746f6b656e20494400000060648201526084016105a4565b50630a85bd0160e11b95945050505050565b60006106316111c7565b6108e48383836111e0565b505050565b60006108f58383611212565b9392505050565b6108e4838383611241565b60006105368261125c565b600061053682611276565b60008051602061318e8339815191526109358161100c565b610940848484611019565b50505050565b600061053682611297565b6000610536826112db565b306001600160a01b0316633882ce8e6040518163ffffffff1660e01b8152600401602060405180830381865afa15801561099a573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109be9190612d2b565b6001600160a01b0316336001600160a01b031614610a445760405162461bcd60e51b815260206004820152603760248201527f537465776172644c6963656e736546616365743a206f6e6c7920696e6974696160448201527f6c206269646465722063616e206d696e7420746f6b656e00000000000000000060648201526084016105a4565b306001600160a01b031663be6a2a6d6040518163ffffffff1660e01b8152600401602060405180830381865afa158015610a82573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610aa69190612d48565b4210610b1c576040805162461bcd60e51b81526020600482015260248101919091527f537465776172644c6963656e736546616365743a2063616e6e6f74206d696e7460448201527f20616674657220696e697469616c20706572696f642073746172742074696d6560648201526084016105a4565b610b258161125c565b15610b845760405162461bcd60e51b815260206004820152602960248201527f537465776172644c6963656e736546616365743a20546f6b656e20616c72656160448201526864792065786973747360b81b60648201526084016105a4565b61072a60008383611332565b6060610631611349565b61072a8282611368565b60008051602061318e833981519152610bbc8161100c565b82518451148015610bce575081518451145b610c335760405162461bcd60e51b815260206004820152603060248201527f537465776172644c6963656e736546616365743a20696e70757420617272617960448201526f040d8cadccee8d040dad2e6dac2e8c6d60831b60648201526084016105a4565b60005b835181101561071957610c88858281518110610c5457610c54612ce6565b6020026020010151858381518110610c6e57610c6e612ce6565b60200260200101518584815181106106f9576106f9612ce6565b80610c9281612d12565b915050610c36565b6109408484848461141c565b60008051602061318e833981519152610cbe8161100c565b60005b8663ffffffff168163ffffffff161015610d0b57610cf98484610cea63ffffffff851689612d61565b610cf4908a612d80565b61144f565b80610d0381612d93565b915050610cc1565b50505050505050565b600061063160008051602061314e8339815191525490565b606061053682611532565b333014610dc15760405162461bcd60e51b815260206004820152604c60248201527f4e6174697665537465776172644c6963656e73653a205472696767657220747260448201527f616e736665722063616e206f6e6c792062652063616c6c65642066726f6d206160648201526b1b9bdd1a195c88199858d95d60a21b608482015260a4016105a4565b6108e4838383611332565b60006108f58383611716565b60008051602061310e83398151915280546001600160a01b03888116610100026001600160a81b03199092169190911760011782557f79ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e318054918b166001600160a01b031990921691909117905560008051602061314e833981519152869055600060008051602061316e833981519152905080610e758682612e3e565b5060018101610e848582612e3e565b5060028101610e938482612e3e565b50610ea66301ffc9a760e01b6001611763565b610eb86380ac58cd60e01b6001611763565b610ed060008051602061318e8339815191528a6117d9565b851561061b5760005b87811015610efd57610eeb898261184d565b80610ef581612d12565b915050610ed9565b5050505050505050505050565b606060008051602061316e8339815191528054610f2690612db6565b80601f0160208091040260200160405190810160405280929190818152602001828054610f5290612db6565b8015610f9f5780601f10610f7457610100808354040283529160200191610f9f565b820191906000526020600020905b815481529060010190602001808311610f8257829003601f168201915b5050505050905090565b6000610fb48261125c565b610fd15760405163c1b843ef60e01b815260040160405180910390fd5b5060009081527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a960205260409020546001600160a01b031690565b6110168133611930565b50565b60008051602061314e833981519152805460008051602061310e8339815191529160019060006110498385612d80565b909155505060008181527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b4602052604090206110858582612e3e565b5060008181527fc7ed1b841b2d3c7f16d15642e7b013e89732e44006608d59c7547b8e331a7ce9602052604090208390556001600160a01b0385161561071957610719858261184d565b60006110da82611297565b9050806001600160a01b0316836001600160a01b03160361110e5760405163424a22cb60e01b815260040160405180910390fd5b336001600160a01b0382161480159061112e575061112c8133611716565b155b1561114c57604051632f5de44f60e01b815260040160405180910390fd5b60008281527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a9602052604080822080546001600160a01b0319166001600160a01b0387811691821790925591518593918516917f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b92591a4505050565b600061063160008051602061312e833981519152611992565b6111ea338261199c565b61120757604051632f5de44f60e01b815260040160405180910390fd5b6108e4838383611a22565b6001600160a01b03821660009081526000805160206130ee833981519152602052604081206108f59083611b9f565b6108e48383836040518060200160405280600081525061141c565b600061053660008051602061312e83398151915283611bab565b600061129060008051602061312e83398151915283611bc3565b5092915050565b6000806112b260008051602061312e83398151915284611bdf565b90506001600160a01b03811661053657604051637e1a7d8b60e01b815260040160405180910390fd5b60006001600160a01b03821661130457604051630810ff9760e41b815260040160405180910390fd5b6001600160a01b03821660009081526000805160206130ee8339815191526020526040902061053690611992565b61133b8161125c565b611207576108e4828261184d565b606060008051602061316e8339815191526001018054610f2690612db6565b336001600160a01b038316036113915760405163424a22cb60e01b815260040160405180910390fd5b3360008181527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07aa602090815260408083206001600160a01b03871680855290835292819020805460ff191686151590811790915590519081529192917f17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31910160405180910390a35050565b611426338361199c565b61144357604051632f5de44f60e01b815260040160405180910390fd5b61094084848484611beb565b60008051602061314e833981519152805460008051602061310e83398151915291600190600061147f8385612d80565b9091555085905061148f82611c1f565b6040516020016114a0929190612efd565b6040516020818303038152906040526114c460008051602061316e83398151915290565b600083815260039190910160205260409020906114e19082612e3e565b5060008181527fc7ed1b841b2d3c7f16d15642e7b013e89732e44006608d59c7547b8e331a7ce96020526040902083905583156107195781546107199061010090046001600160a01b03168261184d565b60008051602061314e8339815191525460609060008051602061310e83398151915290831061157357604051624705a760e71b815260040160405180910390fd5b60008381527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b460205260408120805460008051602061316e8339815191529291906115bd90612db6565b80601f01602080910402602001604051908101604052809291908181526020018280546115e990612db6565b80156116365780601f1061160b57610100808354040283529160200191611636565b820191906000526020600020905b81548152906001019060200180831161161957829003601f168201915b50505050509050600082600201805461164e90612db6565b80601f016020809104026020016040519081016040528092919081815260200182805461167a90612db6565b80156116c75780601f1061169c576101008083540402835291602001916116c7565b820191906000526020600020905b8154815290600101906020018083116116aa57829003601f168201915b505050505090506000825111156116e15750949350505050565b806116eb87611c1f565b6040516020016116fc929190612efd565b604051602081830303815290604052945050505050919050565b6001600160a01b0391821660009081527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07aa6020908152604080832093909416825291909152205460ff1690565b6001600160e01b0319808316900361178e5760405163b0a19dd560e01b815260040160405180910390fd5b6001600160e01b03199190911660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d860205260409020805460ff1916911515919091179055565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c622811602052604090206118109082611d1f565b5060405133906001600160a01b0383169084907f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d90600090a45050565b6001600160a01b038216611874576040516311f2988d60e11b815260040160405180910390fd5b61187d8161125c565b1561189b57604051630d86bb7b60e31b815260040160405180910390fd5b6118a760008383611d34565b6001600160a01b03821660009081526000805160206130ee8339815191526020526040902060008051602061312e833981519152906118e69083611e29565b506118f2818385611e35565b5060405182906001600160a01b038516906000907fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef908290a4505050565b61193a8282611e4b565b61072a57611950816001600160a01b0316611e82565b61195b836020611e94565b60405160200161196c929190612f2c565b60408051601f198184030181529082905262461bcd60e51b82526105a49160040161276b565b6000610536825490565b60006119a78261125c565b6119c45760405163c1b843ef60e01b815260040160405180910390fd5b60006119cf83611297565b9050806001600160a01b0316846001600160a01b03161480611a0a5750836001600160a01b03166119ff84610fa9565b6001600160a01b0316145b80611a1a5750611a1a8185611716565b949350505050565b6000611a2d82611297565b9050836001600160a01b0316816001600160a01b031614611a6157604051630f2db4ad60e01b815260040160405180910390fd5b6001600160a01b038316611a88576040516340311a0960e01b815260040160405180910390fd5b611a93848484611d34565b6001600160a01b03841660009081526000805160206130ee8339815191526020526040902060008051602061312e83398151915290611ad29084611fe6565b506001600160a01b03841660009081526002820160205260409020611af79084611e29565b50611b03818486611e35565b50600083815260038201602052604080822080546001600160a01b0319169055518491906001600160a01b038516907f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925908390a482846001600160a01b0316866001600160a01b03167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef60405160405180910390a45050505050565b60006108f58383611ff2565b600081815260018301602052604081205415156108f5565b6000808080611bd2868661203e565b9097909650945050505050565b60006108f583836120a1565b611bf6848484611a22565b611c0284848484612105565b61094057604051639ff10cdd60e01b815260040160405180910390fd5b606081600003611c465750506040805180820190915260018152600360fc1b602082015290565b8160005b8115611c705780611c5a81612d12565b9150611c699050600a83612fb7565b9150611c4a565b6000816001600160401b03811115611c8a57611c8a61256e565b6040519080825280601f01601f191660200182016040528015611cb4576020820181803683370190505b5090505b8415611a1a57611cc9600183612fcb565b9150611cd6600a86612fde565b611ce1906030612d80565b60f81b818381518110611cf657611cf6612ce6565b60200101906001600160f81b031916908160001a905350611d18600a86612fb7565b9450611cb8565b60006108f5836001600160a01b0384166121d6565b6001600160a01b03831615611e1e5760405163a7c12c1160e01b815260048101829052600090309063a7c12c1190602401602060405180830381865afa158015611d82573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611da69190612ff2565b90508015611e1c5760405162461bcd60e51b815260206004820152603a60248201527f537465776172644c6963656e736546616365743a2043616e6e6f74207472616e60448201527f7366657220647572696e672061756374696f6e20706572696f6400000000000060648201526084016105a4565b505b6108e4838383612219565b60006108f583836121d6565b6000611a1a84846001600160a01b038516612224565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c622811602052604081206108f590836122c3565b60606105366001600160a01b03831660145b60606000611ea3836002612d61565b611eae906002612d80565b6001600160401b03811115611ec557611ec561256e565b6040519080825280601f01601f191660200182016040528015611eef576020820181803683370190505b509050600360fc1b81600081518110611f0a57611f0a612ce6565b60200101906001600160f81b031916908160001a905350600f60fb1b81600181518110611f3957611f39612ce6565b60200101906001600160f81b031916908160001a905350600160028402015b6001811115611fc6576f181899199a1a9b1b9c1cb0b131b232b360811b85600f1660108110611f8957611f89612ce6565b1a60f81b828281518110611f9f57611f9f612ce6565b60200101906001600160f81b031916908160001a90535060049490941c9360001901611f58565b5083156108f55760405163c913478560e01b815260040160405180910390fd5b60006108f583836122e5565b815460009082106120165760405163e637bf3b60e01b815260040160405180910390fd5b82600001828154811061202b5761202b612ce6565b9060005260206000200154905092915050565b8154600090819083106120645760405163022fd82760e31b815260040160405180910390fd5b600084600001848154811061207b5761207b612ce6565b906000526020600020906002020190508060000154816001015492509250509250929050565b60008181526001830160205260408120548082036120d257604051633d547ec560e21b815260040160405180910390fd5b8360000160018203815481106120ea576120ea612ce6565b90600052602060002090600202016001015491505092915050565b60006001600160a01b0384163b61211e57506001611a1a565b600061219f63150b7a0260e01b33888787604051602401612142949392919061300f565b604051602081830303815290604052906001600160e01b0319166020820180516001600160e01b03838183161783525050505060405180606001604052806032815260200161309c603291396001600160a01b038816919061239f565b90506000818060200190518101906121b7919061304c565b6001600160e01b031916630a85bd0160e11b1492505050949350505050565b6000818152600183016020526040812054610536575081546001808201845560008481526020808220909301849055845493815293810190915260409092205590565b6108e48383836123ae565b600082815260018401602052604081205480820361228b5750506040805180820182528381526020808201848152865460018181018955600089815284812095516002909302909501918255915190820155865486845281880190925292909120556108f5565b828560000160018303815481106122a4576122a4612ce6565b90600052602060002090600202016001018190555060009150506108f5565b6001600160a01b038116600090815260018301602052604081205415156108f5565b600081815260018301602052604081205480156112905783546000908590600019810190811061231757612317612ce6565b906000526020600020015490508085600001600184038154811061233d5761233d612ce6565b600091825260208083209091019290925591825260018601905260409020819055835484908061236f5761236f613069565b60008281526020808220830160001990810183905590920190925593815260019485019093525050604081205590565b6060611a1a84846000856123f2565b6001600160a01b0382166108e45760008181527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b4602052604081206108e4916124af565b6060843b61241357604051632270d6bf60e21b815260040160405180910390fd5b600080866001600160a01b0316858760405161242f919061307f565b60006040518083038185875af1925050503d806000811461246c576040519150601f19603f3d011682016040523d82523d6000602084013e612471565b606091505b50915091508115612485579150611a1a9050565b8051156124955780518082602001fd5b8360405162461bcd60e51b81526004016105a4919061276b565b5080546124bb90612db6565b6000825580601f106124cb575050565b601f01602090049060005260206000209081019061101691905b808211156124f957600081556001016124e5565b5090565b6001600160e01b03198116811461101657600080fd5b60006020828403121561252557600080fd5b81356108f5816124fd565b6001600160a01b038116811461101657600080fd5b803561255081612530565b919050565b801515811461101657600080fd5b803561255081612555565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f191681016001600160401b03811182821017156125ac576125ac61256e565b604052919050565b60006001600160401b038311156125cd576125cd61256e565b6125e0601f8401601f1916602001612584565b90508281528383830111156125f457600080fd5b828260208301376000602084830101529392505050565b600082601f83011261261c57600080fd5b6108f5838335602085016125b4565b6000806000806000806000806000806101408b8d03121561264b57600080fd5b6126548b612545565b995060208b0135985061266960408c01612545565b975061267760608c01612545565b965061268560808c01612545565b955060a08b0135945061269a60c08c01612563565b935060e08b01356001600160401b03808211156126b657600080fd5b6126c28e838f0161260b565b94506101008d01359150808211156126d957600080fd5b6126e58e838f0161260b565b93506101208d01359150808211156126fc57600080fd5b506127098d828e0161260b565b9150509295989b9194979a5092959850565b60005b8381101561273657818101518382015260200161271e565b50506000910152565b6000815180845261275781602086016020860161271b565b601f01601f19169290920160200192915050565b6020815260006108f5602083018461273f565b60006020828403121561279057600080fd5b5035919050565b60006001600160401b038211156127b0576127b061256e565b5060051b60200190565b600082601f8301126127cb57600080fd5b813560206127e06127db83612797565b612584565b82815260059290921b840181019181810190868411156127ff57600080fd5b8286015b8481101561283e5780356001600160401b038111156128225760008081fd5b6128308986838b010161260b565b845250918301918301612803565b509695505050505050565b600082601f83011261285a57600080fd5b8135602061286a6127db83612797565b82815260059290921b8401810191818101908684111561288957600080fd5b8286015b8481101561283e578035835291830191830161288d565b6000806000606084860312156128b957600080fd5b83356001600160401b03808211156128d057600080fd5b6128dc878388016127ba565b945060208601359150808211156128f257600080fd5b506128ff86828701612849565b925050604084013561291081612555565b809150509250925092565b6000806040838503121561292e57600080fd5b823561293981612530565b946020939093013593505050565b60008060008060006080868803121561295f57600080fd5b853561296a81612530565b9450602086013561297a81612530565b93506040860135925060608601356001600160401b038082111561299d57600080fd5b818801915088601f8301126129b157600080fd5b8135818111156129c057600080fd5b8960208285010111156129d257600080fd5b9699959850939650602001949392505050565b6000806000606084860312156129fa57600080fd5b8335612a0581612530565b92506020840135612a1581612530565b929592945050506040919091013590565b600080600060608486031215612a3b57600080fd5b8335612a4681612530565b925060208401356001600160401b03811115612a6157600080fd5b612a6d8682870161260b565b925050604084013590509250925092565b600060208284031215612a9057600080fd5b81356108f581612530565b60008060408385031215612aae57600080fd5b8235612ab981612530565b91506020830135612ac981612555565b809150509250929050565b600080600060608486031215612ae957600080fd5b83356001600160401b0380821115612b0057600080fd5b818601915086601f830112612b1457600080fd5b81356020612b246127db83612797565b82815260059290921b8401810191818101908a841115612b4357600080fd5b948201945b83861015612b6a578535612b5b81612530565b82529482019490820190612b48565b97505087013592505080821115612b8057600080fd5b612b8c878388016127ba565b93506040860135915080821115612ba257600080fd5b50612baf86828701612849565b9150509250925092565b60008060008060808587031215612bcf57600080fd5b8435612bda81612530565b93506020850135612bea81612530565b92506040850135915060608501356001600160401b03811115612c0c57600080fd5b8501601f81018713612c1d57600080fd5b612c2c878235602084016125b4565b91505092959194509250565b600080600080600060a08688031215612c5057600080fd5b853563ffffffff81168114612c6457600080fd5b9450602086013593506040860135925060608601356001600160401b03811115612c8d57600080fd5b612c998882890161260b565b9250506080860135612caa81612555565b809150509295509295909350565b60008060408385031215612ccb57600080fd5b8235612cd681612530565b91506020830135612ac981612530565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b600060018201612d2457612d24612cfc565b5060010190565b600060208284031215612d3d57600080fd5b81516108f581612530565b600060208284031215612d5a57600080fd5b5051919050565b6000816000190483118215151615612d7b57612d7b612cfc565b500290565b8082018082111561053657610536612cfc565b600063ffffffff808316818103612dac57612dac612cfc565b6001019392505050565b600181811c90821680612dca57607f821691505b602082108103612dea57634e487b7160e01b600052602260045260246000fd5b50919050565b601f8211156108e457600081815260208120601f850160051c81016020861015612e175750805b601f850160051c820191505b81811015612e3657828155600101612e23565b505050505050565b81516001600160401b03811115612e5757612e5761256e565b612e6b81612e658454612db6565b84612df0565b602080601f831160018114612ea05760008415612e885750858301515b600019600386901b1c1916600185901b178555612e36565b600085815260208120601f198616915b82811015612ecf57888601518255948401946001909101908401612eb0565b5085821015612eed5787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b60008351612f0f81846020880161271b565b835190830190612f2381836020880161271b565b01949350505050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351612f6481601785016020880161271b565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351612f9581602884016020880161271b565b01602801949350505050565b634e487b7160e01b600052601260045260246000fd5b600082612fc657612fc6612fa1565b500490565b8181038181111561053657610536612cfc565b600082612fed57612fed612fa1565b500690565b60006020828403121561300457600080fd5b81516108f581612555565b6001600160a01b03858116825284166020820152604081018390526080606082018190526000906130429083018461273f565b9695505050505050565b60006020828403121561305e57600080fd5b81516108f5816124fd565b634e487b7160e01b600052603160045260246000fd5b6000825161309181846020870161271b565b919091019291505056fe4552433732313a207472616e7366657220746f206e6f6e20455243373231526563656976657220696d706c656d656e74657257726170706564455243373231537465776172644c6963656e736546616365743c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a879ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e303c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a679ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e3299574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b17b62b800d8c954aa32a34a9249066e0f8761d6c1614c95cbc05c04ab0583a14ca26469706673582212208f383a76ac1dba6ec40dda850301b4e0bf44b98215285ce117d5b0060d62f1c264736f6c63430008100033",
+  "deployedBytecode": "0x60806040526004361061019c5760003560e01c80634f6ccce7116100ec578063a8de31cd1161008a578063c4e627c211610064578063c4e627c214610484578063c87b56dd14610499578063e31a7c01146104b9578063e985e9c5146104d957600080fd5b8063a8de31cd14610431578063b88d4fde14610451578063c3f75fc11461046457600080fd5b806370a08231116100c657806370a08231146103bc57806379c65068146103dc57806395d89b41146103fc578063a22cb4651461041157600080fd5b80634f6ccce71461035c5780635d3c438e1461037c5780636352211e1461039c57600080fd5b8063095ea7b31161015957806323b872dd1161013357806323b872dd146102f65780632f745c591461030957806342842e0e146103295780634f558e791461033c57600080fd5b8063095ea7b314610287578063150b7a021461029a57806318160ddd146102d357600080fd5b806301ffc9a7146101a157806303e8224e146101d657806306fdde03146101f8578063075461721461021a578063081812fc146102475780630849cc6914610267575b600080fd5b3480156101ad57600080fd5b506101c16101bc366004612513565b6104f9565b60405190151581526020015b60405180910390f35b3480156101e257600080fd5b506101f66101f136600461262b565b61053c565b005b34801561020457600080fd5b5061020d610627565b6040516101cd919061276b565b34801561022657600080fd5b5061022f610636565b6040516001600160a01b0390911681526020016101cd565b34801561025357600080fd5b5061022f61026236600461277e565b610669565b34801561027357600080fd5b506101f66102823660046128a4565b610674565b6101f661029536600461291b565b610720565b3480156102a657600080fd5b506102ba6102b5366004612947565b61072e565b6040516001600160e01b031990911681526020016101cd565b3480156102df57600080fd5b506102e86108cf565b6040519081526020016101cd565b6101f66103043660046129e5565b6108d9565b34801561031557600080fd5b506102e861032436600461291b565b6108e9565b6101f66103373660046129e5565b6108fc565b34801561034857600080fd5b506101c161035736600461277e565b610907565b34801561036857600080fd5b506102e861037736600461277e565b610912565b34801561038857600080fd5b506101f6610397366004612a26565b61091d565b3480156103a857600080fd5b5061022f6103b736600461277e565b610946565b3480156103c857600080fd5b506102e86103d7366004612a7e565b610951565b3480156103e857600080fd5b506101f66103f736600461291b565b61095c565b34801561040857600080fd5b5061020d610b90565b34801561041d57600080fd5b506101f661042c366004612a9b565b610b9a565b34801561043d57600080fd5b506101f661044c366004612ad4565b610ba4565b6101f661045f366004612bb9565b610c9a565b34801561047057600080fd5b506101f661047f366004612c38565b610ca6565b34801561049057600080fd5b506102e8610d14565b3480156104a557600080fd5b5061020d6104b436600461277e565b610d2c565b3480156104c557600080fd5b506101f66104d43660046129e5565b610d37565b3480156104e557600080fd5b506101c16104f4366004612cb8565b610dcc565b6001600160e01b0319811660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d8602052604081205460ff165b92915050565b60008051602061310e8339815191525460ff16156105ad5760405162461bcd60e51b815260206004820152603560248201526000805160206130ce8339815191526044820152740e88185b1c9958591e481a5b9a5d1a585b1a5e9959605a1b60648201526084015b60405180910390fd5b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6d80546001600160a01b0319166001600160a01b038c161790557f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6e89905561061b8888888888888888610dd8565b50505050505050505050565b6060610631610f0a565b905090565b60006106317f79ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e31546001600160a01b031690565b600061053682610fa9565b60008051602061318e83398151915261068c8161100c565b60005b845181101561071957600083156106c55760008051602061310e8339815191525461010090046001600160a01b031690506106c9565b5060005b610706818784815181106106df576106df612ce6565b60200260200101518785815181106106f9576106f9612ce6565b6020026020010151611019565b508061071181612d12565b91505061068f565b5050505050565b61072a82826110cf565b5050565b600061074960008051602061310e8339815191525460ff1690565b6107a15760405162461bcd60e51b815260206004820152603560248201526000805160206130ce8339815191526044820152740e881b5d5cdd081899481a5b9a5d1a585b1a5e9959605a1b60648201526084016105a4565b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6d546001600160a01b031633146108395760405162461bcd60e51b815260206004820152604260248201526000805160206130ce83398151915260448201527f3a2063616e6e6f7420616363657074207468697320746f6b656e206164647265606482015261737360f01b608482015260a4016105a4565b7f4f3bc7155d2db681e29af52d1119e27d8b92f937da5bb676ae6155a2e77a3c6e5484146108bd5760405162461bcd60e51b815260206004820152603d60248201526000805160206130ce83398151915260448201527f3a2063616e6e6f7420616363657074207468697320746f6b656e20494400000060648201526084016105a4565b50630a85bd0160e11b95945050505050565b60006106316111c7565b6108e48383836111e0565b505050565b60006108f58383611212565b9392505050565b6108e4838383611241565b60006105368261125c565b600061053682611276565b60008051602061318e8339815191526109358161100c565b610940848484611019565b50505050565b600061053682611297565b6000610536826112db565b306001600160a01b0316633882ce8e6040518163ffffffff1660e01b8152600401602060405180830381865afa15801561099a573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109be9190612d2b565b6001600160a01b0316336001600160a01b031614610a445760405162461bcd60e51b815260206004820152603760248201527f537465776172644c6963656e736546616365743a206f6e6c7920696e6974696160448201527f6c206269646465722063616e206d696e7420746f6b656e00000000000000000060648201526084016105a4565b306001600160a01b031663be6a2a6d6040518163ffffffff1660e01b8152600401602060405180830381865afa158015610a82573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610aa69190612d48565b4210610b1c576040805162461bcd60e51b81526020600482015260248101919091527f537465776172644c6963656e736546616365743a2063616e6e6f74206d696e7460448201527f20616674657220696e697469616c20706572696f642073746172742074696d6560648201526084016105a4565b610b258161125c565b15610b845760405162461bcd60e51b815260206004820152602960248201527f537465776172644c6963656e736546616365743a20546f6b656e20616c72656160448201526864792065786973747360b81b60648201526084016105a4565b61072a60008383611332565b6060610631611349565b61072a8282611368565b60008051602061318e833981519152610bbc8161100c565b82518451148015610bce575081518451145b610c335760405162461bcd60e51b815260206004820152603060248201527f537465776172644c6963656e736546616365743a20696e70757420617272617960448201526f040d8cadccee8d040dad2e6dac2e8c6d60831b60648201526084016105a4565b60005b835181101561071957610c88858281518110610c5457610c54612ce6565b6020026020010151858381518110610c6e57610c6e612ce6565b60200260200101518584815181106106f9576106f9612ce6565b80610c9281612d12565b915050610c36565b6109408484848461141c565b60008051602061318e833981519152610cbe8161100c565b60005b8663ffffffff168163ffffffff161015610d0b57610cf98484610cea63ffffffff851689612d61565b610cf4908a612d80565b61144f565b80610d0381612d93565b915050610cc1565b50505050505050565b600061063160008051602061314e8339815191525490565b606061053682611532565b333014610dc15760405162461bcd60e51b815260206004820152604c60248201527f4e6174697665537465776172644c6963656e73653a205472696767657220747260448201527f616e736665722063616e206f6e6c792062652063616c6c65642066726f6d206160648201526b1b9bdd1a195c88199858d95d60a21b608482015260a4016105a4565b6108e4838383611332565b60006108f58383611716565b60008051602061310e83398151915280546001600160a01b03888116610100026001600160a81b03199092169190911760011782557f79ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e318054918b166001600160a01b031990921691909117905560008051602061314e833981519152869055600060008051602061316e833981519152905080610e758682612e3e565b5060018101610e848582612e3e565b5060028101610e938482612e3e565b50610ea66301ffc9a760e01b6001611763565b610eb86380ac58cd60e01b6001611763565b610ed060008051602061318e8339815191528a6117d9565b851561061b5760005b87811015610efd57610eeb898261184d565b80610ef581612d12565b915050610ed9565b5050505050505050505050565b606060008051602061316e8339815191528054610f2690612db6565b80601f0160208091040260200160405190810160405280929190818152602001828054610f5290612db6565b8015610f9f5780601f10610f7457610100808354040283529160200191610f9f565b820191906000526020600020905b815481529060010190602001808311610f8257829003601f168201915b5050505050905090565b6000610fb48261125c565b610fd15760405163c1b843ef60e01b815260040160405180910390fd5b5060009081527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a960205260409020546001600160a01b031690565b6110168133611930565b50565b60008051602061314e833981519152805460008051602061310e8339815191529160019060006110498385612d80565b909155505060008181527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b4602052604090206110858582612e3e565b5060008181527fc7ed1b841b2d3c7f16d15642e7b013e89732e44006608d59c7547b8e331a7ce9602052604090208390556001600160a01b0385161561071957610719858261184d565b60006110da82611297565b9050806001600160a01b0316836001600160a01b03160361110e5760405163424a22cb60e01b815260040160405180910390fd5b336001600160a01b0382161480159061112e575061112c8133611716565b155b1561114c57604051632f5de44f60e01b815260040160405180910390fd5b60008281527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a9602052604080822080546001600160a01b0319166001600160a01b0387811691821790925591518593918516917f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b92591a4505050565b600061063160008051602061312e833981519152611992565b6111ea338261199c565b61120757604051632f5de44f60e01b815260040160405180910390fd5b6108e4838383611a22565b6001600160a01b03821660009081526000805160206130ee833981519152602052604081206108f59083611b9f565b6108e48383836040518060200160405280600081525061141c565b600061053660008051602061312e83398151915283611bab565b600061129060008051602061312e83398151915283611bc3565b5092915050565b6000806112b260008051602061312e83398151915284611bdf565b90506001600160a01b03811661053657604051637e1a7d8b60e01b815260040160405180910390fd5b60006001600160a01b03821661130457604051630810ff9760e41b815260040160405180910390fd5b6001600160a01b03821660009081526000805160206130ee8339815191526020526040902061053690611992565b61133b8161125c565b611207576108e4828261184d565b606060008051602061316e8339815191526001018054610f2690612db6565b336001600160a01b038316036113915760405163424a22cb60e01b815260040160405180910390fd5b3360008181527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07aa602090815260408083206001600160a01b03871680855290835292819020805460ff191686151590811790915590519081529192917f17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31910160405180910390a35050565b611426338361199c565b61144357604051632f5de44f60e01b815260040160405180910390fd5b61094084848484611beb565b60008051602061314e833981519152805460008051602061310e83398151915291600190600061147f8385612d80565b9091555085905061148f82611c1f565b6040516020016114a0929190612efd565b6040516020818303038152906040526114c460008051602061316e83398151915290565b600083815260039190910160205260409020906114e19082612e3e565b5060008181527fc7ed1b841b2d3c7f16d15642e7b013e89732e44006608d59c7547b8e331a7ce96020526040902083905583156107195781546107199061010090046001600160a01b03168261184d565b60008051602061314e8339815191525460609060008051602061310e83398151915290831061157357604051624705a760e71b815260040160405180910390fd5b60008381527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b460205260408120805460008051602061316e8339815191529291906115bd90612db6565b80601f01602080910402602001604051908101604052809291908181526020018280546115e990612db6565b80156116365780601f1061160b57610100808354040283529160200191611636565b820191906000526020600020905b81548152906001019060200180831161161957829003601f168201915b50505050509050600082600201805461164e90612db6565b80601f016020809104026020016040519081016040528092919081815260200182805461167a90612db6565b80156116c75780601f1061169c576101008083540402835291602001916116c7565b820191906000526020600020905b8154815290600101906020018083116116aa57829003601f168201915b505050505090506000825111156116e15750949350505050565b806116eb87611c1f565b6040516020016116fc929190612efd565b604051602081830303815290604052945050505050919050565b6001600160a01b0391821660009081527f3c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07aa6020908152604080832093909416825291909152205460ff1690565b6001600160e01b0319808316900361178e5760405163b0a19dd560e01b815260040160405180910390fd5b6001600160e01b03199190911660009081527ffc606c433378e3a7e0a6a531deac289b66caa1b4aa8554fd4ab2c6f1570f92d860205260409020805460ff1916911515919091179055565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c622811602052604090206118109082611d1f565b5060405133906001600160a01b0383169084907f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d90600090a45050565b6001600160a01b038216611874576040516311f2988d60e11b815260040160405180910390fd5b61187d8161125c565b1561189b57604051630d86bb7b60e31b815260040160405180910390fd5b6118a760008383611d34565b6001600160a01b03821660009081526000805160206130ee8339815191526020526040902060008051602061312e833981519152906118e69083611e29565b506118f2818385611e35565b5060405182906001600160a01b038516906000907fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef908290a4505050565b61193a8282611e4b565b61072a57611950816001600160a01b0316611e82565b61195b836020611e94565b60405160200161196c929190612f2c565b60408051601f198184030181529082905262461bcd60e51b82526105a49160040161276b565b6000610536825490565b60006119a78261125c565b6119c45760405163c1b843ef60e01b815260040160405180910390fd5b60006119cf83611297565b9050806001600160a01b0316846001600160a01b03161480611a0a5750836001600160a01b03166119ff84610fa9565b6001600160a01b0316145b80611a1a5750611a1a8185611716565b949350505050565b6000611a2d82611297565b9050836001600160a01b0316816001600160a01b031614611a6157604051630f2db4ad60e01b815260040160405180910390fd5b6001600160a01b038316611a88576040516340311a0960e01b815260040160405180910390fd5b611a93848484611d34565b6001600160a01b03841660009081526000805160206130ee8339815191526020526040902060008051602061312e83398151915290611ad29084611fe6565b506001600160a01b03841660009081526002820160205260409020611af79084611e29565b50611b03818486611e35565b50600083815260038201602052604080822080546001600160a01b0319169055518491906001600160a01b038516907f8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925908390a482846001600160a01b0316866001600160a01b03167fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef60405160405180910390a45050505050565b60006108f58383611ff2565b600081815260018301602052604081205415156108f5565b6000808080611bd2868661203e565b9097909650945050505050565b60006108f583836120a1565b611bf6848484611a22565b611c0284848484612105565b61094057604051639ff10cdd60e01b815260040160405180910390fd5b606081600003611c465750506040805180820190915260018152600360fc1b602082015290565b8160005b8115611c705780611c5a81612d12565b9150611c699050600a83612fb7565b9150611c4a565b6000816001600160401b03811115611c8a57611c8a61256e565b6040519080825280601f01601f191660200182016040528015611cb4576020820181803683370190505b5090505b8415611a1a57611cc9600183612fcb565b9150611cd6600a86612fde565b611ce1906030612d80565b60f81b818381518110611cf657611cf6612ce6565b60200101906001600160f81b031916908160001a905350611d18600a86612fb7565b9450611cb8565b60006108f5836001600160a01b0384166121d6565b6001600160a01b03831615611e1e5760405163a7c12c1160e01b815260048101829052600090309063a7c12c1190602401602060405180830381865afa158015611d82573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190611da69190612ff2565b90508015611e1c5760405162461bcd60e51b815260206004820152603a60248201527f537465776172644c6963656e736546616365743a2043616e6e6f74207472616e60448201527f7366657220647572696e672061756374696f6e20706572696f6400000000000060648201526084016105a4565b505b6108e4838383612219565b60006108f583836121d6565b6000611a1a84846001600160a01b038516612224565b60008281527fd3889cc5458b268d0544e5534672df1296288ca3f93cbd39bd6f497a5c622811602052604081206108f590836122c3565b60606105366001600160a01b03831660145b60606000611ea3836002612d61565b611eae906002612d80565b6001600160401b03811115611ec557611ec561256e565b6040519080825280601f01601f191660200182016040528015611eef576020820181803683370190505b509050600360fc1b81600081518110611f0a57611f0a612ce6565b60200101906001600160f81b031916908160001a905350600f60fb1b81600181518110611f3957611f39612ce6565b60200101906001600160f81b031916908160001a905350600160028402015b6001811115611fc6576f181899199a1a9b1b9c1cb0b131b232b360811b85600f1660108110611f8957611f89612ce6565b1a60f81b828281518110611f9f57611f9f612ce6565b60200101906001600160f81b031916908160001a90535060049490941c9360001901611f58565b5083156108f55760405163c913478560e01b815260040160405180910390fd5b60006108f583836122e5565b815460009082106120165760405163e637bf3b60e01b815260040160405180910390fd5b82600001828154811061202b5761202b612ce6565b9060005260206000200154905092915050565b8154600090819083106120645760405163022fd82760e31b815260040160405180910390fd5b600084600001848154811061207b5761207b612ce6565b906000526020600020906002020190508060000154816001015492509250509250929050565b60008181526001830160205260408120548082036120d257604051633d547ec560e21b815260040160405180910390fd5b8360000160018203815481106120ea576120ea612ce6565b90600052602060002090600202016001015491505092915050565b60006001600160a01b0384163b61211e57506001611a1a565b600061219f63150b7a0260e01b33888787604051602401612142949392919061300f565b604051602081830303815290604052906001600160e01b0319166020820180516001600160e01b03838183161783525050505060405180606001604052806032815260200161309c603291396001600160a01b038816919061239f565b90506000818060200190518101906121b7919061304c565b6001600160e01b031916630a85bd0160e11b1492505050949350505050565b6000818152600183016020526040812054610536575081546001808201845560008481526020808220909301849055845493815293810190915260409092205590565b6108e48383836123ae565b600082815260018401602052604081205480820361228b5750506040805180820182528381526020808201848152865460018181018955600089815284812095516002909302909501918255915190820155865486845281880190925292909120556108f5565b828560000160018303815481106122a4576122a4612ce6565b90600052602060002090600202016001018190555060009150506108f5565b6001600160a01b038116600090815260018301602052604081205415156108f5565b600081815260018301602052604081205480156112905783546000908590600019810190811061231757612317612ce6565b906000526020600020015490508085600001600184038154811061233d5761233d612ce6565b600091825260208083209091019290925591825260018601905260409020819055835484908061236f5761236f613069565b60008281526020808220830160001990810183905590920190925593815260019485019093525050604081205590565b6060611a1a84846000856123f2565b6001600160a01b0382166108e45760008181527f99574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b4602052604081206108e4916124af565b6060843b61241357604051632270d6bf60e21b815260040160405180910390fd5b600080866001600160a01b0316858760405161242f919061307f565b60006040518083038185875af1925050503d806000811461246c576040519150601f19603f3d011682016040523d82523d6000602084013e612471565b606091505b50915091508115612485579150611a1a9050565b8051156124955780518082602001fd5b8360405162461bcd60e51b81526004016105a4919061276b565b5080546124bb90612db6565b6000825580601f106124cb575050565b601f01602090049060005260206000209081019061101691905b808211156124f957600081556001016124e5565b5090565b6001600160e01b03198116811461101657600080fd5b60006020828403121561252557600080fd5b81356108f5816124fd565b6001600160a01b038116811461101657600080fd5b803561255081612530565b919050565b801515811461101657600080fd5b803561255081612555565b634e487b7160e01b600052604160045260246000fd5b604051601f8201601f191681016001600160401b03811182821017156125ac576125ac61256e565b604052919050565b60006001600160401b038311156125cd576125cd61256e565b6125e0601f8401601f1916602001612584565b90508281528383830111156125f457600080fd5b828260208301376000602084830101529392505050565b600082601f83011261261c57600080fd5b6108f5838335602085016125b4565b6000806000806000806000806000806101408b8d03121561264b57600080fd5b6126548b612545565b995060208b0135985061266960408c01612545565b975061267760608c01612545565b965061268560808c01612545565b955060a08b0135945061269a60c08c01612563565b935060e08b01356001600160401b03808211156126b657600080fd5b6126c28e838f0161260b565b94506101008d01359150808211156126d957600080fd5b6126e58e838f0161260b565b93506101208d01359150808211156126fc57600080fd5b506127098d828e0161260b565b9150509295989b9194979a5092959850565b60005b8381101561273657818101518382015260200161271e565b50506000910152565b6000815180845261275781602086016020860161271b565b601f01601f19169290920160200192915050565b6020815260006108f5602083018461273f565b60006020828403121561279057600080fd5b5035919050565b60006001600160401b038211156127b0576127b061256e565b5060051b60200190565b600082601f8301126127cb57600080fd5b813560206127e06127db83612797565b612584565b82815260059290921b840181019181810190868411156127ff57600080fd5b8286015b8481101561283e5780356001600160401b038111156128225760008081fd5b6128308986838b010161260b565b845250918301918301612803565b509695505050505050565b600082601f83011261285a57600080fd5b8135602061286a6127db83612797565b82815260059290921b8401810191818101908684111561288957600080fd5b8286015b8481101561283e578035835291830191830161288d565b6000806000606084860312156128b957600080fd5b83356001600160401b03808211156128d057600080fd5b6128dc878388016127ba565b945060208601359150808211156128f257600080fd5b506128ff86828701612849565b925050604084013561291081612555565b809150509250925092565b6000806040838503121561292e57600080fd5b823561293981612530565b946020939093013593505050565b60008060008060006080868803121561295f57600080fd5b853561296a81612530565b9450602086013561297a81612530565b93506040860135925060608601356001600160401b038082111561299d57600080fd5b818801915088601f8301126129b157600080fd5b8135818111156129c057600080fd5b8960208285010111156129d257600080fd5b9699959850939650602001949392505050565b6000806000606084860312156129fa57600080fd5b8335612a0581612530565b92506020840135612a1581612530565b929592945050506040919091013590565b600080600060608486031215612a3b57600080fd5b8335612a4681612530565b925060208401356001600160401b03811115612a6157600080fd5b612a6d8682870161260b565b925050604084013590509250925092565b600060208284031215612a9057600080fd5b81356108f581612530565b60008060408385031215612aae57600080fd5b8235612ab981612530565b91506020830135612ac981612555565b809150509250929050565b600080600060608486031215612ae957600080fd5b83356001600160401b0380821115612b0057600080fd5b818601915086601f830112612b1457600080fd5b81356020612b246127db83612797565b82815260059290921b8401810191818101908a841115612b4357600080fd5b948201945b83861015612b6a578535612b5b81612530565b82529482019490820190612b48565b97505087013592505080821115612b8057600080fd5b612b8c878388016127ba565b93506040860135915080821115612ba257600080fd5b50612baf86828701612849565b9150509250925092565b60008060008060808587031215612bcf57600080fd5b8435612bda81612530565b93506020850135612bea81612530565b92506040850135915060608501356001600160401b03811115612c0c57600080fd5b8501601f81018713612c1d57600080fd5b612c2c878235602084016125b4565b91505092959194509250565b600080600080600060a08688031215612c5057600080fd5b853563ffffffff81168114612c6457600080fd5b9450602086013593506040860135925060608601356001600160401b03811115612c8d57600080fd5b612c998882890161260b565b9250506080860135612caa81612555565b809150509295509295909350565b60008060408385031215612ccb57600080fd5b8235612cd681612530565b91506020830135612ac981612530565b634e487b7160e01b600052603260045260246000fd5b634e487b7160e01b600052601160045260246000fd5b600060018201612d2457612d24612cfc565b5060010190565b600060208284031215612d3d57600080fd5b81516108f581612530565b600060208284031215612d5a57600080fd5b5051919050565b6000816000190483118215151615612d7b57612d7b612cfc565b500290565b8082018082111561053657610536612cfc565b600063ffffffff808316818103612dac57612dac612cfc565b6001019392505050565b600181811c90821680612dca57607f821691505b602082108103612dea57634e487b7160e01b600052602260045260246000fd5b50919050565b601f8211156108e457600081815260208120601f850160051c81016020861015612e175750805b601f850160051c820191505b81811015612e3657828155600101612e23565b505050505050565b81516001600160401b03811115612e5757612e5761256e565b612e6b81612e658454612db6565b84612df0565b602080601f831160018114612ea05760008415612e885750858301515b600019600386901b1c1916600185901b178555612e36565b600085815260208120601f198616915b82811015612ecf57888601518255948401946001909101908401612eb0565b5085821015612eed5787850151600019600388901b60f8161c191681555b5050505050600190811b01905550565b60008351612f0f81846020880161271b565b835190830190612f2381836020880161271b565b01949350505050565b7f416363657373436f6e74726f6c3a206163636f756e7420000000000000000000815260008351612f6481601785016020880161271b565b7001034b99036b4b9b9b4b733903937b6329607d1b6017918401918201528351612f9581602884016020880161271b565b01602801949350505050565b634e487b7160e01b600052601260045260246000fd5b600082612fc657612fc6612fa1565b500490565b8181038181111561053657610536612cfc565b600082612fed57612fed612fa1565b500690565b60006020828403121561300457600080fd5b81516108f581612555565b6001600160a01b03858116825284166020820152604081018390526080606082018190526000906130429083018461273f565b9695505050505050565b60006020828403121561305e57600080fd5b81516108f5816124fd565b634e487b7160e01b600052603160045260246000fd5b6000825161309181846020870161271b565b919091019291505056fe4552433732313a207472616e7366657220746f206e6f6e20455243373231526563656976657220696d706c656d656e74657257726170706564455243373231537465776172644c6963656e736546616365743c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a879ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e303c7bf052874fa81625121783266a03507bd2cd48b16e571c01a04e8dd3fb07a679ec1734da2430052e9d78936f451aad707e5bed12ef4806b06dc3d0c38f0e3299574a7094154bb123ae6ae102096f0bf9679b85a5cd1e727aaa0ae5f132e6b17b62b800d8c954aa32a34a9249066e0f8761d6c1614c95cbc05c04ab0583a14ca26469706673582212208f383a76ac1dba6ec40dda850301b4e0bf44b98215285ce117d5b0060d62f1c264736f6c63430008100033",
+  "devdoc": {
+    "details": "ERC-721 token license for Steward that wraps existing ERC-721. Only a particular ERC721 transfer is accepted.",
+    "kind": "dev",
+    "methods": {
+      "approve(address,uint256)": {
+        "params": {
+          "operator": "address to be approved",
+          "tokenId": "token to approve"
+        }
+      },
+      "balanceOf(address)": {
+        "returns": {
+          "_0": "quantity of tokens held"
+        }
+      },
+      "getApproved(uint256)": {
+        "params": {
+          "tokenId": "token to query"
+        },
+        "returns": {
+          "_0": "address approved to spend token"
+        }
+      },
+      "isApprovedForAll(address,address)": {
+        "params": {
+          "account": "address to query for approval granted",
+          "operator": "address to query for approval received"
+        },
+        "returns": {
+          "_0": "whether operator is approved to spend tokens held by account"
+        }
+      },
+      "ownerOf(uint256)": {
+        "params": {
+          "tokenId": "token to query"
+        },
+        "returns": {
+          "_0": "token owner"
+        }
+      },
+      "safeTransferFrom(address,address,uint256)": {
+        "params": {
+          "from": "sender of token",
+          "to": "receiver of token",
+          "tokenId": "token id"
+        }
+      },
+      "safeTransferFrom(address,address,uint256,bytes)": {
+        "params": {
+          "data": "data payload",
+          "from": "sender of token",
+          "to": "receiver of token",
+          "tokenId": "token id"
+        }
+      },
+      "setApprovalForAll(address,bool)": {
+        "params": {
+          "operator": "address to be approved",
+          "status": "approval status"
+        }
+      },
+      "supportsInterface(bytes4)": {
+        "params": {
+          "interfaceId": "interface id"
+        },
+        "returns": {
+          "_0": "bool whether interface is supported"
+        }
+      },
+      "tokenByIndex(uint256)": {
+        "params": {
+          "index": "position in global token list to query"
+        },
+        "returns": {
+          "_0": "id of retrieved token"
+        }
+      },
+      "tokenOfOwnerByIndex(address,uint256)": {
+        "params": {
+          "index": "position in owner's token list to query",
+          "owner": "token holder to query"
+        },
+        "returns": {
+          "_0": "id of retrieved token"
+        }
+      },
+      "totalSupply()": {
+        "returns": {
+          "_0": "total supply"
+        }
+      },
+      "transferFrom(address,address,uint256)": {
+        "params": {
+          "from": "sender of token",
+          "to": "receiver of token",
+          "tokenId": "token id"
+        }
+      }
+    },
+    "title": "WrappedERC721StewardLicenseFacet",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "addTokenToCollection(address,string,uint256)": {
+        "notice": "Add token to collection"
+      },
+      "addTokensToCollection(address[],string[],uint256[])": {
+        "notice": "Add tokens to collection with to"
+      },
+      "addTokensToCollection(string[],uint256[],bool)": {
+        "notice": "Add tokens to collection"
+      },
+      "addTokensWithBaseURIToCollection(uint32,uint256,uint256,string,bool)": {
+        "notice": "Add tokens to collection with baseURI"
+      },
+      "approve(address,uint256)": {
+        "notice": "grant approval to given account to spend token"
+      },
+      "balanceOf(address)": {
+        "notice": "query the balance of given address"
+      },
+      "exists(uint256)": {
+        "notice": "Check if token exists"
+      },
+      "getApproved(uint256)": {
+        "notice": "get approval status for given token"
+      },
+      "initializeWrappedStewardLicense(address,uint256,address,address,address,uint256,bool,string,string,string)": {
+        "notice": "Initialize license"
+      },
+      "isApprovedForAll(address,address)": {
+        "notice": "query approval status of given operator with respect to given address"
+      },
+      "maxTokenCount()": {
+        "notice": "Get max token count"
+      },
+      "mintToken(address,uint256)": {
+        "notice": "Initial bidder can mint token if it doesn't exist"
+      },
+      "minter()": {
+        "notice": "Get minter"
+      },
+      "name()": {
+        "notice": "inheritdoc IERC721Metadata"
+      },
+      "ownerOf(uint256)": {
+        "notice": "query the owner of given token"
+      },
+      "safeTransferFrom(address,address,uint256)": {
+        "notice": "transfer token between given addresses, checking for ERC721Receiver implementation if applicable"
+      },
+      "safeTransferFrom(address,address,uint256,bytes)": {
+        "notice": "transfer token between given addresses, checking for ERC721Receiver implementation if applicable"
+      },
+      "setApprovalForAll(address,bool)": {
+        "notice": "grant approval to or revoke approval from given account to spend all tokens held by sender"
+      },
+      "supportsInterface(bytes4)": {
+        "notice": "query whether contract has registered support for given interface"
+      },
+      "symbol()": {
+        "notice": "inheritdoc IERC721Metadata"
+      },
+      "tokenByIndex(uint256)": {
+        "notice": "get token at given internal storage index"
+      },
+      "tokenOfOwnerByIndex(address,uint256)": {
+        "notice": "get token of given owner at given internal storage index"
+      },
+      "tokenURI(uint256)": {
+        "notice": "inheritdoc IERC721Metadata"
+      },
+      "totalSupply()": {
+        "notice": "get total token supply"
+      },
+      "transferFrom(address,address,uint256)": {
+        "notice": "transfer token between given addresses, without checking for ERC721Receiver implementation if applicable"
+      },
+      "triggerTransfer(address,address,uint256)": {
+        "notice": "Trigger transfer of license"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

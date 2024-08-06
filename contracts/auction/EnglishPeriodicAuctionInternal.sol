@@ -30,6 +30,15 @@ abstract contract EnglishPeriodicAuctionInternal is
         EnglishPeriodicAuctionStorage.Layout
             storage l = EnglishPeriodicAuctionStorage.layout();
 
+        require(
+            minBidIncrement > 0,
+            'EnglishPeriodicAuction: Min bid increment must be greater than 0'
+        );
+
+        require(
+            initialBidder != address(0) && repossessor != address(0),
+            'EnglishPeriodicAuction: !Address Zero'
+        );
         l.isInitialized = true;
         l.initialBidder = initialBidder;
         l.initialPeriodStartTimeOffset = initialPeriodStartTimeOffset;
@@ -53,6 +62,15 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 bidExtensionSeconds,
         uint256 startingBid
     ) internal {
+        require(
+            minBidIncrement > 0,
+            'EnglishPeriodicAuction: Min bid increment must be greater than 0'
+        );
+
+        require(
+            repossessor != address(0),
+            'EnglishPeriodicAuction: !Address Zero'
+        );
         _setRepossessor(repossessor);
         _setAuctionLengthSeconds(auctionLengthSeconds);
         _setMinBidIncrement(minBidIncrement);
@@ -237,7 +255,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             return false;
         }
         //slither-disable-next-line timestamp
-        return block.timestamp >= _auctionEndTime(tokenId);
+        return block.timestamp > _auctionEndTime(tokenId);
     }
 
     /**
@@ -327,7 +345,7 @@ abstract contract EnglishPeriodicAuctionInternal is
             feeAmount = totalCollateralAmount;
         } else {
             require(
-                totalCollateralAmount > bidAmount,
+                totalCollateralAmount >= bidAmount,
                 'EnglishPeriodicAuction: Collateral must be greater than current bid'
             );
             // If new bidder, collateral is bidAmount + fee
@@ -418,8 +436,17 @@ abstract contract EnglishPeriodicAuctionInternal is
             storage l = EnglishPeriodicAuctionStorage.layout();
 
         uint256 currentAuctionRound = l.currentAuctionRound[tokenId];
+        uint256 availableAuctionRound = currentAuctionRound;
+        if (bidder == l.highestBids[tokenId][currentAuctionRound].bidder) {
+            if (currentAuctionRound == 0) {
+                revert(
+                    'EnglishPeriodicAuction: Cannot cancel bid if highest bidder'
+                );
+            }
+            availableAuctionRound = currentAuctionRound - 1;
+        }
 
-        for (uint256 i = 0; i <= currentAuctionRound; i++) {
+        for (uint256 i = 0; i <= availableAuctionRound; i++) {
             Bid storage bid = l.bids[tokenId][i][bidder];
 
             if (bid.collateralAmount > 0) {
@@ -599,6 +626,9 @@ abstract contract EnglishPeriodicAuctionInternal is
         uint256 feeDenominator = IPeriodicPCOParamsReadable(address(this))
             .feeDenominator();
 
+        if (feeNumerator == 0 || feeDenominator == 0) {
+            return 0;
+        }
         return (bidAmount * feeNumerator) / feeDenominator;
     }
 

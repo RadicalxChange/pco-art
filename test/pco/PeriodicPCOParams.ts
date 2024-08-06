@@ -112,6 +112,16 @@ describe('PeriodicPCOParams', function () {
       expect(await instance.feeDenominator()).to.be.equal(4);
     });
 
+    it('should not set feeDenominator over 10_000', async function () {
+      const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
+      const instance = await factory.deploy();
+      await instance.deployed();
+
+      await expect(
+        instance['initializePCOParams(uint256,uint256,uint256)'](1, 3, 10001),
+      ).to.be.revertedWith('PeriodicPCOParamsInternal: invalid fee');
+    });
+
     it('should revert if already initialized', async function () {
       const factory = await ethers.getContractFactory('PeriodicPCOParamsFacet');
       const instance = await factory.deploy();

@@ -16,6 +16,11 @@ abstract contract PeriodicPCOParamsInternal is IPeriodicPCOParamsInternal {
         uint256 feeNumerator,
         uint256 feeDenominator
     ) internal {
+        require(
+            feeDenominator < 10_001,
+            'PeriodicPCOParamsInternal: invalid fee'
+        );
+
         PeriodicPCOParamsStorage.Layout storage l = PeriodicPCOParamsStorage
             .layout();
 
